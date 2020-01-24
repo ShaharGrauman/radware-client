@@ -1,12 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import './index.css';
 
-import EditUserDashbaord from '.components/admin/EditUserDashbaord';
-import NewUserDashbaord from '.components/admin/NewUserDashbaord';
-import AdminDashbaord from './components/AdminDashboard';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+
+import EditUserDashbaord from './components/admin/EditUserDashbaord';
+import NewUserDashbaord from './components/admin/NewUserDashbaord';
+import AdminDashbaord from './components/admin/AdminDashboard';
 import NewRole from './components/admin/NewRole';
 import Audit from './components/admin/Audit';
 import Roles from './components/admin/RoleList';
