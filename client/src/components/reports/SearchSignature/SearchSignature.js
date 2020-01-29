@@ -21,11 +21,14 @@ import SearchRefinement from "./SearchRefinement";
 import VulnerabilityDefinition from "./VulnerabilityDefinition";
 import ScanAtCheckBoxes from "./ScanAtCheckBoxes";
 import RefrencesSelection from "./RefrencesSelection";
+import { object } from "prop-types";
 
 export default class SearchSignature extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      hasNext:true,
+      hasPrev:true,
       tableData: [
         { patternID: "AAA", description: "CCC" },
         { patternID: "AAA", description: "CCC" },
@@ -33,41 +36,70 @@ export default class SearchSignature extends Component {
       ],
       isRefined: false
     };
+    this.urlDetails={
+      page: 1 ,
+      size: 20,
+    };
     this.data = {
       slider: 2
     };
     this.switchers = [];
   }
   onSearch = async e => {
-    
-    const response = await axios.get('http://localhost:3001/');
-    console.log(response);
+    let requestURL='';
+
+    Object.keys(this.urlDetails).forEach(key=>requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`))
+    requestURL.slice(1)
+    console.log(requestURL)
+    // const response = await axios.get('http://localhost:3001/');
+    // console.log(response);
   }
 
 
   sortArrByKey(arr, key) {
     let sorted = arr.sort();
-    console.log(sorted);
+    // console.log(sorted);
     this.setState({ tableData: sorted });
     return sorted;
   }
 
   update = val => {
     this.data.slider = val;
-    console.log(val);
+    // console.log(val);
   };
 
   addSwitcher = switcher => {
-    this.switchers.push(switcher);
+    this.switchers.push(switcher); 
   }
-
   switchAll = () => {
     this.switchers.forEach(switcher => switcher());
   }
 
+
+  urlUpdate= (key , value) =>{
+    if(value==""){
+      // console.log( this.urlDetails.key)
+      delete this.urlDetails[key]
+    }
+    else{
+    this.urlDetails[key]=value;
+  }
+  // console.log(this.urlDetails)
+  }
+
+  onSelect = (key, value) => {
+    this.urlUpdate(key, value);
+  }
+  onEnter = e =>{
+    if(e.key=='Enter'){
+      this.onSearch()
+    }
+
+  }
+
   render() {
-    return (
-      <div className="container-fluid">
+    return (      //onKeyPress={(e)=>e.key=='Enter'?this.onSearch:null}
+      <div className="container-fluid" onKeyPress={this.onEnter}>
         <h1 className="mx-md-3 mt-2 mx-lg-5">Search Signatures</h1>
         <form>
         <div className="row mt-3 mx-auto">
@@ -80,8 +112,9 @@ export default class SearchSignature extends Component {
                 type="text"
                 className="form-control form-rounded"
                 placeholder="Search"
+                onChange  ={e=>this.urlUpdate('description',e.target.value)}
               />
-              <InputGroupAddon addonType="append">
+              <InputGroupAddon addonType="append" style={{cursor:'pointer'}}>
                 <InputGroupText>
                 <FontAwesomeIcon icon={faSearch} onClick={this.onSearch}/>
               </InputGroupText>
@@ -103,30 +136,30 @@ export default class SearchSignature extends Component {
                 <CardBody>
                 <div className="row mx-auto py-2">
                   <div className="col-12 col-sm-6 col-md-5 col-lg-3 mx-md-3 mx-lg-5">
-                    <AttackTypeSelection connectTo={this.addSwitcher}/        >
+                    <AttackTypeSelection connectTo={this.addSwitcher} onSelect={this.urlUpdate}/>
 
                     <div className="py-3">
                       <SeverityRange slidingRangeV={this.update} connectTo={this.addSwitcher}/>
                     </div       >
 
-                    <AttackStatusSelection connectTo={this.addSwitcher}/>
+                    <AttackStatusSelection connectTo={this.addSwitcher} onSelect={this.urlUpdate}/>
                   </div       >
 
                   <div className="col-12 col-sm-6 col-md-5 col-lg-3 mx-md-3 mx-lg-5">
                     <span className="row">
                       <span className="col-12">
-                        <VulnerabilityDefinition connectTo={this.addSwitcher}/>
+                        <VulnerabilityDefinition connectTo={this.addSwitcher} onSelect={this.urlUpdate}/>
                       </span>
                     </span>
                     <div className="py-3">
-                      <ScanAtCheckBoxes connectTo={this.addSwitcher}/>
+                      <ScanAtCheckBoxes connectTo={this.addSwitcher} onSelect={this.urlUpdate}/>
                     </div>
                   </div>
                   <div className="col-sm-12 col-md-5 col-lg-3 mx-md-3 mx-lg-5">
-                    <RefrencesSelection connectTo={this.addSwitcher}/>
+                    <RefrencesSelection connectTo={this.addSwitcher} onSelect={this.urlUpdate}/>
 
                   </div>
-                </div       >
+                </div>
 
                 </CardBody>
               </Card>
@@ -139,24 +172,32 @@ export default class SearchSignature extends Component {
             <Table data={this.state.tableData} />
             <div className="row">
               <div className="col-2 col-sm-2 col-md-3 col-lg-4 mx-sm-2 mx-md-3 mx-lg-0"></div>
-              <div className="col-3 col-sm-3 col-md-2">
-                <span className="fas">
+              <div className="col-3 col-sm-3 col-md-2" >
+                {this.state.hasPrev?
+                  <span className="fas">
                   <FontAwesomeIcon
                     icon={faArrowLeft}
                     onClick={this.props.preOnClick}
                   ></FontAwesomeIcon>{" "}
                   Previous
                 </span>
+                : null  
+              }
+
               </div>
               <div className="col-1 col-lg-0 mx-2 mx-sm-2 mx-md-0"></div>
               <div className="col-3 col-sm-2">
+              {this.state.hasPrev?
                 <span className="fas">
                   Next{" "}
                   <FontAwesomeIcon
                     icon={faArrowRight}
                     onClick={this.props.nextOnClick}
                   ></FontAwesomeIcon>
-                </span>
+                </span>          
+            :null
+            }
+
               </div>
             </div>
           </div>
