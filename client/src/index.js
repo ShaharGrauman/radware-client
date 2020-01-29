@@ -11,8 +11,9 @@ import NewRole from './components/admin/NewRole';
 import Audit from './components/admin/Audit';
 import RolesDashboard from './components/admin/RolesDashboard';
 import LogIn from './components/admin/LogIn';
-import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
+// import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
 import SearchSignature from './components/reports/SearchSignature/SearchSignature';
+// import ControlSteps from '../components/shared/ControlSteps';
 
 class App extends React.Component {
     render() {
@@ -37,15 +38,12 @@ class App extends React.Component {
                     </Route>
                     <Route path="/audit">
                         <Audit />
-                    </Route>
-                    <Route path="/adminDashboard">
-                        <AdminDashbaord />
-                    </Route>
+                    </Route>                    
                     <Route path="/SearchSignature">
                         <SearchSignature />
                     </Route> 
-                    <Route path="/createOrEditSignature">
-                        <CreateOrEditSignatureWizard />
+                    <Route path="/">
+                        <AdminDashbaord />
                     </Route>
                 </Switch>
             </BrowserRouter>

@@ -161,7 +161,7 @@ export default class SearchSignature extends Component {
                       <SeverityRange slidingRangeV={this.update} connectTo={this.addSwitcher}/>
                       </div>
                     </div >
-                    <AttackStatusSelection connectTo={this.addSwitcher}/>
+                    <AttackStatusSelection connectTo={this.addSwitcher} onSelect={this.urlUpdate}/>
                   </div>
 
                   <div className="col-12 col-sm-6 col-md-5 col-lg-3 mx-md-3 mx-lg-5">

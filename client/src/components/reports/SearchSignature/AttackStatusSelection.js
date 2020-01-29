@@ -7,7 +7,7 @@ import {constants} from './dataManager'
 export default class AttackStatusSelection extends SwitchableComponent {
   onChange = e => {
     if(e.target.value>=0){
-      this.props.onSelect('status', e.target.selectedOptions[0].text)
+      this.props.onSelect('status',  e.target.selectedOptions[0].text)
     }else{
       this.props.onSelect('status',"" )
     }
