@@ -1,8 +1,9 @@
 import React from 'react';
-
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import ResearcherDashboard from './components/reports/SearchSignature/ResearcherDashboard'
 function App() {
   return (
-    <h1>Radware Client</h1>
+    <ResearcherDashboard/>
   );
 }
 
