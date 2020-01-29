@@ -3,10 +3,11 @@ import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Redirect, withRouter, useHistory, useLocation } from 'react-router-dom'
 import axios from 'axios';
+
 import MyTable from '../shared/MyTable';
 
 
-class App extends React.Component {
+class AdminDashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -49,8 +50,6 @@ class App extends React.Component {
         });
   }
   
-
-  
   tableHeaders = ["SeqID", "Username", "Phone", "Roles", "Status"];
 
 
@@ -71,7 +70,7 @@ class App extends React.Component {
             >New user</button>
             <button type="button" className="btn btn-secondary"
               onClick={() => this.renderRedirect("roleslist")}
-            >Roles Management</button>
+            >Roles Managment</button>
           </div>
 
           <div className="container ml-0">
@@ -81,7 +80,7 @@ class App extends React.Component {
                   header={this.tableHeaders}
                   data={this.state.users}
                   sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
-                  className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.users.SeqID}</MyTable>
+                  className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.users.SeqID}</Table>
               </div>
             </div></div>
 
