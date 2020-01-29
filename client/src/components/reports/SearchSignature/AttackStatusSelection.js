@@ -17,7 +17,7 @@ export default class AttackStatusSelection extends SwitchableComponent {
       <>
         <label htmlFor="attack-Status">Status:</label>
         <select className="custom-select" id="attack-Status" onChange={this.onChange} disabled={this.state.disabled}>
-          <option defaultValue >Attack</option>
+          <option defaultValue >All</option>
 
           {
             constants.status.map((status,index)=>
