@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import Table from '../Table';
+import Table from '../shared/Table';
 
 export default class App extends React.Component {
   usersData = [
