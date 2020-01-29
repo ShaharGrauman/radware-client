@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import axios from 'axios';
+
 import ControlSteps from '../shared/ControlSteps';
 import WizardFooterButtons from '../shared/WizardFooterButtons';
 
@@ -11,12 +13,141 @@ import CreateOrEditSignatureStep5Attributes from './CreateOrEditSignatureStep5At
 
 const stepsIndexesContainingCreateWithDefaultsButton = [1, 2, 3];
 
+const valueBySeverity = {
+    'low': 0,
+    'medium': 50,
+    'high': 100
+};
+
+const severityByValue = {
+    0: 'low',
+    50: 'medium',
+    100: 'high'
+};
+
 class CreateOrEditSignatureWizard extends Component {
     constructor(props) {
         super(props);
         this.state = {
             currentStep: 0,
-            signatureData: {}
+            signatureData: {
+                id: 2829, //?
+                user_id: 1,
+                // attack_id: 1,
+                pattern_id: 123452, //?
+                type: "vuln",
+                // creation_time: "17:04:44",
+                // creation_date: "2020-01-15",
+                status: "in_progress",
+                // in_qa_internal_status_manual: "init",
+                // in_qa_internal_status_performance: "init",
+                // in_qa_internal_status_automation: "init",
+                vuln_data: "vuln data for this signature is: ",
+                keep_order: false,
+                start_break: null,
+                end_break: null,
+                right_index: null,
+                scan_uri: null,
+                scan_header: null,
+                scan_body: null,
+                scan_parameters: null,
+                scan_file_name: null,
+                severity: valueBySeverity['medium'],
+                description: null,
+                test_data: "this is FAKE test_data",
+                // attackId: 1,
+                userId: 1,
+                files: [
+                    {
+                        signatureId: 1,
+                        file: "Simple File"
+                    },
+                    {
+                        signatureId: 1,
+                        file: "Simple File"
+                    }
+                ],
+                attackName: null,
+                parameters: [
+                    {
+                        parameter: "this is sample PARAMETERS!",
+                        signatureId: 1
+                    },
+                    {
+                        parameter: "this is sample PARAMETERS!",
+                        signatureId: 1
+                    }
+                ],
+                external_references: [
+                    {
+                        type: "cveid",
+                        reference: "http://www.security.com/bid/214",
+                        signatureId: 1
+                    },
+                    {
+                        type: "bugtraqid",
+                        reference: "http://www.BOOS.com/55",
+                        signatureId: 1
+                    },
+                    {
+                        type: "bugtraqid",
+                        reference: "http://www.cve.com/bid/24",
+                        signatureId: 1
+                    },
+                    {
+                        type: "cveid",
+                        reference: "http://www.security.com/",
+                        signatureId: 1
+                    }
+                ],
+                vuln_data_extras: [
+                    {
+                        description: "this is sample desc",
+                        signatureId: 1
+                    },
+                    {
+                        description: "this is sample desc",
+                        signatureId: 1
+                    }
+                ],
+                web_servers: [
+                    { id: '1', webserver: 'Web Server 1' },
+                    { id: '2', webserver: 'Web Server 2' },
+                    { id: '3', webserver: 'Web Server 3' },
+                    { id: '4', webserver: 'Web Server 4' },
+                    { id: '5', webserver: 'Web Server 5' },
+                ],
+                signature_status_histories: [
+                    {
+                        status: "in_progress",
+                        time: "17:12:12",
+                        date: "2020-01-15",
+                        signatureId: 1,
+                        userId: 1
+                    },
+                    {
+                        status: "in_progress",
+                        time: "17:12:19",
+                        date: "2020-01-15",
+                        signatureId: 1,
+                        userId: 1
+                    },
+                    {
+                        status: "in_progress",
+                        time: "17:12:28",
+                        date: "2020-01-15",
+                        signatureId: 1,
+                        userId: 1
+                    },
+                    {
+                        status: "in_progress",
+                        time: "17:12:33",
+                        date: "2020-01-15",
+                        signatureId: 1,
+                        userId: 1
+                    }
+                ]
+            }
         };
     }
 
@@ -35,8 +166,58 @@ class CreateOrEditSignatureWizard extends Component {
         this.setState({ currentStep: this.state.currentStep - 1 });
     }
 
+    getRandomId = (max) => {
+        return Math.floor(Math.random() * Math.floor(max));
+    }
+
     createSignatureButtonClick = () => {
-        alert('CREATE SIGNATURE BUTTON CLICKED:' + JSON.stringify(this.state.signatureData));
+        const newId = this.getRandomId(100000);
+        const now = new Date().toLocaleString("he-IL").split(', ');
+        console.log();
+        const createSignatureInput = {
+            id: newId,
+            user_id: 1,
+            attack_id: 1,
+            pattern_id: newId,
+            type: "vuln",
+            creation_time: now[1],
+            creation_date: now[0],
+            status: this.state.signatureData.status,
+            in_qa_internal_status_manual: "init",
+            in_qa_internal_status_performance: "init",
+            in_qa_internal_status_automation: "init",
+            vuln_data: "vuln data for this signature is: ",
+            keep_order: this.state.signatureData.keep_order,
+            start_break: this.state.signatureData.start_break,
+            end_break: this.state.signatureData.end_break,
+            right_index: null,
+            scan_uri: null,
+            scan_header: null,
+            scan_body: null,
+            scan_parameters: null,
+            scan_file_name: null,
+            severity: severityByValue[this.state.signatureData.severity],
+            description: this.state.signatureData.description,
+            test_data: "this is FAKE test_data",
+            files: [
+                { id: 333333, signatureId: newId, file: "Simple File" }
+            ],
+            attack: {
+                id: 5266354,
+                name: "attack1"
+            },
+            parameters: [
+                { id: 5285838, parameter: "this is sample PARAMETERS!", signatureId: newId }
+            ],
+            external_references: [
+                { id: 4578935, type: "cveid", reference: "http://www.security.com/bid/214", signatureId: newId }
+            ],
+            vuln_data_extras: [
+                { id: 455535, description: "this is sample desc", signatureId: newId }
+            ],
+            web_servers: []
+        };
+        axios.post('http://localhost:3001/signature', createSignatureInput);
     }
 
     createWithDefaultsButtonClick = () => {

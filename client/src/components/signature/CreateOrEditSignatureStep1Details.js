@@ -8,26 +8,26 @@ export default class CreateOrEditSignatureStep1Details extends React.Component {
   render() {
     return (
       <div>
-        <div id="container">
+        <div id="container-fluid row">
           <div className="row">
             <div className="col-lg-5 ml-4 col-md-5 col-sm-10 col-xs-1 attackname">
-              <h4>Attack name:</h4>
             </div>
             <div className="col-lg-5 col-md-5 col-sm-10 col-xs-1"></div>
           </div>
           <div className="row ml-2 justify-content-around">
             <div className="col-lg-5 col-md-5 mb-2 col-sm-10 col-xs-8">
-              <label>The customer will identity the attack by this name</label>
+            <h5 className="display-5">Attack name:</h5>
+              <small>The customer will identity the attack by this name</small>
               <div id="btns">
                 <div className="input-group sm-3">
-                  <input type="text" className="form-control" name="attackName" placeholder="Attack Name" value={this.props.signatureData.attackName} onChange={this.props.onChangeHandler}></input>
+                  <input type="text" className="form-control" name="attackName" placeholder="Attack name" value={this.props.signatureData.attackName} onChange={this.props.onChangeHandler}></input>
                   <div className="input-group-append">
-                    <button type="button" className="btn btn-secondary" >Search</button>
+                    <button type="button" className="btn btn-secondary">Search</button>
                   </div>
                 </div>
               </div>
             </div>
-            <Status signatureStatus={this.props.signatureData.signatureStatus} onChangeHandler={this.props.onChangeHandler} />
+            <Status status={this.props.signatureData.status} onChangeHandler={this.props.onChangeHandler} />
           </div>
           <div className="row ml-2 justify-content-around">
             <Severity severity={this.props.signatureData.severity} onChangeHandler={this.props.onChangeHandler} />
