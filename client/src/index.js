@@ -16,8 +16,8 @@ import SearchSignature from './components/reports/SearchSignature/SearchSignatur
 // import ControlSteps from '../components/shared/ControlSteps';
 
 import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
-import SearchSignature from './components/reports/SearchSignature/SearchSignature';
 import ResearcherDashboard from './components/reports/SearchSignature/ResearcherDashboard';
+
 class App extends React.Component {
     render() {
         return (
@@ -41,7 +41,10 @@ class App extends React.Component {
                     </Route>
                     <Route path="/audit">
                         <Audit />
-                    </Route>                    
+                    </Route>                
+                    <Route path="/researcher-dashboard">
+                        <ResearcherDashboard />    
+                    </Route>    
                     <Route path="/SearchSignature">
                         <SearchSignature />
                     </Route> 
