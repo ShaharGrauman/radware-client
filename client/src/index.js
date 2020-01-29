@@ -2,17 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import './index.css';
-
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import EditUserDashbaord from './components/admin/EditUserDashbaord';
-import NewUserDashbaord from './components/admin/NewUserDashbaord';
+import NewUserDashbaord from './components/admin/NewUserDashboard';
 import AdminDashbaord from './components/admin/AdminDashboard';
 import NewRole from './components/admin/NewRole';
 import Audit from './components/admin/Audit';
-import Roles from './components/admin/RoleList';
+import RolesDashboard from './components/admin/RolesDashboard';
 import LogIn from './components/admin/LogIn';
 import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
+import SearchSignature from './components/reports/SearchSignature/SearchSignature';
 
 class App extends React.Component {
     render() {
@@ -22,13 +22,14 @@ class App extends React.Component {
                     <Route path="/edit_user">
                         <EditUserDashbaord />
                     </Route>
-                    <Route path="/new_user">
+                    <Route path="/newuser">
                         <NewUserDashbaord />
                     </Route>
-                    <Route path="/roles">
-                        <Roles />
+                    <Route path="/roleslist">
+                        <RolesDashboard />
                     </Route>
-                    <Route path="/new_role">
+
+                    <Route path="/newrole">
                         <NewRole />
                     </Route>
                     <Route path="/login">
@@ -40,6 +41,9 @@ class App extends React.Component {
                     <Route path="/adminDashboard">
                         <AdminDashbaord />
                     </Route>
+                    <Route path="/SearchSignature">
+                        <SearchSignature />
+                    </Route> 
                     <Route path="/createOrEditSignature">
                         <CreateOrEditSignatureWizard />
                     </Route>

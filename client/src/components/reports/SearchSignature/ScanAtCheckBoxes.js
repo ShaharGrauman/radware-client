@@ -2,6 +2,15 @@ import React, { Component } from "react";
 import SwitchableComponent from "./SwitchableComponent";
 
 export default class ScanAtCheckBoxes extends SwitchableComponent {
+  onChange = e => {
+    // console.log(e.target.value,e.target.checked)
+    if(e.target.checked){
+      this.props.onSelect(e.target.value, 1)
+    }else{
+      this.props.onSelect(e.target.value, "")
+    }
+
+  }
   render() {
     return (
       <>
@@ -14,7 +23,8 @@ export default class ScanAtCheckBoxes extends SwitchableComponent {
                 type="checkbox"
                 id="scan-uri"
                 name="scanner"
-                value="scan uri"
+                value="scanUri"
+                onChange={this.onChange}
                 disabled={this.state.disabled}
               />
               <label htmlFor="scan-uri"> Uri</label>
@@ -25,7 +35,8 @@ export default class ScanAtCheckBoxes extends SwitchableComponent {
                 type="checkbox"
                 id="scan-body"
                 name="scanner"
-                value="scan body"
+                value="scanBody"
+                onChange={this.onChange}
                 disabled={this.state.disabled}
               />
               <label htmlFor="scan-body"> Body</label>
@@ -35,7 +46,8 @@ export default class ScanAtCheckBoxes extends SwitchableComponent {
                 type="checkbox"
                 id="scan-header"
                 name="scanner"
-                value="scan header"
+                value="scanHeader"
+                onChange={this.onChange}
                 disabled={this.state.disabled}
               />
               <label htmlFor="scan-header"> Header</label>
@@ -48,7 +60,8 @@ export default class ScanAtCheckBoxes extends SwitchableComponent {
                 type="checkbox"
                 id="scan-parameters"
                 name="scanner"
-                value="scan paramters"
+                value="scanParamters"
+                onChange={this.onChange}
                 disabled={this.state.disabled}
               />
               <label htmlFor="scan-parameters"> Parameters</label>
@@ -58,7 +71,8 @@ export default class ScanAtCheckBoxes extends SwitchableComponent {
                 type="checkbox"
                 id="scan-filename"
                 name="scanner"
-                value="scan filename"
+                value="scanFilename"
+                onChange={this.onChange}
                 disabled={this.state.disabled}
               />
               <label htmlFor="scan-filename"> Filename</label>
