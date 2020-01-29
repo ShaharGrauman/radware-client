@@ -20,23 +20,39 @@ export default class ResearcherDashboard extends React.Component {
   constructor(props){
     super(props);
     this.state={
-      dataFilter:'All Singatures ',
+      hasNext:true,
+      hasPrev:false,
+      dataFilter:'All Singatures ',  
       data : [
-        {patternId: '', description: ''},
+        { patternID: '', description: ''},
+        
 
-      ],
-      inProgress:true,
-      inTest:true,
+      ] ,
+      // page:1,
+      in_progress:true,
+      in_test:true,
       inQa:true,
-      publish:true,
-      suspend:true,
+      Published:true,
+      suspended:true,
       all:true,
+      currentButton:'all',
+      clickedButton:'',
       errorMsg:''
     }
-
+    this.urlDetails={
+      page: 1 ,
+      size: 20,
+    };
   }
-  loadData= async(filter)=>{
-    
+
+  loadData(filter){
+
+    let requestURL=`http://localhost:3001/signatures/researcher?status=${filter}`;
+
+    Object.keys(this.urlDetails).forEach(key=>requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`))
+    requestURL.slice(1)
+    console.log(requestURL)
+
     const isClicked=this.state[filter]
     if(isClicked&&filter!='all'){
       this.setState({dataFilter:`${filter} Signature`,[filter]:false})
@@ -46,27 +62,39 @@ export default class ResearcherDashboard extends React.Component {
      filter='';
     }
     try{
-      const {data} = await axios.get(`http://localhost:3001/signature/${filter}`, 
-                                        this.state, 
-                                        {withCredentials: true});
-      console.log('loadData',filter,data);
-      this.setState({data: data});
-            
-    
+    axios.get(requestURL).then(res=>{
+      console.log(res.data.signatureData);
+      if(res.data.signatureData.length == 0){
+        this.setState({data: [
+          { patternID: '', description: '' }
+         
+        ]});
+      }else{
+        this.setState({data:res.data.signatureData});
+      }
+      
+      })
     }catch(error){
-        this.setState({
-          errorMsg: 'Inalid email or password'
-        });
-    }
-  }
+            this.setState({
+              errorMsg: 'Error'
+            });
+        }
+
+  } 
+  
   selectButton=(value)=>{
+    // console.log(currentButton,value)
     let {currentButton}=this.state;
-    if (currentButton === value) currentButton = 'all';
+    if (currentButton === value) {
+      currentButton = 'all';
+      this.state.dataFilter="all sig"
+    }
     else currentButton=value;
     this.loadData(value);
     this.setState({currentButton});
   
   }
+
   render() {
 
     return (
@@ -102,35 +130,48 @@ export default class ResearcherDashboard extends React.Component {
             Search
           </button>
         </div>
-        <div className="ml-2 mt-3">{this.state.dataFilter} by Create Date</div>
+        <div className="ml-2 mt-3 mx-">{this.state.dataFilter} by Create Date</div>
         <div className="container ml-0">
           <div className="row">
             <div className="col-7">
             <div className="row">
-              <Table data={this.state.data} />
+              <Table data= {this.state.data}/>
             </div>
             <div className="row mx-auto">
           <div className="col">
             <div className="row">
               <div className="col-2"></div>
-              <div className="col" onClick={()=>console.log('Prev')}>
-                <span className="fas">
+              <div className="col-3 col-sm-3 col-md-2" >
+                {this.state.hasPrev?
+                  <span className="fas" onClick={()=>{
+                    this.urlDetails.page--;
+                    this.loadData(this.state.currentButton);
+                  }}>
                   <FontAwesomeIcon
                     icon={faArrowLeft}
-                    
                   ></FontAwesomeIcon>{" "}
                   Previous
                 </span>
+                : null  
+              }
+
               </div>
               <div className="col "></div>
-              <div className="col" onClick={()=>console.log('Next')}>
-                <span className="fas">
-                  Next{" "}
+              <div className="col-3 col-sm-2">
+              {this.state.hasNext?
+                <span className="fas" onClick={()=>{
+                  this.urlDetails.page++;
+                  this.loadData(this.state.currentButton);
+                }}>
+                  Next
                   <FontAwesomeIcon
                     icon={faArrowRight}
-                    
+                    onClick={this.props.nextOnClick}
                   ></FontAwesomeIcon>
-                </span>
+                </span>          
+            :null
+            }
+
               </div>
               <div className="col-2"></div>
 
@@ -147,7 +188,7 @@ export default class ResearcherDashboard extends React.Component {
                     <button
                       type="button"
                       className={this.state.currentButton==="inProgress"?"outline- mt-3 btn btn-secondary btn-block  text-left":"outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
-                      onClick={()=>this.selectButton("inProgress")}
+                      onClick={()=>this.selectButton("in_progress")}
                     
                     >
                       <i className="fas fa-star"></i> In progress
@@ -155,7 +196,7 @@ export default class ResearcherDashboard extends React.Component {
                     <button
                       type="button"
                       className={this.state.currentButton==="inTest"?"outline- mt-3 btn btn-secondary btn-block  text-left":"outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
-                      onClick={()=>this.selectButton("inTest")}
+                      onClick={()=>this.selectButton("in_test")}
                     
                     >
                       <i className="fas fa-star-half-alt"></i> In test
