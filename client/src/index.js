@@ -35,10 +35,11 @@ class App extends React.Component {
                     <Route path="/login">
                         <LogIn />
                     </Route>
-                    <Route path="/audit">
-                        <Audit />
+                      <Route path="/SearchSignature">
+                        <SearchSignature />
+                       <Audit />
                     </Route>
-                    <Route path="/adminDashboard">
+                    <Route path="/">
                         <AdminDashbaord />
                     </Route>
                     <Route path="/SearchSignature">

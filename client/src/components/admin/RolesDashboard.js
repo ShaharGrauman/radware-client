@@ -79,7 +79,7 @@ export default class RolesDashboard extends React.Component {
                                     data={this.state.roles}
                                     key={this.state.roles.ID}
                                     sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
-                                    className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</Table>
+                                    className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</MyTable>
                             </div>
                         </div>
                     </div>
