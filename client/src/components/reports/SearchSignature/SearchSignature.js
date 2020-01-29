@@ -4,7 +4,7 @@ import { UncontrolledCollapse, Button, CardBody, Card } from 'reactstrap';
 import { InputGroup, InputGroupText, InputGroupAddon, Input } from 'reactstrap';
 
 
-import Table from "./Table";
+import Table from "../../shared/Table";
 
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -34,7 +34,8 @@ export default class SearchSignature extends Component {
         { patternID: "AAA", description: "CCC" },
         { patternID: "AAA", description: "CCC" }
       ],
-      isRefined: false
+      isRefined: false,
+      disableDiv: false
     };
     this.urlDetails={
       page: 1 ,
@@ -45,7 +46,7 @@ export default class SearchSignature extends Component {
     };
     this.switchers = [];
   }
-  onSearch = async e => {
+  onSearch = async => {
     let requestURL='';
 
     Object.keys(this.urlDetails).forEach(key=>requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`))
@@ -53,6 +54,17 @@ export default class SearchSignature extends Component {
     console.log(requestURL)
     // const response = await axios.get('http://localhost:3001/');
     // console.log(response);
+  }
+
+  controlsevrity=()=>{
+    if(this.state.disableDiv)
+        this.setState({
+          disableDiv:false
+        });
+    else
+        this.setState({
+          disableDiv:true
+        });
   }
 
 
@@ -98,6 +110,9 @@ export default class SearchSignature extends Component {
   }
 
   render() {
+    var divStyle = {
+      pointerEvents:this.state.disableDiv?'auto':'none', opacity:this.state.disableDiv?1:0.3
+    };
     return (      //onKeyPress={(e)=>e.key=='Enter'?this.onSearch:null}
       <div className="container-fluid" onKeyPress={this.onEnter}>
         <h1 className="mx-md-3 mt-2 mx-lg-5">Search Signatures</h1>
@@ -139,11 +154,16 @@ export default class SearchSignature extends Component {
                     <AttackTypeSelection connectTo={this.addSwitcher} onSelect={this.urlUpdate}/>
 
                     <div className="py-3">
+                    <div class="custom-control custom-switch">
+                      <input type="checkbox" class="custom-control-input" id="customSwitch2" onClick={this.controlsevrity} ></input>
+                      <label class="custom-control-label" for="customSwitch2"></label>
+                    </div > 
+                      <div style={divStyle}>
                       <SeverityRange slidingRangeV={this.update} connectTo={this.addSwitcher}/>
-                    </div       >
-
-                    <AttackStatusSelection connectTo={this.addSwitcher} onSelect={this.urlUpdate}/>
-                  </div       >
+                      </div>
+                    </div >
+                    <AttackStatusSelection connectTo={this.addSwitcher}/>
+                  </div>
 
                   <div className="col-12 col-sm-6 col-md-5 col-lg-3 mx-md-3 mx-lg-5">
                     <span className="row">
@@ -187,8 +207,11 @@ export default class SearchSignature extends Component {
               </div>
               <div className="col-1 col-lg-0 mx-2 mx-sm-2 mx-md-0"></div>
               <div className="col-3 col-sm-2">
-              {this.state.hasPrev?
-                <span className="fas">
+              {this.state.hasNext?
+                <span className="fas" onClick={()=>{
+                this.urlDetails.page++;
+                this.onSearch();
+                }}>
                   Next{" "}
                   <FontAwesomeIcon
                     icon={faArrowRight}
