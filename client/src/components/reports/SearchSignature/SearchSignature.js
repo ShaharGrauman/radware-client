@@ -46,7 +46,7 @@ export default class SearchSignature extends Component {
     };
     this.switchers = [];
   }
-  onSearch = async e => {
+  onSearch = async => {
     let requestURL='';
 
     Object.keys(this.urlDetails).forEach(key=>requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`))
@@ -207,8 +207,11 @@ export default class SearchSignature extends Component {
               </div>
               <div className="col-1 col-lg-0 mx-2 mx-sm-2 mx-md-0"></div>
               <div className="col-3 col-sm-2">
-              {this.state.hasPrev?
-                <span className="fas">
+              {this.state.hasNext?
+                <span className="fas" onClick={()=>{
+                this.urlDetails.page++;
+                this.onSearch();
+                }}>
                   Next{" "}
                   <FontAwesomeIcon
                     icon={faArrowRight}
