@@ -41,10 +41,6 @@ export default class SearchSignature extends Component {
       page: 1 ,
       size: 20,
     };
-    this.urlDetails={
-      page: 1 ,
-      size: 20,
-    };
     this.data = {
       slider: 2
     };
@@ -52,7 +48,6 @@ export default class SearchSignature extends Component {
   }
   onSearch = async => {
     let requestURL='';
-
     Object.keys(this.urlDetails).forEach(key=>requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`))
     requestURL.slice(1)
     console.log(requestURL)
@@ -166,7 +161,7 @@ export default class SearchSignature extends Component {
                       <SeverityRange slidingRangeV={this.update} connectTo={this.addSwitcher}/>
                       </div>
                     </div >
-                    <AttackStatusSelection connectTo={this.addSwitcher}/>
+                    <AttackStatusSelection connectTo={this.addSwitcher} onSelect={this.urlUpdate}/>
                   </div>
 
                   <div className="col-12 col-sm-6 col-md-5 col-lg-3 mx-md-3 mx-lg-5">
