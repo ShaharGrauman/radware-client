@@ -15,6 +15,9 @@ import LogIn from './components/admin/LogIn';
 import SearchSignature from './components/reports/SearchSignature/SearchSignature';
 // import ControlSteps from '../components/shared/ControlSteps';
 
+import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
+import SearchSignature from './components/reports/SearchSignature/SearchSignature';
+import ResearcherDashboard from './components/reports/SearchSignature/ResearcherDashboard';
 class App extends React.Component {
     render() {
         return (
