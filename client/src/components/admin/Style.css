@@ -1,0 +1,65 @@
+fieldset.scheduler-border {
+    border: 1px groove #ddd !important;
+    padding: 0 1.4em 1.4em 1.4em !important;
+    margin: 0 0 1.5em 0 !important;
+    -webkit-box-shadow:  0px 0px 0px 0px #000;
+            box-shadow:  0px 0px 0px 0px #000;
+}
+
+legend.scheduler-border {
+    width:inherit; /* Or auto */
+    padding:0 10px; /* To give a bit of padding on the left and right */
+    border-bottom:none;
+    margin-bottom:0;
+}
+.center_div{
+    margin: 0 auto;
+    width:80% /* value of your choice which suits your alignment */
+}
+.cover {
+    background: #222 url('https://unsplash.it/1920/1080/?random') center center no-repeat;
+    background-size: cover;
+    height: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.cover-caption {
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+.div-wrapper {
+    height: 200px;
+    margin-top: 40px;
+    border: 2px dashed #ddd;
+    border-radius: 8px;
+}
+ 
+.div-to-align {
+    width: 75%;
+    padding: 40px 20px;
+ 
+    /* .... */
+}
+
+.container{
+    overflow: hidden;
+}
+.tab{
+    float: left;
+}
+.tab-btn{
+    margin: 50px;
+}
+button{
+    display: block;
+    margin-bottom: 20px;
+}
+tr{
+    transition: all .25s ease-in-out;
+}
+tr:hover{background-color: #ddd;}
+
