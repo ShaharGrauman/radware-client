@@ -7,7 +7,7 @@ import axios from 'axios';
 import MyTable from '../shared/MyTable';
 
 
-class App extends React.Component {
+class AdminDashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {

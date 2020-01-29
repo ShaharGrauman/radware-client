@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import MyTable from '../shared/MyTable';
 
-export default class App extends React.Component {
+export default class RolesDashboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
