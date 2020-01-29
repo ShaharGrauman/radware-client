@@ -76,7 +76,7 @@ class App extends React.Component {
           <div className="container ml-0">
             <div className="row">
               <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
-                <Table
+                <MyTable
                   header={this.tableHeaders}
                   data={this.state.users}
                   sortDataByKey={(sortKey) => this.SortByKey(sortKey)}

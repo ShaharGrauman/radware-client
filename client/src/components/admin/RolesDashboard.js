@@ -74,7 +74,7 @@ export default class App extends React.Component {
                     <div className="ml-3 mr-3">
                         <div className="row">
                             <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
-                                <Table
+                                <MyTable
                                     header={this.tableHeaders}
                                     data={this.state.roles}
                                     key={this.state.roles.ID}
