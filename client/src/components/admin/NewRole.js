@@ -1,9 +1,7 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-
-// import DropLeftRight from './DropLeftRight';
-import Table from './TableRole';
-
+import PermissionsTable from './PermissionsTable';
+import { Redirect} from 'react-router-dom'
 export default class NewRole extends React.Component {
 
   constructor(props){
@@ -11,11 +9,17 @@ export default class NewRole extends React.Component {
 
     
    this.state = { 
+    cancelClicked: false,
      form:{ rolename: '', description: ''},
      errors:{}
    };   
   }
-
+  renderRedirect = () => {
+    this.setState({
+      cancelClicked: true
+    });
+}
+  
   roleNameError(input){
     if (input.name === 'rolename') {
         if(input.value.trim()==='') return 'rolename is required';
@@ -80,6 +84,7 @@ handleChange = ({currentTarget : input }) => {
   render() {
     return (
       <>
+        {this.state.cancelClicked && <Redirect to='/roleslist'/>}
         <div className="row">
           <div className="col-10">
             <div className="row ">
@@ -151,12 +156,13 @@ handleChange = ({currentTarget : input }) => {
             </div>
 
         {/* <DropLeftRight  data={this.data}/> */}
-        <div class="d-flex justify-content-center"> <Table/></div>
+        <div className="col-md-8 col-sm-8"> 
+        <PermissionsTable/></div>
              <div className="row">
               <div className="col-2"></div>
               <div className="col-7">
               <div className="form-group">
-              <button type="button" className="btn btn-secondary  btn-block">Cancel</button>
+              <button  onClick={this.onSubmit}  type="button" className="btn btn-secondary btn-block">Save</button>
               </div>
               </div>
               </div>
@@ -166,7 +172,7 @@ handleChange = ({currentTarget : input }) => {
               <div className="col-2"></div> 
               <div className="col-7">
               <div className="form-group">
-              <button  onClick={this.onSubmit}  type="button" className="btn btn-secondary btn-block">Save</button>
+              <button type="button" onClick={() => this.renderRedirect("roles")} className="btn btn-secondary  btn-block">Cancel</button>
                </div>
              </div>
              </div>

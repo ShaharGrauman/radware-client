@@ -46,7 +46,6 @@ export default class LogIn extends React.Component {
           <div class="col"></div>
         </div>
 
-
       </>
     );
   }

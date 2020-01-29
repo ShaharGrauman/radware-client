@@ -1,5 +1,5 @@
 import React from "react";
-import Table from '../Table';
+import Table from '../shared/Table';
 
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Dropdown from 'react-bootstrap/Dropdown'

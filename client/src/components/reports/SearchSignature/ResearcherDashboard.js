@@ -68,7 +68,7 @@ export default class ResearcherDashboard extends React.Component {
         this.setState({data: [
           { patternID: '', description: '' }
          
-        ]});
+        ]});         
       }else{
         this.setState({data:res.data.signatureData});
       }
