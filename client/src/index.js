@@ -13,7 +13,7 @@ import RolesDashboard from './components/admin/RolesDashboard';
 import LogIn from './components/admin/LogIn';
 import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
 import SearchSignature from './components/reports/SearchSignature/SearchSignature';
-
+import ResearcherDashboard from './components/reports/SearchSignature/ResearcherDashboard';
 class App extends React.Component {
     render() {
         return (
@@ -46,6 +46,9 @@ class App extends React.Component {
                     </Route> 
                     <Route path="/createOrEditSignature">
                         <CreateOrEditSignatureWizard />
+                    </Route>
+                    <Route path="/ResearcherDashboard">
+                        < ResearcherDashboard/>
                     </Route>
                 </Switch>
             </BrowserRouter>
