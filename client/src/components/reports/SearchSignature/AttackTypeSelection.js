@@ -8,12 +8,20 @@ export default class AttackTypeSelection extends SwitchableComponent {
     super(props);
   }
 
+  onChange = e => {
+    if(e.target.value>=0){
+      this.props.onSelect('attackType', e.target.selectedOptions[0].text)
+    }else{
+      this.props.onSelect('attackType',"" )
+    }
+  }
+
   render() {
     return (
       <>
         <label htmlFor="attack-type">Attack Type:</label>
-        <select className="custom-select" id="attack-type" disabled={this.state.disabled}>
-          <option defaultValue>Attack</option>
+        <select className="custom-select" id="attack-type" onChange={this.onChange} disabled={this.state.disabled}>
+          <option defaultValue >Attack</option>
           {
             constants.attackType.map((attack,index)=>
               <option value={index}>{attack}</option>
