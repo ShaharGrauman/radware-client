@@ -80,7 +80,7 @@ class AdminDashboard extends React.Component {
                   header={this.tableHeaders}
                   data={this.state.users}
                   sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
-                  className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.users.SeqID}</Table>
+                  className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.users.SeqID}</MyTable>
               </div>
             </div></div>
 
@@ -95,6 +95,6 @@ class AdminDashboard extends React.Component {
 
 }
 
-export default withRouter(App);
+export default withRouter(AdminDashboard);
 
 

@@ -6,9 +6,9 @@ import { faFrown } from '@fortawesome/free-solid-svg-icons';
 
 export default class Severity extends React.Component {
     render() {
-        const icons = [faSmile, faMeh, faFrown]
+        const icons = [faSmile, faMeh, faFrown];
         return (
-            <div className="col-lg-5 col-md-5 col-sm-10 col-xs-8" style={{ marginTop: 50 }}>
+            <div className="col-lg-5 col-md-5 col-sm-10 col-xs-8" style={{ marginTop: 20 }}>
                 <div>
                     <h5>Severity:</h5>
                     <input name="severity" value={this.props.severity} onChange={this.props.onChangeHandler} type="range" min='0' max="100" defaultValue="50" step="50" className="custom-range" style={{ marginTop: 15 }}></input>

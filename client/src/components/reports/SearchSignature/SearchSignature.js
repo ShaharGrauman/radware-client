@@ -41,6 +41,10 @@ export default class SearchSignature extends Component {
       page: 1 ,
       size: 20,
     };
+    this.urlDetails={
+      page: 1 ,
+      size: 20,
+    };
     this.data = {
       slider: 2
     };
