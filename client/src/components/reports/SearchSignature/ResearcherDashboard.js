@@ -114,6 +114,7 @@ export default class ResearcherDashboard extends React.Component {
           >
             Export
           </button>
+          <Link to="/SearchSignature">Search</Link>
           <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a className="dropdown-item" href="#">
               1
@@ -126,9 +127,6 @@ export default class ResearcherDashboard extends React.Component {
             </a>
           </div>
 
-          <button type="button" className="btn btn-secondary">
-            Search
-          </button>
         </div>
         <div className="ml-2 mt-3 mx-">{this.state.dataFilter} by Create Date</div>
         <div className="container ml-0">

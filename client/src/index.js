@@ -35,13 +35,6 @@ class App extends React.Component {
                     <Route path="/login">
                         <LogIn />
                     </Route>
-                      <Route path="/SearchSignature">
-                        <SearchSignature />
-                       <Audit />
-                    </Route>
-                    <Route path="/">
-                        <AdminDashbaord />
-                    </Route>
                     <Route path="/SearchSignature">
                         <SearchSignature />
                     </Route> 
@@ -50,6 +43,9 @@ class App extends React.Component {
                     </Route>
                     <Route path="/ResearcherDashboard">
                         < ResearcherDashboard/>
+                    </Route>
+                    <Route path="/">
+                        <AdminDashbaord />
                     </Route>
                 </Switch>
             </BrowserRouter>
