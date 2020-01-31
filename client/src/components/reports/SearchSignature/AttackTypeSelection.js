@@ -21,7 +21,7 @@ export default class AttackTypeSelection extends SwitchableComponent {
       <>
         <label htmlFor="attack-type">Attack Type:</label>
         <select className="custom-select" id="attack-type" onChange={this.onChange} disabled={this.state.disabled}>
-          <option defaultValue >Attack</option>
+          <option defaultValue >All</option>
           {
             constants.attackType.map((attack,index)=>
               <option value={index}>{attack}</option>
