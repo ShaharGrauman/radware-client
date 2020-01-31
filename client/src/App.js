@@ -4,7 +4,7 @@ import ResearcherDashboard from './components/reports/SearchSignature/Researcher
 import SearchSignature from './components/reports/SearchSignature/SearchSignature'
 function App() {
   return (
-    <SearchSignature/>
+    <ResearcherDashboard/>
   );
 }
 
