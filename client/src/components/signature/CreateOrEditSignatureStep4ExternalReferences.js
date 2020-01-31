@@ -9,38 +9,10 @@ export default class CreateOrEditSignatureStep4ExternalReferences extends React.
   constructor(props) {
     super(props);
     this.state = {
-      webServers: this.props.signatureData.web_servers.map(ws => {
-        return ({ id: ws.id, webServer: ws.webserver, actions: [<Actions value={ws} excludeFromArrayByValue={this.excludeFromArrayByValue} />] });
-      })
+      increment_index: 0
     };
-    this.dataHeader = ['Reference', 'Type', 'Actions'];
     this.webServerHeader = ['Web Server', 'Actions'];
-    this.data = [
-      {
-        reference: 'http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=2000-0001',
-        type: 'CveId',
-        actions: [<Actions />]
-      },
-      {
-        reference: 'http://www.securityfocus.com/bid/21443',
-        type: 'BugTraqId',
-        actions: [<Actions />]
-      },
-      {
-        reference: 'http://www.cve.mitre.org/cgi-bin/cvename.cgi?name=2000-0001',
-        type: '',
-        actions: [<Actions />]
-      },
-      {
-        reference: 'http://www.securityfocus.com/bid/21443',
-        type: '',
-        actions: [<Actions />]
-      }
-    ];
-  }
-
-  excludeFromArrayByValue = (value) => {
-    this.setState({ webServers: this.state.webServers.filter(item => item.id !== value.id) || [{}] });
+    this.dataHeader = ['Reference', 'Type', 'Actions'];
   }
 
   render() {
@@ -50,17 +22,20 @@ export default class CreateOrEditSignatureStep4ExternalReferences extends React.
         <div className="row ml-2 input-group">
           <div className="input-group-append col-md-4 mb-2 col-xs-4">
             <FontAwesomeIcon className="mt-2 fa-lg mr-2" icon={faLink}></FontAwesomeIcon>
-            <input className="form-control" placeholder="References" type="text" id="referenceId" />
+            <input className="form-control" placeholder="Reference" type="text" id="referenceId" />
           </div>
           <div className="input-group col-md-5">
             <div className="input-group mb-3">
-              <label className="ml-5 mb-3 mt-1"><strong> Type </strong></label>
+              <label className="ml-5 mb-3 mt-1"><strong>Type</strong></label>
               <select id="inputType" className="form-control ml-3">
                 <option selected>CveId</option>
-                <option>...</option>
+                <option>bugtraqid</option>
               </select>
               <div>
-                <button className="btn btn-secondary ml-3">Add</button>
+                <button type="button" className="btn btn-secondary ml-3" onClick={() => {
+                  this.setState({ increment_index: this.state.increment_index + 1 });
+                  this.props.addToStateArray('external_references', { id: `NEW_${this.state.increment_index}`, reference: document.querySelector('#referenceId').value, type: document.querySelector('#inputType').value })
+                }}>Add</button>
               </div>
             </div>
           </div>
@@ -68,25 +43,32 @@ export default class CreateOrEditSignatureStep4ExternalReferences extends React.
         </div>
         <div className="row mt-3">
           <div className="col col-sm-10">
-            <Table headers={this.dataHeader} data={this.data} />
+            <Table headers={this.dataHeader} data={this.props.signatureData.external_references.map(er => {
+              return ({ reference: er.reference, type: er.type, actions: [<Actions id={er.id} stateName="external_references" excludeFromStateArrayById={this.props.excludeFromStateArrayById} />] });
+            })} />
           </div>
         </div>
         <hr />
         <h5 className="row ml-3 mt-3">Web servers</h5>
         <div className="row">
-        <div id="btns" className="col md-3">
-                <div className="input-group sm-3">
-                  <input type="text" className="form-control" name="Web Name" placeholder="Web Server"></input>
-                  <div className="input-group-append">
-                    <button type="button" className="btn btn-secondary">Add</button>
-                  </div>
+          <div id="btns" className="col md-3">
+            <div className="input-group sm-3">
+              <input type="text" className="form-control" id="webServerName" placeholder="Web Server"></input>
+              <div className="input-group-append">
+                <button type="button" className="btn btn-secondary" onClick={() => {
+                  this.setState({ increment_index: this.state.increment_index + 1 });
+                  this.props.addToStateArray('web_servers', { id: `NEW_${this.state.increment_index}`, webserver: document.querySelector('#webServerName').value })
+                }}>Add</button>
+              </div>
             </div>
-        </div>
-        <div className="col md-9"></div>
+          </div>
+          <div className="col md-9"></div>
         </div>
         <div className="row mt-3">
           <div className="col-4 col-md-4 col-sm-6">
-            <Table headers={this.webServerHeader} data={this.state.webServers} />
+            <Table headers={this.webServerHeader} data={this.props.signatureData.web_servers.map(ws => {
+              return ({ webServer: ws.webserver, actions: [<Actions id={ws.id} stateName="web_servers" excludeFromStateArrayById={this.props.excludeFromStateArrayById} />] });
+            })} />
           </div>
         </div>
       </div>

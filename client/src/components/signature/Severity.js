@@ -1,12 +1,12 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSmile } from '@fortawesome/free-solid-svg-icons';
-import { faMeh } from '@fortawesome/free-solid-svg-icons';
-import { faFrown } from '@fortawesome/free-solid-svg-icons';
+import { faTemperatureLow } from '@fortawesome/free-solid-svg-icons';
+import { faThermometerHalf } from '@fortawesome/free-solid-svg-icons';
+import { faTemperatureHigh } from '@fortawesome/free-solid-svg-icons';
 
 export default class Severity extends React.Component {
     render() {
-        const icons = [faSmile, faMeh, faFrown];
+        const icons = [faTemperatureLow, faThermometerHalf, faTemperatureHigh];
         return (
             <div className="col-lg-5 col-md-5 col-sm-10 col-xs-8" style={{ marginTop: 20 }}>
                 <div>
