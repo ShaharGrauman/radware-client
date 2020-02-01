@@ -20,11 +20,14 @@ export default class CreateOrEditSignatureStep1Details extends React.Component {
               <small>The customer will identity the attack by this name</small>
               <div id="btns">
                 <div className="input-group sm-3">
-                  <input type="text" className="form-control" name="attackName" placeholder="Attack name" value={this.props.signatureData.attackName} onChange={this.props.onChangeHandler}></input>
+                  <input type="text" className="form-control" name="attackName" placeholder="Attack name" value={this.props.signatureData.attackName} onChange={this.props.onChangeHandler} onBlur={this.props.onBlur}></input>
                   <div className="input-group-append">
                     <button type="button" className="btn btn-secondary">Search</button>
                   </div>
                 </div>
+                    {
+                      this.props.signatureErrors.attackName.map(error => <div className="text-danger">{error}</div>)
+                    }
               </div>
             </div>
             <Status status={this.props.signatureData.status} onChangeHandler={this.props.onChangeHandler} />

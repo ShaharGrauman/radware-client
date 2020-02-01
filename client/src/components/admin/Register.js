@@ -1,6 +1,6 @@
 import React from 'react';
 import Table from './RolesDashboard';
-import RolesTable from './RolesTable';
+// import RolesTable from './RolesTable';
 import Style from './Style.css';
 import SelectRole from './SelectRole';
 import MyTable from '../shared/MyTable';

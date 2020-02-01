@@ -29,7 +29,7 @@ class App extends React.Component {
                     <Route path="/newuser">
                         <NewUserDashbaord />
                     </Route>
-                    <Route path="/roleslist">
+                    <Route path="/admin/roles">
                         <RolesDashboard />
                     </Route>
 
@@ -41,7 +41,14 @@ class App extends React.Component {
                     </Route>
                     <Route path="/audit">
                         <Audit />
-                    </Route>                
+                    </Route>
+                    <Route path="/users">
+                        <AdminDashbaord />
+                    </Route>
+                    {/* <Route path="/SearchSignature">
+                        <SearchSignature />
+                    </Route> 
+                   */}
                     <Route path="/researcher-dashboard">
                         <ResearcherDashboard />    
                     </Route>    
