@@ -45,14 +45,21 @@ export default class ResearcherDashboard extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.loadData();
+  }
+
   loadData(filter){
-
-    let requestURL=`http://localhost:3001/signatures/researcher?status=${filter}`;
-
-    Object.keys(this.urlDetails).forEach(key=>requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`))
-    requestURL.slice(1)
+    let requestURL;
+    if (this.state.currentButton == 'all'){
+      requestURL=`http://localhost:3001/signature/researcher`;
+    }else{
+      requestURL=`http://localhost:3001/signature/researcher?status=${filter}`;
+      Object.keys(this.urlDetails).forEach(key=>requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`))
+      requestURL.slice(1)
+    }
+   
     console.log(requestURL)
-
     const isClicked=this.state[filter]
     if(isClicked&&filter!='all'){
       this.setState({dataFilter:`${filter} Signature`,[filter]:false})
@@ -235,3 +242,4 @@ export default class ResearcherDashboard extends React.Component {
     );
   }
 }
+

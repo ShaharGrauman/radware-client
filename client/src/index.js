@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 
 import './index.css';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-
 import EditUserDashbaord from './components/admin/EditUserDashbaord';
 import NewUserDashbaord from './components/admin/NewUserDashboard';
 import AdminDashbaord from './components/admin/AdminDashboard';
@@ -17,6 +16,8 @@ import SearchSignature from './components/reports/SearchSignature/SearchSignatur
 
 import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
 import ResearcherDashboard from './components/reports/SearchSignature/ResearcherDashboard';
+import QADashboard from './components/reports/QADashboard/QADashboard';
+
 
 class App extends React.Component {
     render() {
@@ -54,6 +55,9 @@ class App extends React.Component {
                     </Route>    
                     <Route path="/SearchSignature">
                         <SearchSignature />
+                    </Route> 
+                    <Route path="/qaDashboard">
+                        <QADashboard />
                     </Route> 
                     <Route path="/">
                         <AdminDashbaord />
