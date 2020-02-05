@@ -17,6 +17,7 @@ import SearchSignature from './components/reports/SearchSignature/SearchSignatur
 
 import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
 import ResearcherDashboard from './components/reports/SearchSignature/ResearcherDashboard';
+import Export from './components/reports/SearchSignature/Export';
 
 class App extends React.Component {
     render() {
@@ -47,6 +48,9 @@ class App extends React.Component {
                     </Route>    
                     <Route path="/SearchSignature">
                         <SearchSignature />
+                    </Route> 
+                    <Route path="/Export">
+                        <Export />
                     </Route> 
                     <Route path="/">
                         <AdminDashbaord />
