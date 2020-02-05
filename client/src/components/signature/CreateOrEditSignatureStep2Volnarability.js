@@ -2,6 +2,7 @@ import React from "react";
 
 import Table from '../shared/Table'
 import Actions from '../shared/Actions';
+import Scanat from "./Scanat";
 
 export default class CreateOrEditSignatureStep2Volnarability extends React.Component {
     constructor(props) {
@@ -9,22 +10,16 @@ export default class CreateOrEditSignatureStep2Volnarability extends React.Compo
         this.state = {
             increment_index: 0
         }
-        this.dataHeader = ['Vuln text', 'Order', 'Actions'];
-        this.parametersHeaders = ['Param Name	', 'Actions'];
-        this.data = [
-            { vulnText: 'Giacomo Guilizzoni', order: '^v', actions: [<Actions />] },
-            { vulnText: 'Marco Botton', order: '^v', actions: [<Actions />] },
-            { vulnText: 'Mariah Maclachlan', order: '^v', actions: [<Actions />] },
-        ];
+        this.extendedTextHeaders = ['Description', 'Order', 'Actions'];
     }
 
     simpleOrExtendedTextClick = event => {
         if (this.state.showRegularInStep2) {
-            this.props.setLeftAndRightIndexes(0, 0);
+            this.props.setLeftAndRightIndexes('0', '0');
         } else if (event.target.value === 'SimpleText') {
-            this.props.setLeftAndRightIndexes(1, 2);
+            this.props.setLeftAndRightIndexes('1', '2');
         } else {
-            this.props.setLeftAndRightIndexes(2, 3);
+            this.props.setLeftAndRightIndexes('2', '3');
         }
         this.props.onChangeHandler(event);
     }
@@ -41,17 +36,16 @@ export default class CreateOrEditSignatureStep2Volnarability extends React.Compo
                             <input type="radio" name="simpleOrExtendedText" id="rbSimpleText" value="SimpleText" checked={this.props.signatureData.simpleOrExtendedText === 'SimpleText'} onClick={this.simpleOrExtendedTextClick} />
                             <label className="form-check-label" for="rbSimpleText">Simple text:</label>
                         </div>
-                        <input type="text" className="mt-2 form-control" placeholder="Add text"></input>
+                        <input type="text" className="mt-2 form-control" name="txtSimpleText" value={this.props.signatureData.txtSimpleText} onChange={this.props.onChangeHandler} placeholder="Add text"></input>
                         <div className="form-check mt-2">
-                            <input className="form-check-input" type="checkbox" id="cbToggleshowRegular" onClick={this.props.toggleshowRegularInStep2} />
+                            <input className="form-check-input" type="checkbox" id="cbToggleshowRegular" checked={this.props.signatureData.showRegularInStep2} onClick={this.props.toggleshowRegularInStep2} />
                             <label className="form-check-label" for="cbToggleshowRegular">Regular expression</label>
                         </div>
                         {
                             this.props.signatureData.showRegularInStep2 ?
                                 <div className="mt-3">
-                                    <label>Test text: </label>
-                                    <textarea rows="7" type="text" className="form-control" id="testText" placeholder="Add text">
-                                    </textarea>
+                                    <label>Test text:</label>
+                                    <textarea rows="7" type="text" className="form-control" name="txtTestText" value={this.props.signatureData.txtTestText} onChange={this.props.onChangeHandler} id="testText" placeholder="Add text"></textarea>
                                     <div className="mt-2 mb-2">
                                         <button className="btn btn-block btn-secondary">Test</button>
                                     </div>
@@ -67,45 +61,24 @@ export default class CreateOrEditSignatureStep2Volnarability extends React.Compo
                         </div>
                         <div>
                             <div className="input-group sm-3 mb-2 mt-2">
-                                <input type="text" className="form-control" name="Add text" placeholder="Add text"></input>
+                                <input type="text" className="form-control" name="txtExtendedText" value={this.props.signatureData.txtExtendedText} onChange={this.props.onChangeHandler} id="txtAddDataExtra" placeholder="Add text"></input>
                                 <div className="input-group-append">
-                                    <button type="button" className="btn btn-secondary">Add text</button>
+                                    <button type="button" className="btn btn-secondary" onClick={() => {
+                                    this.setState({ increment_index: this.state.increment_index + 1 });
+                                    this.props.addToStateArray('vuln_data_extras', { id: `NEW_${this.state.increment_index}`, description: document.querySelector('#txtAddDataExtra').value })
+                                }}>Add parameter</button>
                                 </div>
                             </div>
                         </div>
-                        <Table headers={this.dataHeader} data={this.data} />
+                        <Table headers={this.extendedTextHeaders} data={this.props.signatureData.vuln_data_extras.map(data => {
+                            return ({ parameter: data.description, order: '^v', actions: [<Actions id={data.id} stateName="vuln_data_extras" excludeFromStateArrayById={this.props.excludeFromStateArrayById} />] });
+                        })} />
                     </div>
                 </div>
                 <hr />
                 <div className="row ml-3">
                     <div className="col-md-6">
-                        <h6>Scan at : </h6>
-                        <div className="row container">
-                            <div className="form-check form-check-inline col">
-                                <input name="scanAtScanURl" id="inlineCheckbox1" checked={this.props.signatureData.scanAtScanURl} onChange={this.props.onChangeHandler} className="form-check-input" type="checkbox" />
-                                <label className="form-check-label" for="inlineCheckbox1">Scan URl</label>
-                            </div>
-                            <div className="form-check form-check-inline col">
-                                <input name="scanAtScanParameters" id="inlineCheckbox2" checked={this.props.signatureData.scanAtScanParameters} onChange={this.props.onChangeHandler} className="form-check-input" type="checkbox" />
-                                <label className="form-check-label" for="inlineCheckbox2">Scan Parameters</label>
-                            </div>
-                        </div>
-                        <div className="row container">
-                            <div className="form-check form-check-inline col">
-                                <input name="scanAtScanBody" id="inlineCheckbox3" checked={this.props.signatureData.scanAtScanBody} onChange={this.props.onChangeHandler} className="form-check-input" type="checkbox" />
-                                <label className="form-check-label" for="inlineCheckbox3">Scan Body</label>
-                            </div>
-                            <div className="form-check form-check-inline col">
-                                <input name="scanAtScanFilename" id="inlineCheckbox4" checked={this.props.signatureData.scanAtScanFilename} onChange={this.props.onChangeHandler} className="form-check-input" type="checkbox" />
-                                <label className="form-check-label" onChange={this.props.onChangeHandler} for="inlineCheckbox4">Scan Filename</label>
-                            </div>
-                        </div>
-                        <div className="row container">
-                            <div className="form-check form-check-inline">
-                                <input name="scanAtScanHeaders" id="inlineCheckbox5" checked={this.props.signatureData.scanAtScanHeaders} onChange={this.props.onChangeHandler} className="form-check-input" type="checkbox" />
-                                <label className="form-check-label" for="inlineCheckbox5">Scan Headers</label>
-                            </div>
-                        </div>
+                        <Scanat signatureData={this.props.signatureData} onChangeHandler={this.props.onChangeHandler} disabled={false} />
                     </div>
                     <div className="col-md-6">
                         <div className="input-group sm-3 mb-2" >
@@ -141,8 +114,8 @@ export default class CreateOrEditSignatureStep2Volnarability extends React.Compo
                     </div>
                     <div className="checkbox">
                         <label>
-                            <input type="checkbox" name="setEndBreak" checked={this.props.signatureData.setEndBreak} onChange={this.props.onChangeHandler}></input> Set End Break
-                                </label>
+                            <input type="checkbox" name="setEndBreak" checked={this.props.signatureData.setEndBreak} onChange={this.props.onChangeHandler} />Set End Break
+                        </label>
                         <div className="radio ml-4">
                             <label className="form-check form-check-inline">
                                 <input type="radio" id="filename2" name="end_break" value="setEndBreakByFileName" checked={this.props.signatureData.end_break === 'setEndBreakByFileName'} onChange={this.props.onChangeHandler} disabled={!this.props.signatureData.setEndBreak}></input>

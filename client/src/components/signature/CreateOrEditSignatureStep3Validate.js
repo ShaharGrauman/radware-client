@@ -10,6 +10,7 @@ export default class CreateOrEditSignatureStep3Validate extends React.Component 
             get: 'Access-Control-Request-Headers: content-type Access-Control-Request-Method: GET',
             post: 'Access-Control-Request-Headers: content-type Access-Control-Request-Method: POST'
         }
+        this.extendedTextHeaders = ['Description', 'Order', 'Actions'];
     }
     
     useGetClick = () => {
@@ -20,42 +21,34 @@ export default class CreateOrEditSignatureStep3Validate extends React.Component 
     }
 
     render() {
-        let tableData = [
-            { Vuln_text: "Giacomo Guilizzoni" },
-            { Vuln_text: "Marco Botton" },
-            { Vuln_text: "Mariah Maclachlan" }
-        ];
         return (
             <div>
                 <div className="container-fluid row">
                     <div className="col-md-6">
                         <h5 className="display-5"> 1.Review the vulrability data</h5>
                         <div className="form-check">
-                            <input className="form-check-input" type="radio" name="simple_text" id="exampleRadios1" value="option1" checked={this.props.signatureData.simple_text}></input>
-                            <label className="form-check-label" for="exampleRadios1">
-                                Simple text
-                                </label>
+                            <input type="radio" name="simpleOrExtendedText" id="rbSimpleText" value="SimpleText" checked={this.props.signatureData.simpleOrExtendedText === 'SimpleText'} disabled="true" onClick={this.simpleOrExtendedTextClick} />
+                            <label className="form-check-label" for="rbSimpleText">Simple text</label>
                             <input type="text" class="form-control" id="text"></input>
                             <div className="form-group form-check">
-                                <input type="checkbox" class="form-check-input" id="exampleCheck1"></input>
-                                <label className="form-check-label" for="exampleCheck1">Regular expression</label>
+                                <input className="form-check-input" type="checkbox" id="cbToggleshowRegular" checked={this.props.signatureData.showRegularInStep2} onClick={this.props.toggleshowRegularInStep2} disabled="true" />
+                                <label className="form-check-label" for="cbToggleshowRegular">Regular expression</label>
                             </div>
                         </div>
                         <div className="row container">
                             <div className="form-check col">
-                                <input className="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2"></input>
-                                <label className="form-check-label" for="exampleRadios2">
-                                    Extended text
-                                </label>
+                                <input type="radio" name="simpleOrExtendedText" id="rbExtendedText" value="ExtendedText" checked={this.props.signatureData.simpleOrExtendedText === 'ExtendedText'} disabled="true" onClick={this.simpleOrExtendedTextClick} />
+                                <label className="form-check-label" for="rbExtendedText">Extended text</label>
                             </div>
                             <div className="custom-control custom-switch col">
-                                <input type="checkbox" class="custom-control-input" id="customSwitch1"></input>
-                                <label className="custom-control-label" for="customSwitch1">Keep order</label>
+                                <input name="keep_order" checked={this.props.signatureData.keep_order} onChange={this.props.onChangeHandler} disabled="true" type="checkbox" className="custom-control-input" id="toggle"></input>
+                                <label className="custom-control-label" for="toggle">Keep order</label>
                             </div>
                         </div>
-                        <Table data={tableData} />
-                        <hr></hr>
-                        <Scanat />
+                        <Table headers={this.extendedTextHeaders} data={this.props.signatureData.vuln_data_extras.map(data => { return ({ parameter: data.description }); })} />
+                        <hr />
+                        <Scanat signatureData={this.props.signatureData} disabled={true} />
+                        <hr />
                         <div className="checkbox">
                             <label>
                                 <input type="checkbox" name="setStartBreak" disabled checked={this.props.signatureData.setStartBreak}></input> Set Start Break
