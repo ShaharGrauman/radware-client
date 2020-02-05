@@ -17,6 +17,7 @@ import SearchSignature from './components/reports/SearchSignature/SearchSignatur
 
 import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
 import ResearcherDashboard from './components/reports/SearchSignature/ResearcherDashboard';
+import ApplicationBar from './components/shared/ApplicationBar';
 
 class App extends React.Component {
     render() {
@@ -32,7 +33,6 @@ class App extends React.Component {
                     <Route path="/admin/roles">
                         <RolesDashboard />
                     </Route>
-
                     <Route path="/newrole">
                         <NewRole />
                     </Route>
@@ -45,18 +45,17 @@ class App extends React.Component {
                     <Route path="/users">
                         <AdminDashbaord />
                     </Route>
-                    {/* <Route path="/SearchSignature">
-                        <SearchSignature />
-                    </Route> 
-                   */}
-                    <Route path="/researcher-dashboard">
-                        <ResearcherDashboard />    
-                    </Route>    
                     <Route path="/SearchSignature">
                         <SearchSignature />
                     </Route> 
+                    <Route path="/researcher-dashboard">
+                        <ResearcherDashboard />    
+                    </Route>    
+                    <Route path="/createOrEditSignature">
+                        <CreateOrEditSignatureWizard />
+                    </Route> 
                     <Route path="/">
-                        <AdminDashbaord />
+                        <ApplicationBar />
                     </Route>
                 </Switch>
             </BrowserRouter>

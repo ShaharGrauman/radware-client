@@ -4,32 +4,33 @@ export default class Scanat extends React.Component {
   render() {
     return (
       <>
-        <h6>Scan at:</h6>
-        <div className="form-check">
-          <input className="form-check-input" type="checkbox" value="" id="defaultCheck1"></input>
-          <label className="form-check-label" for="defaultCheck1">URI</label>
-        </div>
+        <h6>Scan at : </h6>
         <div className="row container">
           <div className="form-check form-check-inline col">
-            <input className="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"></input>
-            <label className="form-check-label" for="inlineCheckbox1">Headers</label>
+            <input name="scanAtScanURl" id="inlineCheckbox1" checked={this.props.signatureData.scanAtScanURl} onChange={this.props.onChangeHandler} className="form-check-input" disabled={this.props.disabled} type="checkbox" />
+            <label className="form-check-label" for="inlineCheckbox1">Scan URl</label>
           </div>
           <div className="form-check form-check-inline col">
-            <input className="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2"></input>
-            <label className="form-check-label" for="inlineCheckbox2">Body</label>
+            <input name="scanAtScanParameters" id="inlineCheckbox2" checked={this.props.signatureData.scanAtScanParameters} onChange={this.props.onChangeHandler} className="form-check-input" disabled={this.props.disabled} type="checkbox" />
+            <label className="form-check-label" for="inlineCheckbox2">Scan Parameters</label>
           </div>
         </div>
         <div className="row container">
           <div className="form-check form-check-inline col">
-            <input className="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1"></input>
-            <label className="form-check-label" for="inlineCheckbox1">Parameters</label>
+            <input name="scanAtScanBody" id="inlineCheckbox3" checked={this.props.signatureData.scanAtScanBody} onChange={this.props.onChangeHandler} className="form-check-input" disabled={this.props.disabled} type="checkbox" />
+            <label className="form-check-label" for="inlineCheckbox3">Scan Body</label>
           </div>
           <div className="form-check form-check-inline col">
-            <input className="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2"></input>
-            <label className="form-check-label" for="inlineCheckbox2">FileName</label>
+            <input name="scanAtScanFilename" id="inlineCheckbox4" checked={this.props.signatureData.scanAtScanFilename} onChange={this.props.onChangeHandler} className="form-check-input" disabled={this.props.disabled} type="checkbox" />
+            <label className="form-check-label" onChange={this.props.onChangeHandler} for="inlineCheckbox4">Scan Filename</label>
           </div>
         </div>
-        <hr />
+        <div className="row container">
+          <div className="form-check form-check-inline">
+            <input name="scanAtScanHeaders" id="inlineCheckbox5" checked={this.props.signatureData.scanAtScanHeaders} onChange={this.props.onChangeHandler} className="form-check-input" disabled={this.props.disabled} type="checkbox" />
+            <label className="form-check-label" for="inlineCheckbox5">Scan Headers</label>
+          </div>
+        </div>
       </>
     )
   }
