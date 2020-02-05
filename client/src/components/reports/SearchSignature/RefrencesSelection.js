@@ -8,7 +8,7 @@ export default class RefrencesSelection extends SwitchableComponent {
   onChange = e => {
     if(e.target.id=="cveid"){
       if(e.target.value>=0){
-        this.props.onSelect('refrencesSelection', e.target.selectedOptions[0].text)
+        this.props.onSelect('refrencesSelection', e.target.value)
       }else{
         this.props.onSelect('refrencesSelection',"" )
       }
@@ -25,13 +25,10 @@ export default class RefrencesSelection extends SwitchableComponent {
             <select className="custom-select" id="cveid" onChange={this.onChange} disabled={this.state.disabled}>
               <option defaultValue>CveId</option>
               {
-               constants.reference.map((reference,index)=>
-                 <option value={index}>{reference}</option>
+               constants.reference.map(reference=>
+                 <option value={reference.id}>{reference.name}</option>
                )
               }
-              {/* <option value="1">One</option>
-              <option value="2">Two</option>
-              <option value="3">Three</option> */}
             </select>
           </span>
         </span>
