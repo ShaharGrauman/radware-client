@@ -24,7 +24,7 @@ class AdminDashboard extends React.Component {
         newUserClicked: true
       });
     }
-    if (page === "roleslist") {
+    if (page === "/admin/roles") {
       this.setState({
         rolesManagementClicked: true
       });
@@ -43,11 +43,15 @@ class AdminDashboard extends React.Component {
   }
 
   componentDidMount() {
-    axios.get(`http://localhost:3001/users`, (req, res) => res.json()
+    axios.get(`http://localhost:3000/users`, (req, res) => res.json()
     ).then(res => {
-        const data = res.data;
-          this.setState({ orgUsers: data, users: data });
-        });
+        const users = res.data.map(user => ({
+          ...user, 
+          roles: user.roles.map(role => role.description).join(',')
+        }));
+
+        this.setState({ orgUsers: users, users: users });
+      });
   }
   
   tableHeaders = ["SeqID", "Username", "Phone", "Roles", "Status"];
@@ -58,7 +62,7 @@ class AdminDashboard extends React.Component {
     return (
       <>
         <div>
-          {this.state.rolesManagementClicked && <Redirect to='/roleslist' />}
+          {this.state.rolesManagementClicked && <Redirect to='/admin/roles' />}
           {this.state.newUserClicked && <Redirect to='/newuser' />}
           <div className="ml-3 mb-3">
             <h2>Admin Dashboard</h2>
@@ -69,7 +73,7 @@ class AdminDashboard extends React.Component {
               onClick={() => this.renderRedirect("newuser")}
             >New user</button>
             <button type="button" className="btn btn-secondary"
-              onClick={() => this.renderRedirect("roleslist")}
+              onClick={() => this.renderRedirect('/admin/roles')}
             >Roles Managment</button>
           </div>
 
@@ -83,8 +87,6 @@ class AdminDashboard extends React.Component {
                   className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.users.SeqID}</MyTable>
               </div>
             </div></div>
-
-
         </div>
       </>
 

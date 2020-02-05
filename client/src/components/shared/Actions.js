@@ -10,7 +10,7 @@ export default class NewSignatureOrEditSignature extends React.Component {
         <button type="button" title="Edit" class="btn btn-outline float-left " >
           <FontAwesomeIcon className="fa-lg" icon={faEdit} style={{ color: 'blue' }}></FontAwesomeIcon>
         </button>
-        <button type="button" title="Delete" class="btn btn-outline float-right" onClick={() => this.props.excludeFromArrayByValue(this.props.value)} >
+        <button type="button" title="Delete" class="btn btn-outline float-right" onClick={() => this.props.excludeFromStateArrayById(this.props.stateName, this.props.id)} >
           <FontAwesomeIcon className="fa-lg" icon={faTrash} style={{ color: 'red' }}></FontAwesomeIcon>
         </button>
       </>
