@@ -14,6 +14,7 @@ import LogIn from './components/admin/LogIn';
 // import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
 import SearchSignature from './components/reports/SearchSignature/SearchSignature';
 // import ControlSteps from '../components/shared/ControlSteps';
+import QaDashboard from './components/reports/QADashboard/QADashboard'
 
 import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
 import ResearcherDashboard from './components/reports/SearchSignature/ResearcherDashboard';
@@ -53,6 +54,9 @@ class App extends React.Component {
                     </Route>    
                     <Route path="/createOrEditSignature">
                         <CreateOrEditSignatureWizard />
+                    </Route> 
+                    <Route path="/QaDashboard">
+                        <QaDashboard />
                     </Route> 
                     <Route path="/">
                         <ApplicationBar />
