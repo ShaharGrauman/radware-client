@@ -150,6 +150,9 @@ export default class ResearcherDashboard extends React.Component {
                 {this.state.hasPrev?
                   <span className="fas" onClick={()=>{
                     this.urlDetails.page--;
+                    if(this.urlDetails.page == 1){
+                      this.state.hasPrev = false;
+                    }
                     this.loadData(this.state.currentButton);
                   }}>
                   <FontAwesomeIcon
@@ -167,6 +170,7 @@ export default class ResearcherDashboard extends React.Component {
                 <span className="fas" onClick={()=>{
                   this.urlDetails.page++;
                   this.loadData(this.state.currentButton);
+                  this.state.hasPrev = true;
                 }}>
                   Next
                   <FontAwesomeIcon

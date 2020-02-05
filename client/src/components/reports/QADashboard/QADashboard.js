@@ -13,6 +13,20 @@ export default class QADashboard extends React.Component {
     constructor(props) {
         super(props);
         this.state={
+            signature : {
+                
+                        seq_id:1, 
+                        patternID: "AAA", 
+                        URI: true,
+                        headers: true,
+                        body:true, 
+                        parameters: true, 
+                        file: false,
+                        manual: "passed",
+                        performance: "init", 
+                        automation: 'init'
+                    
+            },
             data : [
                 // {
                 //     seq_id:1, 
@@ -126,8 +140,27 @@ export default class QADashboard extends React.Component {
             }
       } 
 
+      handleChange = event => {
+        this.setState({ signature: event.target.value });
+        console.log(this.state.signature);
+      }
+    
+    //   handleSubmit = event => {
+    //     event.preventDefault();
+    
+    //     const signature = this.state.sig; 
+
+
+    
+    //     axios.put(`http://localhost:3001/qaDashboard/${id}`, this.state.data[])
+    //       .then(res => {
+    //         console.log(res);
+    //         console.log(res.data);
+    //       })
+    //   }
+
       updateData(id){
-        let requestURL=`http://localhost:3001/signatures/${id}`;
+        let requestURL=`http://localhost:3001/qaDashboard/${id}`;
         try{
             axios.put(requestURL, 
                 {
