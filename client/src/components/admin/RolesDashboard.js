@@ -41,13 +41,28 @@ export default class RolesDashboard extends React.Component {
     }
 
 
+    // componentDidMount() {
+    //     axios.get(`http://localhost:3000/admin/roles`, (req, res) => res.json()
+    //     ).then(res => {
+    //         const data = res.data;
+    //           this.setState({ roles: data, orgRoles: data });
+    //         });
+    //     }
     componentDidMount() {
-        axios.get(`http://localhost:3001/roles`, (req, res) => res.json()
-        ).then(res => {
-            const data = res.data;
-              this.setState({ roles: data, orgRoles: data });
-            });
-      }
+        axios.get(`http://localhost:3000/admin/roles`, (req, res) => res.json()
+        ).then 
+        (res => {
+            
+                const roles = res.data.map(role => ({
+                    ...role, 
+                    permissions: role.permissions.map(permission => permission.description).join(' ,')
+                  }));
+          
+                  this.setState({ orgRoles: roles, roles: roles });
+                });
+        }
+           
+      
 
     tableHeaders = ['ID', 'Rolename', 'Permissions'];
 
@@ -55,7 +70,7 @@ export default class RolesDashboard extends React.Component {
         return (
             <>
                 <div>
-                    {this.state.usersManagementClicked && <Redirect to='/admin' />}
+                    {this.state.usersManagementClicked && <Redirect to='/users' />}
                     {this.state.newRoleClicked && <Redirect to='/newrole' />}
 
                     <div className="ml-3 mb-3">

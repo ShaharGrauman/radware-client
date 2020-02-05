@@ -10,8 +10,8 @@ class CreateOrEditSignatureStep5Attributes extends Component {
               <label className="my-1 mr-2" for="Left">Left Index</label>
             </div>
             <div className="col">
-              <select name="leftIndex" className="custom-select my-1 mr-sm-2" id="Left" value={this.props.signatureData.leftIndex} onChange={this.props.onChangeHandler}>
-                <option selected>0</option>
+              <select name="left_index" className="custom-select my-1 mr-sm-2" id="Left" value={this.props.signatureData.left_index} onChange={this.props.onChangeHandler}>
+                <option value="0">0</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -23,8 +23,8 @@ class CreateOrEditSignatureStep5Attributes extends Component {
               <label className="my-1 mr-2" for="Right">Right Index</label>
             </div>
             <div className="col">
-              <select name="rightIndex" className="custom-select my-1 mr-sm-2" id="Right" value={this.props.signatureData.rightIndex} onChange={this.props.onChangeHandler}>
-                <option selected>0</option>
+              <select name="right_index" className="custom-select my-1 mr-sm-2" id="Right" value={this.props.signatureData.right_index} onChange={this.props.onChangeHandler}>
+                <option value="0">0</option>
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
