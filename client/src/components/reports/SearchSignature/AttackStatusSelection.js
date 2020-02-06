@@ -15,18 +15,17 @@ export default class AttackStatusSelection extends SwitchableComponent {
   }
 
   handleChange = selectedOption => {
-    let url=''
+    let url=[]
     if(selectedOption!=null){
     selectedOption.forEach(attack=>{
-      url=url.concat(`+${attack.value}`)
+      url.push(attack.value)
     })
   }
       this.setState(
         { selectedOption }
       );
-    this.props.onSelect('status',url.slice(1))
+    this.props.onSelect('status',url)
   };
-
 
   // onChange = e => {
   //   console.log(e.target.value)

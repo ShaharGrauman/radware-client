@@ -54,37 +54,40 @@ export default class SearchSignature extends Component {
   }
   onSearch = async e=> {
     let requestURL='http://localhost:3000/search';
-    Object.keys(this.urlDetails).forEach(key=>requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`))
+    Object.keys(this.urlDetails).forEach(key=>{
+      if(Array.isArray(this.urlDetails[key])){
+        this.urlDetails[key].forEach(value=>
+          requestURL=requestURL.concat(`&${key}=${value}`)
+          )
+      }else{
+      requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`)
+      }
+      })
     requestURL.slice(1)
     console.log(requestURL)
     
     // try{
     //   const {data} = await axios.get(requestURL,{withCredentials: true});
-    //   // console.log('data',data.role);
     //   this.setState({errorMsg: '',role:data.role});
     
     // }catch(error){
     //   this.setState({
     //     errorMsg: 'Inalid email or password'
     //   });
-    //   // console.log(this.state.errorMsg)
     // }
 
     // const response = await axios.get('http://localhost:3001/');
-    // console.log(response);
   }
 
 
   sortArrByKey(arr, key) {
     let sorted = arr.sort();
-    // console.log(sorted);
     this.setState({ tableData: sorted });
     return sorted;
   }
 
   update = val => {
     this.data.slider = val;
-    // console.log(val);
   };
 
   addSwitcher = switcher => {
@@ -96,15 +99,12 @@ export default class SearchSignature extends Component {
 
 
   urlUpdate= (key , value) =>{
-    // console.log(value)
     if(value==""){
-      // console.log( this.urlDetails.key)
       delete this.urlDetails[key]
     }
     else{
     this.urlDetails[key]=value;
   }
-  console.log(this.urlDetails)
   }
 
   onSelect = (key, value) => {

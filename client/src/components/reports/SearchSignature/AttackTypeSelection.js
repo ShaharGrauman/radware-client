@@ -15,16 +15,16 @@ export default class AttackTypeSelection extends SwitchableComponent {
   }
 
   handleChange = selectedOption => {
-    let url=''
+    let url=[]
     if(selectedOption!=null){
     selectedOption.forEach(attack=>{
-      url=url.concat(`+${attack.value}`)
+      url.push(attack.value)
     })
   }
       this.setState(
         { selectedOption }
       );
-    this.props.onSelect('attackType',url.slice(1))
+    this.props.onSelect('attackType',url)
   };
 
   // onChange = e => {
@@ -39,6 +39,8 @@ export default class AttackTypeSelection extends SwitchableComponent {
 
   render() {
     const { selectedOption } = this.state;
+    console.log(this.state.selectedOption)
+
 
     return (
       <>
