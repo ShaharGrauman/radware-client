@@ -8,21 +8,23 @@ import  './QADashboard.css';
 class QATable extends Component {
 constructor(props) {
     super(props);
+
     this.sortIcon=<FontAwesomeIcon icon={faSort}></FontAwesomeIcon> 
     this.trueIcon=<FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
     this.falseIcon=<FontAwesomeIcon icon={faTimes}></FontAwesomeIcon>
     this.role=this.props.role    
-    this.data=this.props.data
+
 }
 
-render() {
 
+
+render() {
 return (
     <div className="table-responsive">
     <table className="table table-striped table-sm border border-dark" >
       <thead>
           <tr>
-              {Object.keys(this.data[0]).slice(1).map((key,index)=>
+              {Object.keys(this.props.data[0]).slice(1).map((key,index)=>
               <th scope="col" className="border-secondary border-right" key={index}>
                   {key!='patternID'?key:<div>{key}{this.sortIcon}</div>}
                 </th>
@@ -31,7 +33,7 @@ return (
       </thead>
       <tbody>
           {
-              this.data.map((item,index) =>(
+              this.props.data.map((item,index) =>(
                 <tr key={index}>
                 {Object.values(item).slice(1,7).map((column,index) => (
                     <td scope="row" className="Centered border-secondary border-right border-top-0 font-weight-normal" key={index}>
