@@ -2,18 +2,27 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import './index.css';
-
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import EditUserDashbaord from './components/admin/EditUserDashbaord';
-import NewUserDashbaord from './components/admin/NewUserDashbaord';
+import NewUserDashbaord from './components/admin/NewUserDashboard';
 import AdminDashbaord from './components/admin/AdminDashboard';
 import NewRole from './components/admin/NewRole';
 import Audit from './components/admin/Audit';
-import Roles from './components/admin/RoleList';
+import RolesDashboard from './components/admin/RolesDashboard';
 import LogIn from './components/admin/LogIn';
-import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
+// import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
 import SearchSignature from './components/reports/SearchSignature/SearchSignature';
+// import ControlSteps from '../components/shared/ControlSteps';
+import QaDashboard from './components/reports/QADashboard/QADashboard'
+
+import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
+import ResearcherDashboard from './components/reports/SearchSignature/ResearcherDashboard';
+<<<<<<< HEAD
+import Export from './components/reports/SearchSignature/Export';
+=======
+import ApplicationBar from './components/shared/ApplicationBar';
+>>>>>>> 47b3a04fe2f8fdba4bc22d4fb8282a4510186574
 
 class App extends React.Component {
     render() {
@@ -23,13 +32,13 @@ class App extends React.Component {
                     <Route path="/edit_user">
                         <EditUserDashbaord />
                     </Route>
-                    <Route path="/new_user">
+                    <Route path="/newuser">
                         <NewUserDashbaord />
                     </Route>
-                    <Route path="/roles">
-                        <Roles />
+                    <Route path="/admin/roles">
+                        <RolesDashboard />
                     </Route>
-                    <Route path="/new_role">
+                    <Route path="/newrole">
                         <NewRole />
                     </Route>
                     <Route path="/login">
@@ -38,14 +47,26 @@ class App extends React.Component {
                     <Route path="/audit">
                         <Audit />
                     </Route>
-                    <Route path="/adminDashboard">
+                    <Route path="/users">
                         <AdminDashbaord />
                     </Route>
                     <Route path="/SearchSignature">
                         <SearchSignature />
                     </Route> 
+                    <Route path="/researcher-dashboard">
+                        <ResearcherDashboard />    
+                    </Route>    
                     <Route path="/createOrEditSignature">
                         <CreateOrEditSignatureWizard />
+                    </Route> 
+                    <Route path="/QaDashboard">
+                        <QaDashboard />
+                    </Route> 
+                    <Route path="/Export">
+                        <Export />
+                    </Route> 
+                    <Route path="/">
+                        <ApplicationBar />
                     </Route>
                 </Switch>
             </BrowserRouter>
