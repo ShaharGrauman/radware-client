@@ -26,7 +26,7 @@ export default class CreateOrEditSignatureStep1Details extends React.Component {
                   </div>
                 </div>
                     {
-                      this.props.signatureErrors.attackName.map(error => <div className="text-danger">{error}</div>)
+                      this.props.signatureErrors.attackName.map(error => <small className="text-danger">{error}</small>)
                     }
               </div>
             </div>
