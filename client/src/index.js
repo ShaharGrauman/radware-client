@@ -14,15 +14,10 @@ import LogIn from './components/admin/LogIn';
 // import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
 import SearchSignature from './components/reports/SearchSignature/SearchSignature';
 // import ControlSteps from '../components/shared/ControlSteps';
-import QaDashboard from './components/reports/QADashboard/QADashboard'
 
 import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
 import ResearcherDashboard from './components/reports/SearchSignature/ResearcherDashboard';
-<<<<<<< HEAD
-import Export from './components/reports/SearchSignature/Export';
-=======
 import ApplicationBar from './components/shared/ApplicationBar';
->>>>>>> 47b3a04fe2f8fdba4bc22d4fb8282a4510186574
 
 class App extends React.Component {
     render() {
@@ -58,12 +53,6 @@ class App extends React.Component {
                     </Route>    
                     <Route path="/createOrEditSignature">
                         <CreateOrEditSignatureWizard />
-                    </Route> 
-                    <Route path="/QaDashboard">
-                        <QaDashboard />
-                    </Route> 
-                    <Route path="/Export">
-                        <Export />
                     </Route> 
                     <Route path="/">
                         <ApplicationBar />
