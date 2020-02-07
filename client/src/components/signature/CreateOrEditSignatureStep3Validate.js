@@ -29,7 +29,7 @@ export default class CreateOrEditSignatureStep3Validate extends React.Component 
                         <div className="form-check">
                             <input type="radio" name="simpleOrExtendedText" id="rbSimpleText" value="SimpleText" checked={this.props.signatureData.simpleOrExtendedText === 'SimpleText'} disabled="true" onClick={this.simpleOrExtendedTextClick} />
                             <label className="form-check-label" for="rbSimpleText">Simple text</label>
-                            <input type="text" class="form-control" id="text"></input>
+                            <input type="text" class="form-control" id="text" value={this.props.signatureData.txtSimpleText} disabled></input>
                             <div className="form-group form-check">
                                 <input className="form-check-input" type="checkbox" id="cbToggleshowRegular" checked={this.props.signatureData.showRegularInStep2} onClick={this.props.toggleshowRegularInStep2} disabled="true" />
                                 <label className="form-check-label" for="cbToggleshowRegular">Regular expression</label>

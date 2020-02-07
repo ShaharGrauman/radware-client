@@ -10,6 +10,7 @@ import CreateOrEditSignatureStep2Volnarability from './CreateOrEditSignatureStep
 import CreateOrEditSignatureStep3Validate from './CreateOrEditSignatureStep3Validate';
 import CreateOrEditSignatureStep4ExternalReferences from './CreateOrEditSignatureStep4ExternalReferences';
 import CreateOrEditSignatureStep5Attributes from './CreateOrEditSignatureStep5Attributes';
+import CreateOrEditSignatureStep6History from './History';
 
 import { validateStep1 } from '../shared/validations/signature';
 const stepsIndexesContainingCreateWithDefaultsButton = [1, 2, 3];
@@ -46,11 +47,11 @@ class CreateOrEditSignatureWizard extends Component {
                 end_break: null,
                 left_index: '0',
                 right_index: '0',
-                scan_uri: null,
-                scan_header: null,
-                scan_body: null,
-                scan_parameters: null,
-                scan_file_name: null,
+                scan_uri: false,
+                scan_header: false,
+                scan_body: false,
+                scan_parameters: false,
+                scan_file_name: false,
                 severity: valueBySeverity['medium'],
                 description: null,
                 test_data: "NEED TO ADD TEST DATA",
@@ -60,6 +61,10 @@ class CreateOrEditSignatureWizard extends Component {
                     { signatureId: 1, file: "Simple File" },
                     { signatureId: 1, file: "Simple File" }
                 ],
+                attack: {
+                    attack_id: 66979,
+                    name: "rgaergergerg"
+                },
                 parameters: [
                     { id: '1', parameter: "this is sample PARAMETERS!", signatureId: 1 },
                     { id: '2', parameter: "this is sample PARAMETERS!", signatureId: 1 },
@@ -146,10 +151,10 @@ class CreateOrEditSignatureWizard extends Component {
         }
 
         const createSignatureInput = {
-            id: newId,
+            // id: newId,
             user_id: 1,
-            attack_id: this.getRandomId(100000),
-            pattern_id: newId,
+            attack_id: this.getRandomId(100000).toString(),
+            pattern_id: newId.toString(),
             type: "vuln",
             creation_time: now[1],
             creation_date: now[0],
@@ -163,9 +168,10 @@ class CreateOrEditSignatureWizard extends Component {
             end_break: this.state.signatureData.end_break,
             simple_text: this.state.signatureData.simple_text,
             right_index: this.state.signatureData.right_index,
+          //  left_index: this.state.signatureData.left_index,
             scan_uri: this.state.signatureData.scan_uri,
-            scan_header: this.state.signatureData.scan_parameters,
-            scan_body: this.state.signatureData.scan_parameters,
+            scan_header: this.state.signatureData.scan_header,
+            scan_body: this.state.signatureData.scan_body,
             scan_parameters: this.state.signatureData.scan_parameters,
             scan_file_name: this.state.signatureData.scan_file_name,
             severity: severityByValue[this.state.signatureData.severity],
@@ -223,7 +229,8 @@ class CreateOrEditSignatureWizard extends Component {
             <CreateOrEditSignatureStep2Volnarability signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} toggleshowRegularInStep2={this.toggleshowRegularInStep2} setLeftAndRightIndexes={this.setLeftAndRightIndexes} />,
             <CreateOrEditSignatureStep3Validate signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} toggleshowRegularInStep2={this.toggleshowRegularInStep2} />,
             <CreateOrEditSignatureStep4ExternalReferences signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} />,
-            <CreateOrEditSignatureStep5Attributes signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} />
+            <CreateOrEditSignatureStep5Attributes signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} />,
+            <CreateOrEditSignatureStep6History signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} />
         ];
 
         return (
