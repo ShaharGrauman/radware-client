@@ -24,7 +24,7 @@ export default class AttackStatusSelection extends SwitchableComponent {
       this.setState(
         { selectedOption }
       );
-    this.props.onSelect('status',url)
+    this.props.onSelect('[status]',url)
   };
 
   // onChange = e => {
