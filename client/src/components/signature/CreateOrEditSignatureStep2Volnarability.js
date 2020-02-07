@@ -99,30 +99,30 @@ export default class CreateOrEditSignatureStep2Volnarability extends React.Compo
                     <hr />
                     <div className="checkbox">
                         <label>
-                            <input type="checkbox" name="setStartBreak" checked={this.props.signatureData.setStartBreak} onChange={this.props.onChangeHandler}></input> Set Start Break
+                            <input type="checkbox" name="start_break" checked={this.props.signatureData.start_break} onChange={this.props.onChangeHandler}></input> Set Start Break
                                 </label>
                         <div className="radio ml-4">
                             <label className="form-check form-check-inline">
-                                <input type="radio" id="filename1" name="start_break" value="setStartBreakByFileName" checked={this.props.signatureData.start_break === 'setStartBreakByFileName'} onChange={this.props.onChangeHandler} disabled={!this.props.signatureData.setStartBreak}></input>
+                                <input type="radio" id="filename1" name="start_break" value="setStartBreakByFileName" checked={this.props.signatureData.start_break === 'setStartBreakByFileName'} onChange={this.props.onChangeHandler} disabled={!this.props.signatureData.start_break}></input>
                                 <label className="ml-1" for="filename1">By FILENAME (?)</label>
                             </label>
                             <label className="form-check form-check-inline">
-                                <input type="radio" id="alpha1" name="start_break" value="setStartBreakByAlpha" checked={this.props.signatureData.start_break === 'setStartBreakByAlpha'} onChange={this.props.onChangeHandler} disabled={!this.props.signatureData.setStartBreak}></input>
+                                <input type="radio" id="alpha1" name="start_break" value="setStartBreakByAlpha" checked={this.props.signatureData.start_break === 'setStartBreakByAlpha'} onChange={this.props.onChangeHandler} disabled={!this.props.signatureData.start_break}></input>
                                 <label className="ml-1" for="alpha1">By Alpha (?)</label>
                             </label>
                         </div>
                     </div>
                     <div className="checkbox">
                         <label>
-                            <input type="checkbox" name="setEndBreak" checked={this.props.signatureData.setEndBreak} onChange={this.props.onChangeHandler} />Set End Break
+                            <input type="checkbox" name="end_break" checked={this.props.signatureData.end_break} onChange={this.props.onChangeHandler} />Set End Break
                         </label>
                         <div className="radio ml-4">
                             <label className="form-check form-check-inline">
-                                <input type="radio" id="filename2" name="end_break" value="setEndBreakByFileName" checked={this.props.signatureData.end_break === 'setEndBreakByFileName'} onChange={this.props.onChangeHandler} disabled={!this.props.signatureData.setEndBreak}></input>
+                                <input type="radio" id="filename2" name="end_break" value="setEndBreakByFileName" checked={this.props.signatureData.end_break === 'setEndBreakByFileName'} onChange={this.props.onChangeHandler} disabled={!this.props.signatureData.end_break}></input>
                                 <label className="ml-1" for="filename2">By FILENAME (?)</label>
                             </label>
                             <label className="form-check form-check-inline">
-                                <input type="radio" id="alpha2" name="end_break" value="setEndBreakByAlpha" checked={this.props.signatureData.end_break === 'setEndBreakByAlpha'} onChange={this.props.onChangeHandler} disabled={!this.props.signatureData.setEndBreak}></input>
+                                <input type="radio" id="alpha2" name="end_break" value="setEndBreakByAlpha" checked={this.props.signatureData.end_break === 'setEndBreakByAlpha'} onChange={this.props.onChangeHandler} disabled={!this.props.signatureData.end_break}></input>
                                 <label className="ml-1" for="alpha2">By Alpha (?)</label>
                             </label>
                         </div>
