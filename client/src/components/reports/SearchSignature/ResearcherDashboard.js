@@ -28,7 +28,6 @@ export default class ResearcherDashboard extends React.Component {
         
 
       ] ,
-      // page:1,
       in_progress:true,
       in_test:true,
       inQa:true,
@@ -45,24 +44,38 @@ export default class ResearcherDashboard extends React.Component {
     };
   }
 
+  componentDidMount() {
+    this.loadData('All');
+  }
+
   loadData(filter){
-
-    let requestURL=`http://localhost:3001/signatures/researcher?status=${filter}`;
-
-    Object.keys(this.urlDetails).forEach(key=>requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`))
-    requestURL.slice(1)
-    console.log(requestURL)
-
-    const isClicked=this.state[filter]
-    if(isClicked&&filter!='all'){
-      this.setState({dataFilter:`${filter} Signature`,[filter]:false})
-      this.setState({dataFilter:`${filter} Signature`,[filter]:true})
+    let requestURL;
+    this.setState({currentButton:filter});
+    if(this.state.currentButton == filter){//to return to all when double clicking
+      this.setState({currentButton:"all"}); // to set currentButton to all when clicking twice at button
+      requestURL=`http://localhost:3001/signature/researcher`;
+      this.setState({dataFilter:"All Signatures"}); 
+    }else if (this.state.currentButton == 'all' ){
+      this.setState({dataFilter:"All Signatures"}); 
+      requestURL=`http://localhost:3001/signature/researcher`;
     }else{
-     this.setState({dataFilter:`All Signature`,[filter]:true})
-     filter='';
+      requestURL=`http://localhost:3001/signature/researcher?status=${filter}`;
+      Object.keys(this.urlDetails).forEach(key=>requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`))
+      requestURL.slice(1)
     }
+   
+    console.log(requestURL)
+    const isClicked=this.state[filter]
+    // if(isClicked&&filter!='all'){
+    //   this.setState({dataFilter:`${filter} Signature`,[filter]:false})
+    //   this.setState({dataFilter:`${filter} Signature`,[filter]:true})
+    // }else{
+    //  this.setState({dataFilter:`All Signature`,[filter]:true})
+    //  filter='';
+    // }
     try{
     axios.get(requestURL).then(res=>{
+      this.setState({hasNext:res.hasNext,hasPrev:res.hasPrev})
       console.log(res.data.signatureData);
       if(res.data.signatureData.length == 0){
         this.setState({data: [
@@ -83,15 +96,18 @@ export default class ResearcherDashboard extends React.Component {
   } 
   
   selectButton=(value)=>{
+    this.urlDetails.page =1;
+    this.setState({clickedButton:value});
+    this.setState({dataFilter:`${value} Signatures`});
     // console.log(currentButton,value)
-    let {currentButton}=this.state;
-    if (currentButton === value) {
-      currentButton = 'all';
-      this.state.dataFilter="all sig"
-    }
-    else currentButton=value;
-    this.loadData(value);
-    this.setState({currentButton});
+    // let current = this.state.currentButton;
+    // if (current === value) {
+    //   current = 'all';
+    //   this.state.dataFilter="all sig"
+    // }
+    // else current=value;
+    // this.loadData(value);
+    // this.setState({currentButton:current});
   
   }
 
@@ -143,6 +159,9 @@ export default class ResearcherDashboard extends React.Component {
                 {this.state.hasPrev?
                   <span className="fas" onClick={()=>{
                     this.urlDetails.page--;
+                    if(this.urlDetails.page == 1){
+                      this.state.hasPrev = false;
+                    }
                     this.loadData(this.state.currentButton);
                   }}>
                   <FontAwesomeIcon
@@ -160,6 +179,7 @@ export default class ResearcherDashboard extends React.Component {
                 <span className="fas" onClick={()=>{
                   this.urlDetails.page++;
                   this.loadData(this.state.currentButton);
+                  this.state.hasPrev = true;
                 }}>
                   Next
                   <FontAwesomeIcon
@@ -185,24 +205,42 @@ export default class ResearcherDashboard extends React.Component {
                     Version status
                     <button
                       type="button"
-                      className={this.state.currentButton==="inProgress"?"outline- mt-3 btn btn-secondary btn-block  text-left":"outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
-                      onClick={()=>this.selectButton("in_progress")}
+                      className={this.state.clickedButton==="inProgress"&&this.state.currentButton=="in_progress" ?"outline- mt-3 btn btn-secondary btn-block  text-left":"outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
+                      onClick={
+                        ()=>{
+                        this.selectButton("inProgress");
+                        this.loadData("in_progress");
+                        // this.setState({this.urlDetails.page:1});
+                        }
+                      }
                     
                     >
                       <i className="fas fa-star"></i> In progress
                     </button>
                     <button
                       type="button"
-                      className={this.state.currentButton==="inTest"?"outline- mt-3 btn btn-secondary btn-block  text-left":"outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
-                      onClick={()=>this.selectButton("in_test")}
+                      className={this.state.clickedButton==="inTest"&&this.state.currentButton=="in_test"?"outline- mt-3 btn btn-secondary btn-block  text-left":"outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
+                      onClick={()=>
+                          {
+                            this.selectButton("inTest");
+                            this.loadData("in_test");
+                            // this.setState({this.urlDetails.page:1});
+                            }
+                      }
                     
                     >
                       <i className="fas fa-star-half-alt"></i> In test
                     </button>
                     <button
                       type="button"
-                      className={this.state.currentButton==="inQa"?"outline- mt-3 btn btn-secondary btn-block  text-left":"outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
-                      onClick={()=>this.selectButton("inQa")}
+                      className={this.state.clickedButton==="inQa"&&this.state.currentButton=="inQa"?"outline- mt-3 btn btn-secondary btn-block  text-left":"outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
+                      onClick={()=>
+                        { 
+                        this.selectButton("inQa");
+                        this.loadData("inQa");
+                        // this.setState({this.urlDetails.page:1});
+                        }
+                      }
                                           >
                       <i className="fas fa-star-half"></i> In QA
                     </button>
@@ -211,16 +249,28 @@ export default class ResearcherDashboard extends React.Component {
                     Production status
                     <button
                       type="button"
-                      className={this.state.currentButton==="Published"?"outline- mt-3 btn btn-secondary btn-block  text-left":"outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
-                      onClick={()=>this.selectButton("Published")}
+                      className={this.state.clickedButton==="Published"&&this.state.currentButton=="Published"?"outline- mt-3 btn btn-secondary btn-block  text-left":"outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
+                      onClick={()=>
+                        {
+                          this.selectButton("Published");
+                          this.loadData("Published");
+                          // this.setState({this.urlDetails.page:1});
+                        }
+                      }
                     >
                       <i className="far fa-star"></i> Published
                     </button>
                     <button
 
                         type="button"
-                      className={this.state.currentButton==="Suspended"?"outline- mt-3 btn btn-secondary btn-block  text-left":"outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
-                      onClick={()=>this.selectButton("Suspended")}
+                      className={this.state.clickedButton==="Suspended"&&this.state.currentButton=="Suspended"?"outline- mt-3 btn btn-secondary btn-block  text-left":"outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
+                      onClick={()=>
+                        {
+                          this.selectButton("Suspended");
+                          this.loadData("Suspended");
+                          // this.setState({this.urlDetails.page:1});
+                        }
+                      }
 
                     >
                       <i className="fas fa-exclamation-triangle"></i> Suspended
@@ -235,3 +285,4 @@ export default class ResearcherDashboard extends React.Component {
     );
   }
 }
+
