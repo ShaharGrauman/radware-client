@@ -10,12 +10,13 @@ import { InputGroup, InputGroupText, InputGroupAddon, Input } from 'reactstrap';
 
 import Table from "../../shared/Table";
 
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRight,
   faArrowLeft,
-  faSearch
+  faSearch,
+  faEdit,
+  faCopy
 } from "@fortawesome/free-solid-svg-icons";
 
 import SeverityRange from "./SeverityRange";
@@ -54,6 +55,22 @@ export default class SearchSignature extends Component {
   }
   onSearch = async e=> {
     let requestURL='http://localhost:3000/search';
+
+      this.state.tableData.map(signatur=>{
+      signatur['button']=
+      <>
+        <button type="button" title="Edit" class="btn btn-outline float-left " >
+          <FontAwesomeIcon className="fa-lg" icon={faEdit} style={{ color: 'blue' }}></FontAwesomeIcon>
+        </button>
+        <button type="button" title="Delete" class="btn btn-outline float-right" onClick={() => this.props.excludeFromStateArrayById(this.props.stateName, this.props.id)} >
+          <FontAwesomeIcon className="fa-lg" icon={faCopy} style={{ color: 'red' }}></FontAwesomeIcon>
+        </button>
+      </>
+    })
+    this.setState({})
+    // console.log(dataWithButton)
+    // this.setState({tableData:dataWithButton})
+
     Object.keys(this.urlDetails).forEach(key=>{
       if(Array.isArray(this.urlDetails[key])){
         this.urlDetails[key].forEach(value=>
@@ -118,6 +135,7 @@ export default class SearchSignature extends Component {
   }
 
   render() {
+
     return (      //onKeyPress={(e)=>e.key=='Enter'?this.onSearch:null}
       <div className="container-fluid" onKeyPress={this.onEnter}>
         <h1 className="mx-md-3 mt-2 mx-lg-5">Search Signatures</h1>

@@ -119,7 +119,7 @@ export default class QADashboard extends React.Component {
             //     automation: 'failed'
             // }
         ];
-        this.size=5;
+        this.size=15;
         this.role=['manual','performance','automation']       
         // this.role=['manual','performance','automation']       
     }
@@ -127,7 +127,7 @@ export default class QADashboard extends React.Component {
     async componentDidMount() {
         try{
             const {data} = await axios.get('http://localhost:3000/Qa/dashboard');
-            this.data=data;
+            this.data=data.sort((a,b)=>a.patternID-b.patternID);
             console.log(this.data)
             this.setState({dataToShow:data.slice(0,this.size),page:1})
             // console.log(this.state.data)
