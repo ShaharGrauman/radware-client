@@ -18,8 +18,22 @@ export default class SeverityRange extends SwitchableComponent {
     }
   }
   onChange = e => {
+    let valueText='';
     this.setState({severity:e.target.value==0?"2":e.target.value})
-    this.props.onSelect('severity',e.target.value)
+    console.log('severity',e.target.value)
+    switch(e.target.value) {
+      case '0':
+        return this.props.onSelect('severity','');
+      case '1':
+        return this.props.onSelect('severity','low');
+      case '2':
+        return this.props.onSelect('severity','medium');
+      case '3':
+        return this.props.onSelect('severity','high');
+      default:
+        return this.props.onSelect('severity','');
+    }
+    // this.props.onSelect('severity',e.target.value)
   }
   render() {
     var divStyle = {
@@ -32,9 +46,11 @@ export default class SeverityRange extends SwitchableComponent {
             const switchState=this.state.disableDiv;
             this.setState({disableDiv:!switchState});
             if(switchState){
+              // if switch to off
               this.setState({severity:"2"})
               this.onChange({target:{value:0}})
             }else{
+              // if switch to on
               this.onChange({target:{value:"2"}})
             }
           }} ></input>
