@@ -39,8 +39,6 @@ export default class AttackTypeSelection extends SwitchableComponent {
 
   render() {
     const { selectedOption } = this.state;
-    console.log(this.state.selectedOption)
-
 
     return (
       <>

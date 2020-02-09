@@ -37,9 +37,7 @@ export default class SearchSignature extends Component {
       hasPrev:false,
       page: 1,
       tableData: [
-        { patternID: "AAA", description: "CCC" },
-        { patternID: "AAA", description: "CCC" },
-        { patternID: "AAA", description: "CCC" }
+        { patternID: "", description: "", status:'' }
       ],
       isRefined: false,
       errorMsg:''
@@ -53,24 +51,25 @@ export default class SearchSignature extends Component {
     };
     this.switchers = [];
   }
-  onSearch = async e=> {
-    let requestURL='http://localhost:3000/search';
 
-      this.state.tableData.map(signatur=>{
-      signatur['button']=
-      <>
-        <button type="button" title="Edit" class="btn btn-outline float-left " >
-          <FontAwesomeIcon className="fa-lg" icon={faEdit} style={{ color: 'blue' }}></FontAwesomeIcon>
-        </button>
-        <button type="button" title="Delete" class="btn btn-outline float-right" onClick={() => this.props.excludeFromStateArrayById(this.props.stateName, this.props.id)} >
-          <FontAwesomeIcon className="fa-lg" icon={faCopy} style={{ color: 'red' }}></FontAwesomeIcon>
-        </button>
-      </>
+  addingButtonsToTable() {
+    const tableData=this.state.tableData;
+    tableData.map(signatur=>{
+      signatur['']=
+      <div>
+          <FontAwesomeIcon 
+            className="fa-lg float-left" 
+            icon={faEdit}  
+            style={{ color: 'blue',cursor:'pointer' }}
+            onClick={()=>{window.location.href="http://localhost:3002/QaDashboard"}}
+            ></FontAwesomeIcon>
+          <FontAwesomeIcon className="fa-lg float-right" icon={faCopy} style={{ color: 'red',cursor:'pointer' }}></FontAwesomeIcon>
+      </div>
     })
-    this.setState({})
-    // console.log(dataWithButton)
-    // this.setState({tableData:dataWithButton})
-
+    this.setState({tableData:tableData})
+  }
+  onSearch = async e=> {
+    let requestURL='';
     Object.keys(this.urlDetails).forEach(key=>{
       if(Array.isArray(this.urlDetails[key])){
         this.urlDetails[key].forEach(value=>
@@ -80,20 +79,37 @@ export default class SearchSignature extends Component {
       requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`)
       }
       })
-    requestURL.slice(1)
+      requestURL='http://localhost:3000/signature/search?'.concat(requestURL.slice(1))
     console.log(requestURL)
     
-    // try{
-    //   const {data} = await axios.get(requestURL,{withCredentials: true});
-    //   this.setState({errorMsg: '',role:data.role});
+    try{
+      const {data} = await axios.get(requestURL,{withCredentials: true});
+      console.log('data is:',data)
+      // let newData=data
+      let newData=data.map(sig=>(
+        {
+          pattern_id: sig.pattern_id,
+          description: sig.description,
+          status:sig.status
+        }
+      ));
+      console.log('new data is:',data,newData)
+      if(newData.length==0){
+        // console.log('newData==[]')
+        newData=[{ patternID: "", description: "", status:'' }]
+      }
+      this.setState({tableData:newData, errorMsg: '',role:data.role});
     
-    // }catch(error){
-    //   this.setState({
-    //     errorMsg: 'Inalid email or password'
-    //   });
-    // }
+    }catch(error){
+      this.setState({
+        errorMsg: 'Inalid email or password'
+      });
+    }
 
     // const response = await axios.get('http://localhost:3001/');
+
+    this.addingButtonsToTable();
+
   }
 
 
@@ -150,7 +166,7 @@ export default class SearchSignature extends Component {
                 type="text"
                 className="form-control form-rounded"
                 placeholder="Search"
-                onBlur  ={e=>this.urlUpdate('description',e.target.value)}
+                onChange  ={e=>this.urlUpdate('description',e.target.value)}
               />
               <InputGroupAddon addonType="append" style={{cursor:'pointer'}}>
                 <InputGroupText>
