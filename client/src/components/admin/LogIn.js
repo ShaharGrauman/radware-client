@@ -13,7 +13,8 @@ export default class LogIn extends React.Component {
       password: '',
       errorMsg: '',
       role: '',
-      redirect: false
+      redirect: false,
+      resetClicked: false
     }
 
   }
@@ -29,6 +30,11 @@ export default class LogIn extends React.Component {
         return <Redirect to={`/${this.state.role}`} />
       }
       // return <Redirect to='./AdminDashboard' />
+    }
+  }
+  resetRedirect = page => {
+    if( page === "resetpassword"){
+      this.setState({resetClicked :true})
     }
   }
   onBlur = ({ target: { name, value } }) => {
@@ -67,8 +73,11 @@ export default class LogIn extends React.Component {
   //       this.setState({users: users });
   //     });
   // }
-  
+  // onResetClick =() =>{
+  //   return <Link to = {`/ResetPassword/`}/>
+  // }
 
+  
   render() {
 
     if (this.state.role != '') {
@@ -76,7 +85,8 @@ export default class LogIn extends React.Component {
     }
     return (
       <>
-          {this.renderRedirect()}
+          {/* {this.renderRedirect()} */}
+          {this.state.resetClicked && <Redirect to = '/resetpassword'/>}
         <div class="row">
           <div class="col"></div>
           <div class="col">
@@ -115,9 +125,9 @@ export default class LogIn extends React.Component {
                     </div>
                 }
                 <label >
-                  <button type="button" class="btn btn-link ">Reset Password</button>
+                  <button type="button" class="btn btn-link " onClick ={()=> this.resetRedirect("resetpassword")}> Reset Password </button>
                 </label>
-           
+            
                 <button type="submit" class="btn btn-block btn-secondary">Sign In</button>
               </form>
             </div>

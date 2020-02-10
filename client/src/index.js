@@ -52,7 +52,10 @@ class App extends React.Component {
                     <Route path="/users">
                         <AdminDashbaord />
                     </Route>
-                    <Route path="/SearchSignature">
+                    <Route path="/resetpassword">
+                        <ResetPassword />    
+                    </Route>  
+                     <Route path="/SearchSignature">
                         <SearchSignature />
                     </Route> 
                     <Route path="/researcher-dashboard">
