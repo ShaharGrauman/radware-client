@@ -245,7 +245,7 @@ export default class QADashboard extends React.Component {
                                         clickedButton: {
                                             role: this.role,
                                             value: 'passed',
-                                            msg: `Are you sure you want to select all ${this.state.clickedButton.role.join(' and ')} signatures as ${this.state.clickedButton.value}`,
+                                            msg: `Are you sure you want to select all ${this.role.join(' and ')} signatures as passed`,
                                             callBack: this.selectData
                                         },
                                         popupAlert: true
@@ -259,7 +259,7 @@ export default class QADashboard extends React.Component {
                                                 clickedButton: {
                                                     role: [role],
                                                     value: 'passed',
-                                                    msg: `Are you sure you want to select all ${this.state.clickedButton.role.join(' and ')} signatures as ${this.state.clickedButton.value}`,
+                                                    msg: `Are you sure you want to select all ${role} signatures as passed`,
                                                     callBack: this.selectData
                                                 },
                                                 popupAlert: true
@@ -277,7 +277,7 @@ export default class QADashboard extends React.Component {
                                         clickedButton: {
                                             role: this.role,
                                             value: 'failed',
-                                            msg: `Are you sure you want to select all ${this.state.clickedButton.role.join(' and ')} signatures as ${this.state.clickedButton.value}`,
+                                            msg: `Are you sure you want to select all ${this.role.join(' and ')} signatures as failed`,
                                             callBack: this.selectData
                                         },
                                         popupAlert: true
@@ -291,7 +291,7 @@ export default class QADashboard extends React.Component {
                                                 clickedButton: {
                                                     role: [role],
                                                     value: 'failed',
-                                                    msg: `Are you sure you want to select all ${this.state.clickedButton.role.join(' and ')} signatures as ${this.state.clickedButton.value}`,
+                                                    msg: `Are you sure you want to select all ${role} signatures as failed`,
                                                     callBack: this.selectData
                                                 },
                                                 popupAlert: true
