@@ -3,15 +3,21 @@ import axios from 'axios'
 import { UncontrolledCollapse, Button, CardBody, Card } from 'reactstrap';
 import { InputGroup, InputGroupText, InputGroupAddon, Input } from 'reactstrap';
 
+import {ButtonToolbar, OverlayTrigger, Tooltip} from 'react-bootstrap';
+
+
+
+// import MultiSelectField from './MultiSelectField'
 
 import Table from "../../shared/Table";
-
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRight,
   faArrowLeft,
-  faSearch
+  faSearch,
+  faEdit,
+  faCopy
 } from "@fortawesome/free-solid-svg-icons";
 
 import SeverityRange from "./SeverityRange";
@@ -23,19 +29,19 @@ import ScanAtCheckBoxes from "./ScanAtCheckBoxes";
 import RefrencesSelection from "./RefrencesSelection";
 import { object } from "prop-types";
 
+
 export default class SearchSignature extends Component {
   constructor(props) {
     super(props);
     this.state = {
       hasNext:true,
-      hasPrev:true,
+      hasPrev:false,
+      page: 1,
       tableData: [
-        { patternID: "AAA", description: "CCC" },
-        { patternID: "AAA", description: "CCC" },
-        { patternID: "AAA", description: "CCC" }
+        { patternID: "", description: "", status:'' }
       ],
       isRefined: false,
-      disableDiv: false
+      errorMsg:''
     };
     this.urlDetails={
       page: 1 ,
@@ -45,38 +51,84 @@ export default class SearchSignature extends Component {
       slider: 2
     };
     this.switchers = [];
-  }
-  onSearch = async => {
-    let requestURL='';
-    Object.keys(this.urlDetails).forEach(key=>requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`))
-    requestURL.slice(1)
-    console.log(requestURL)
-    // const response = await axios.get('http://localhost:3001/');
-    // console.log(response);
+    this.sortArrByKey=this.sortArrByKey.bind(this)
   }
 
-  controlsevrity=()=>{
-    if(this.state.disableDiv)
-        this.setState({
-          disableDiv:false
-        });
-    else
-        this.setState({
-          disableDiv:true
-        });
+  addingButtonsToTable() {
+    const tableData=this.state.tableData;
+    if(tableData.length!=0){
+    tableData.map(signatur=>{
+      signatur['']=
+      <div>
+          <FontAwesomeIcon 
+            className="fa-lg float-left" 
+            icon={faEdit}  
+            style={{ color: 'blue',cursor:'pointer' }}
+            onClick={()=>{window.location.href="http://localhost:3002/QaDashboard"}}
+            ></FontAwesomeIcon>
+          <FontAwesomeIcon className="fa-lg float-right" icon={faCopy} style={{ color: 'red',cursor:'pointer' }}></FontAwesomeIcon>
+      </div>
+    })
+    this.setState({tableData:tableData})
+  }
+}
+  onSearch = async e=> {
+    let requestURL='';
+    Object.keys(this.urlDetails).forEach(key=>{
+      if(Array.isArray(this.urlDetails[key])){
+        this.urlDetails[key].forEach(value=>
+          requestURL=requestURL.concat(`&${key}=${value}`)
+          )
+      }else{
+      requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`)
+      }
+      })
+      requestURL='http://localhost:3000/signature/search?'.concat(requestURL.slice(1))
+    console.log(requestURL)
+    
+    try{
+      const {data} = await axios.get(requestURL,{withCredentials: true});
+      // console.log('data is:',data)
+      let newData=data.map(sig=>(
+        {
+          pattern_id: sig.pattern_id,
+          description: sig.description,
+          status:sig.status
+        }
+      ));
+      // console.log('new data is:',data,newData)
+      if(newData.length==0){
+        newData=[{ patternID: "NO RESULTS FOUND !", description: "NO RESULTS FOUND !", status:'NO RESULTS FOUND !' }]
+        this.setState({tableData:newData, errorMsg: '',role:data.role});
+      }else{
+      this.setState({tableData:newData, errorMsg: '',role:data.role});
+      this.addingButtonsToTable();
+      }
+    }catch(error){
+      this.setState({
+        errorMsg: 'Inalid email or password'
+      });
+    }
+
+    // const response = await axios.get('http://localhost:3001/');
   }
 
 
   sortArrByKey(arr, key) {
-    let sorted = arr.sort();
-    // console.log(sorted);
-    this.setState({ tableData: sorted });
-    return sorted;
+    if(!(key=='')){
+    if(!(this.urlDetails['sortby']==key)){
+      this.urlDetails['sortby']=key;
+      this.urlDetails['orderby']='asc'
+    }else{
+      const orderby=this.urlDetails['orderby']
+      this.urlDetails['orderby']=orderby=='asc'?'desc':'asc'
+    }
+    this.onSearch()
+  }
   }
 
   update = val => {
     this.data.slider = val;
-    // console.log(val);
   };
 
   addSwitcher = switcher => {
@@ -89,13 +141,11 @@ export default class SearchSignature extends Component {
 
   urlUpdate= (key , value) =>{
     if(value==""){
-      // console.log( this.urlDetails.key)
       delete this.urlDetails[key]
     }
     else{
     this.urlDetails[key]=value;
   }
-  // console.log(this.urlDetails)
   }
 
   onSelect = (key, value) => {
@@ -109,10 +159,8 @@ export default class SearchSignature extends Component {
   }
 
   render() {
-    var divStyle = {
-      pointerEvents:this.state.disableDiv?'auto':'none', opacity:this.state.disableDiv?1:0.3
-    };
-    return (      //onKeyPress={(e)=>e.key=='Enter'?this.onSearch:null}
+
+    return (      
       <div className="container-fluid" onKeyPress={this.onEnter}>
         <h1 className="mx-md-3 mt-2 mx-lg-5">Search Signatures</h1>
         <form>
@@ -128,11 +176,23 @@ export default class SearchSignature extends Component {
                 placeholder="Search"
                 onChange  ={e=>this.urlUpdate('description',e.target.value)}
               />
+          <ButtonToolbar>
+            <OverlayTrigger
+              key={'top'}
+              placement={'top'}
+              overlay={
+                <Tooltip id={`tooltip-${'top'}`}>
+                  You can search by pressing ENTER
+                </Tooltip>
+              }
+            >
               <InputGroupAddon addonType="append" style={{cursor:'pointer'}}>
                 <InputGroupText>
                 <FontAwesomeIcon icon={faSearch} onClick={this.onSearch}/>
               </InputGroupText>
               </InputGroupAddon>
+            </OverlayTrigger>
+            </ButtonToolbar>
             </InputGroup>
             </div>
           </div>
@@ -153,13 +213,7 @@ export default class SearchSignature extends Component {
                     <AttackTypeSelection connectTo={this.addSwitcher} onSelect={this.urlUpdate}/>
 
                     <div className="py-3">
-                    <div class="custom-control custom-switch">
-                      <input type="checkbox" class="custom-control-input" id="customSwitch2" onClick={this.controlsevrity} ></input>
-                      <label class="custom-control-label" for="customSwitch2"></label>
-                    </div > 
-                      <div style={divStyle}>
-                      <SeverityRange slidingRangeV={this.update} connectTo={this.addSwitcher}/>
-                      </div>
+                      <SeverityRange slidingRangeV={this.update} connectTo={this.addSwitcher} onSelect={this.urlUpdate}/>
                     </div >
                     <AttackStatusSelection connectTo={this.addSwitcher} onSelect={this.urlUpdate}/>
                   </div>
@@ -188,12 +242,19 @@ export default class SearchSignature extends Component {
         </form>
         <div className="row mx-auto">
           <div className="col-sm-12 col-md-11 mx-sm-1 mx-md-3 mx-lg-5 py-4">
-            <Table data={this.state.tableData} />
+            <Table data={this.state.tableData} sortDataByKey={this.sortArrByKey} />
             <div className="row">
-              <div className="col-2 col-sm-2 col-md-3 col-lg-4 mx-sm-2 mx-md-3 mx-lg-0"></div>
-              <div className="col-3 col-sm-3 col-md-2" >
+              <div className="col-1 col-sm-1 col-md-2 col-lg-3 mx-sm-1 mx-md-2 mx-lg-0"></div>
+              <div className="col-3 col-sm-3 col-md-2 ml-5 " >
                 {this.state.hasPrev?
-                  <span className="fas">
+                  <span className="fas" className="noselect ml-5"  onClick={()=>{
+                    this.urlDetails.page--;
+                    this.setState({page:this.urlDetails.page});
+                    this.onSearch();
+                    if(this.urlDetails.page==1){
+                      this.setState({hasPrev:false})
+                    }
+                  }}>
                   <FontAwesomeIcon
                     icon={faArrowLeft}
                     onClick={this.props.preOnClick}
@@ -204,11 +265,16 @@ export default class SearchSignature extends Component {
               }
 
               </div>
-              <div className="col-1 col-lg-0 mx-2 mx-sm-2 mx-md-0"></div>
+              <div className="col-1 col-lg-0 mx-2 mx-sm-2 mx-md-0">
+            <span class="badge badge-secondary">{this.state.page}</span>
+
+              </div>
               <div className="col-3 col-sm-2">
               {this.state.hasNext?
                 <span className="fas" onClick={()=>{
+                this.setState({hasPrev:true});
                 this.urlDetails.page++;
+                this.setState({page:this.urlDetails.page});
                 this.onSearch();
                 }}>
                   Next{" "}

@@ -12,11 +12,50 @@ export default class SeverityRange extends SwitchableComponent {
   constructor(props) {
     super(props);
     this.props = props;
+    this.state={
+      disableDiv: false,
+      severity:"2"
+    }
+  }
+  onChange = e => {
+    let valueText='';
+    this.setState({severity:e.target.value==0?"2":e.target.value})
+    console.log('severity',e.target.value)
+    switch(e.target.value) {
+      case '0':
+        return this.props.onSelect('severity','');
+      case '1':
+        return this.props.onSelect('severity','low');
+      case '2':
+        return this.props.onSelect('severity','medium');
+      case '3':
+        return this.props.onSelect('severity','high');
+      default:
+        return this.props.onSelect('severity','');
+    }
+    // this.props.onSelect('severity',e.target.value)
   }
   render() {
+    var divStyle = {
+      pointerEvents:this.state.disableDiv?'auto':'none', opacity:this.state.disableDiv?1:0.3
+    };
     return (
       <>
-        <label htmlFor="severity">Severity</label>
+        <div class="custom-control custom-switch">
+          <input type="checkbox" className="custom-control-input" id="customSwitch2" onClick={()=>{
+            const switchState=this.state.disableDiv;
+            this.setState({disableDiv:!switchState});
+            if(switchState){
+              // if switch to off
+              this.setState({severity:"2"})
+              this.onChange({target:{value:0}})
+            }else{
+              // if switch to on
+              this.onChange({target:{value:"2"}})
+            }
+          }} ></input>
+          <label className="custom-control-label" for="customSwitch2">Severity</label>
+        </div >       
 
         <input
           type="range"
@@ -24,14 +63,16 @@ export default class SeverityRange extends SwitchableComponent {
           min="1"
           max="3"
           step="1"
-          defaultValue="2"
+          value={this.state.severity}
           id="severity"
           dataSliderHandle="custom"
-          onChange={e => this.props.slidingRangeV(e.target.value)}
-          disabled={this.state.disabled}
+          style={divStyle}
+          onChange={this.onChange}
+          // onChange={e => this.props.slidingRangeV(e.target.value)}
+          disabled={!this.state.disableDiv}
         />
 
-        <span className="row">
+        <span className="row" style={divStyle}>
           <span className="col-5">
             <FontAwesomeIcon
               size="2x"
