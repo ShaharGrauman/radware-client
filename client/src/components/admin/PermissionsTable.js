@@ -23,7 +23,28 @@ export default class PermissionsTable extends React.Component {
   constructor(props) {
     super(props);
     
+    this.state = {
+      permissions: []
+    };
  
+  }
+
+  
+  componentDidMount(){
+    //fetch permissions from db
+    //
+    this.setState({
+      permissions: [
+        {id: 1, name: 'Researcher dashboard'},
+        {id: 2, name: 'Create/update signature'},
+        {id: 3, name: 'Search signatures'},
+        {id: 4, name: 'Export signatures'},
+        {id: 5, name: 'Update signature status'},
+        {id: 6, name: 'QA dashboard'},
+        {id: 7, name: 'Update QA performance internal status'},
+        
+      ]
+    });
   }
 
   render() {
@@ -36,27 +57,14 @@ export default class PermissionsTable extends React.Component {
             </tr>
         </thead>
         <tbody>
-            <tr class="m-0">
-                <td class="w-25">New signature</td>
-                <td class="w-25 center" ><input type="checkbox" name="myTextEditBox" value="checked" /></td>
-            </tr>
-            <tr class="m-0">
-                <td class="w-25">Search signature	</td>
-                <td class="w-25" ><input type="checkbox" name="myTextEditBox" value="checked" /></td>
-            </tr>
-            <tr class="m-0">
-                <td class="w-25">Export</td>
-                <td class="w-25" ><input type="checkbox" name="myTextEditBox" value="checked" /></td>
-            </tr>
-            <tr class="m-0">
-                <td class="w-25">Permission 1</td>
-                <td class="w-25" ><input type="checkbox" name="myTextEditBox" value="checked" /></td>
-            </tr>
-  
-            <tr class="m-0">
-                <td class="w-25">Permission 2</td>
-                <td class="w-25" ><input type="checkbox" name="myTextEditBox" value="checked" /></td>
-            </tr>
+            {
+              this.state.permissions.map(p => <tr class="m-0">
+                  <td class="w-25">{p.name}</td>
+                  <td class="w-25" >
+                    <input type="checkbox" onChange={() => this.props.onSelect(p.id)} />
+                  </td>
+              </tr>)
+            }
         </tbody>
     </table>
     );
