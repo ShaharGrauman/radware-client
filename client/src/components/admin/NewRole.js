@@ -161,6 +161,7 @@ export default class NewRole extends React.Component {
             errors: {}
         };
     }
+    
     renderRedirect = () => {
         this.setState({
 

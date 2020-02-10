@@ -1,103 +1,63 @@
 import React, { Component } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import QaStatuseUpdate from './QaStatuseUpdate';
-import { faSort } from '@fortawesome/free-solid-svg-icons';
-import { faTimes} from '@fortawesome/free-solid-svg-icons';
-import { faCheck} from '@fortawesome/free-solid-svg-icons';
+import { faCheck , faSort ,faTimes} from '@fortawesome/free-solid-svg-icons';
 
+import QaStatuseUpdate from './QaStatuseUpdate';
 import  './QADashboard.css';
 
 class QATable extends Component {
 constructor(props) {
     super(props);
-    this.state = {
-        checkedOption: this.props.checkedOption
-    }
-    this.role=["manual",'performance','automation']       
+
+    this.sortIcon=<FontAwesomeIcon icon={faSort}></FontAwesomeIcon> 
+    this.trueIcon=<FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
+    this.falseIcon=<FontAwesomeIcon icon={faTimes}></FontAwesomeIcon>
+    this.falseIconRed=<FontAwesomeIcon icon={faTimes} style={{color: 'red'}}></FontAwesomeIcon>
+    this.role=this.props.role    
 }
 
-render() { 
-    
+render() {
 return (
     <div className="table-responsive">
-    <table data={this.data} className="table table-striped table-sm border border-dark" >
+    <table className="table table-striped table-sm border border-dark" >
       <thead>
           <tr>
-              <th scope="col" className="border-secondary border-right">PatternID 
-                  <FontAwesomeIcon icon={faSort}></FontAwesomeIcon></th>
-              <th scope="col" className="border-secondary border-right">URI</th>
-              <th scope="col" className="border-secondary border-right">Headers</th>
-              <th scope="col" className="border-secondary border-right">Body</th>
-              <th scope="col" className="border-secondary border-right">Parameters</th>
-              <th scope="col" className="border-secondary border-right">File</th>
-              <th scope="col" className="border-secondary border-right">Manual QA</th>
-              <th scope="col" className="border-secondary border-right">Performance</th>
-              <th scope="col" className="border-secondary border-right">Automation</th>
+              {Object.keys(this.props.data[0]).slice(1).map((key,index)=>
+              <th scope="col" className="border-secondary border-right" key={index}>
+                  {key!='patternID'?key:<div>{key}{this.sortIcon}</div>}
+                </th>
+                )}
           </tr>
       </thead>
       <tbody>
           {
-              this.props.data.map(item => (
-                <tr key={item.patternID} >
-                    <td scope="row" className="border-secondary border-right border-top-0 font-weight-normal">
-                        {item.patternID}
-                    </td>
-                    <td scope="row" className="Centered border-secondary border-right border-top-0 font-weight-normal">
-                    {item.URI=="true"?
-                        <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
-                        :
-                        <FontAwesomeIcon icon={faTimes}></FontAwesomeIcon>
+              this.props.data.map((item,index) =>(
+                <tr key={index}>
+                {Object.values(item).slice(1,7).map((column,index) => (
+                    <td scope="row" className="Centered border-secondary border-right border-top-0 font-weight-normal" key={index}>
+                      {(()=>{
+                        switch(column){
+                            case 1:
+                                return this.trueIcon;
+                            case 0:
+                                return this.falseIcon;
+                            case null:
+                                return this.falseIconRed;
+                            default:
+                                return column;
+                        }
+                      })()
                     }
                     </td>
-                    <td scope="row" className="Centered border-secondary border-right border-top-0 font-weight-normal">
-                        {item.headers=="true"?
-                            <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
-                            :
-                            <FontAwesomeIcon icon={faTimes}></FontAwesomeIcon>
-                        }
+                ))}
+                {(Object.entries(item).slice(7)).map((status,index)=>(
+                    <td scope="row" className="Centered border-secondary border-right border-top-0 font-weight-normal" key={index}>
+                    {this.role.includes(status[0])?(
+                        // console.log(status[0]),
+                    <QaStatuseUpdate role={status[0]} signature={item} val={item[status[0]]}/>):
+                    status[1]}
                     </td>
-                    <td scope="row" className="Centered border-secondary border-right border-top-0 font-weight-normal">
-                        {item.body=="true"?
-                            <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
-                            :
-                            <FontAwesomeIcon icon={faTimes}></FontAwesomeIcon>
-                        }                                </td>
-                    <td scope="row" className="Centered border-secondary border-right border-top-0 font-weight-normal">
-                        {item.parameters=="true"?
-                            <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
-                            :
-                            <FontAwesomeIcon icon={faTimes}></FontAwesomeIcon>
-                        }                                    </td>
-                    <td scope="row" className="Centered border-secondary border-right border-top-0 font-weight-normal">
-                        {item.file=="true"?
-                            <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
-                            :
-                            <FontAwesomeIcon icon={faTimes}></FontAwesomeIcon>
-                        }     
-                    </td>
-                    <td scope="row" className="border-secondary border-right border-top-0 font-weight-normal">
-                        {
-                        this.role.includes('manual')?
-                          <QaStatuseUpdate role="manual" key={item.patternID} value={item.patternID} checkedOption={this.props.checkedOption} />:
-                          item.manualQa
-
-                        }
-                    </td>
-                    <td scope="row" className="border-secondary border-right border-top-0 font-weight-normal">
-                        {
-                        this.role.includes('performance')?
-                          <QaStatuseUpdate role="performance" key={item.patternID} value={item.patternID} checkedOption={this.props.checkedOption} />:
-                          item.performance
-
-                        }
-                    </td>
-                    <td scope="row" className="border-secondary border-right border-top-0 font-weight-normal">
-                        {
-                        this.role.includes('automation')?
-                          <QaStatuseUpdate role="automation" key={item.patternID} value={item.patternID} checkedOption={this.props.checkedOption} />:
-                          item.automation
-                        }
-                    </td>
+                ))}
                 </tr>
               ))
           }
@@ -105,6 +65,7 @@ return (
     </table>
 </div>
   );
+        
 }
 }
  

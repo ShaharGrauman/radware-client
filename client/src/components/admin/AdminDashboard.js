@@ -1,7 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Redirect, withRouter, useHistory, useLocation } from 'react-router-dom'
+import { Redirect, withRouter} from 'react-router-dom'
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import MyTable from '../shared/MyTable';

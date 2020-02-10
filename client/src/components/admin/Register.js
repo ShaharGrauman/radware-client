@@ -256,7 +256,7 @@ export default class Register extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            account: { name: "", username: "", phone: "", status: "active", password: "" },
+            account: { first_name:"", last_name: "", username: "", phone: "", status: "active", password: "" },
             errors: {},
             orgRoles: [],
             roles: []
@@ -334,16 +334,15 @@ export default class Register extends React.Component {
         this.setState({ errors: errors || {} });//we render the object errors  in the setstate 
         if (errors) return;
 
-      /*  const user = {
-            name: this.state.name,
+        const user = {
+            // name: this.state.name,
             //lastName: this.state.lastName,
-            usename: this.state.email,
-            phonenumber: this.state.phone,
-            status: "active",
-            password: this.state.password
+            username: this.state.account.username,
+            phone: this.state.account.phone,
+            password: this.state.account.password
         };
 
-
+/*
         let formBody = [];
         for (let property in user) {
             let encodedKey = encodeURIComponent(property);
@@ -363,7 +362,7 @@ export default class Register extends React.Component {
         */
     
  
-      axios.post('http://localhost:3000/users/new_user', this.state.account)
+      axios.post('http://localhost:3000/users/new_user', user)
             .then(response => {
                 
                 console.log(response)
@@ -414,6 +413,9 @@ export default class Register extends React.Component {
 
 
                         </div>
+
+
+                    
 
                     
 
@@ -472,8 +474,8 @@ export default class Register extends React.Component {
 
                         <MyTable
                             header={this.tableHeaders}
-                            // data={this.rolesData}
-                            data={this.state.roles}
+                            data={this.rolesData}
+                            // data={this.state.roles}
                             sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
                             className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</MyTable>
 

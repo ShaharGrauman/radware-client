@@ -92,6 +92,7 @@ return (
                   <button type="submit" class="btn btn-block btn-secondary"
                   onClick ={()=> this.loginRedirect("login")}
                   >Back to Login</button>
+               
               </form>
             </div>
           </div>
