@@ -17,6 +17,7 @@ import SearchSignature from './components/reports/SearchSignature/SearchSignatur
 import ResetPassword from './components/admin/ResetPassword';
 import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
 import ResearcherDashboard from './components/reports/SearchSignature/ResearcherDashboard';
+import Export from './components/reports/SearchSignature/Export';
 import ApplicationBar from './components/shared/ApplicationBar';
 
 class App extends React.Component {
