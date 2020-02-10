@@ -3,6 +3,7 @@ import axios from 'axios'
 import { UncontrolledCollapse, Button, CardBody, Card } from 'reactstrap';
 import { InputGroup, InputGroupText, InputGroupAddon, Input } from 'reactstrap';
 
+import {ButtonToolbar, OverlayTrigger, Tooltip} from 'react-bootstrap';
 
 
 
@@ -50,10 +51,12 @@ export default class SearchSignature extends Component {
       slider: 2
     };
     this.switchers = [];
+    this.sortArrByKey=this.sortArrByKey.bind(this)
   }
 
   addingButtonsToTable() {
     const tableData=this.state.tableData;
+    if(tableData.length!=0){
     tableData.map(signatur=>{
       signatur['']=
       <div>
@@ -68,6 +71,7 @@ export default class SearchSignature extends Component {
     })
     this.setState({tableData:tableData})
   }
+}
   onSearch = async e=> {
     let requestURL='';
     Object.keys(this.urlDetails).forEach(key=>{
@@ -84,8 +88,7 @@ export default class SearchSignature extends Component {
     
     try{
       const {data} = await axios.get(requestURL,{withCredentials: true});
-      console.log('data is:',data)
-      // let newData=data
+      // console.log('data is:',data)
       let newData=data.map(sig=>(
         {
           pattern_id: sig.pattern_id,
@@ -93,13 +96,14 @@ export default class SearchSignature extends Component {
           status:sig.status
         }
       ));
-      console.log('new data is:',data,newData)
+      // console.log('new data is:',data,newData)
       if(newData.length==0){
-        // console.log('newData==[]')
-        newData=[{ patternID: "", description: "", status:'' }]
-      }
+        newData=[{ patternID: "NO RESULTS FOUND !", description: "NO RESULTS FOUND !", status:'NO RESULTS FOUND !' }]
+        this.setState({tableData:newData, errorMsg: '',role:data.role});
+      }else{
       this.setState({tableData:newData, errorMsg: '',role:data.role});
-    
+      this.addingButtonsToTable();
+      }
     }catch(error){
       this.setState({
         errorMsg: 'Inalid email or password'
@@ -107,16 +111,20 @@ export default class SearchSignature extends Component {
     }
 
     // const response = await axios.get('http://localhost:3001/');
-
-    this.addingButtonsToTable();
-
   }
 
 
   sortArrByKey(arr, key) {
-    let sorted = arr.sort();
-    this.setState({ tableData: sorted });
-    return sorted;
+    if(!(key=='')){
+    if(!(this.urlDetails['sortby']==key)){
+      this.urlDetails['sortby']=key;
+      this.urlDetails['orderby']='asc'
+    }else{
+      const orderby=this.urlDetails['orderby']
+      this.urlDetails['orderby']=orderby=='asc'?'desc':'asc'
+    }
+    this.onSearch()
+  }
   }
 
   update = val => {
@@ -152,7 +160,7 @@ export default class SearchSignature extends Component {
 
   render() {
 
-    return (      //onKeyPress={(e)=>e.key=='Enter'?this.onSearch:null}
+    return (      
       <div className="container-fluid" onKeyPress={this.onEnter}>
         <h1 className="mx-md-3 mt-2 mx-lg-5">Search Signatures</h1>
         <form>
@@ -168,11 +176,23 @@ export default class SearchSignature extends Component {
                 placeholder="Search"
                 onChange  ={e=>this.urlUpdate('description',e.target.value)}
               />
+          <ButtonToolbar>
+            <OverlayTrigger
+              key={'top'}
+              placement={'top'}
+              overlay={
+                <Tooltip id={`tooltip-${'top'}`}>
+                  You can search by pressing ENTER
+                </Tooltip>
+              }
+            >
               <InputGroupAddon addonType="append" style={{cursor:'pointer'}}>
                 <InputGroupText>
                 <FontAwesomeIcon icon={faSearch} onClick={this.onSearch}/>
               </InputGroupText>
               </InputGroupAddon>
+            </OverlayTrigger>
+            </ButtonToolbar>
             </InputGroup>
             </div>
           </div>
@@ -222,7 +242,7 @@ export default class SearchSignature extends Component {
         </form>
         <div className="row mx-auto">
           <div className="col-sm-12 col-md-11 mx-sm-1 mx-md-3 mx-lg-5 py-4">
-            <Table data={this.state.tableData} />
+            <Table data={this.state.tableData} sortDataByKey={this.sortArrByKey} />
             <div className="row">
               <div className="col-1 col-sm-1 col-md-2 col-lg-3 mx-sm-1 mx-md-2 mx-lg-0"></div>
               <div className="col-3 col-sm-3 col-md-2 ml-5 " >
