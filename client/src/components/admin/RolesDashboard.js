@@ -3,8 +3,12 @@ import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLink, faWindowClose, faEdit, faCalculator, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 
 import MyTable from '../shared/MyTable';
+import Table from '../shared/Table';
 
 export default class RolesDashboard extends React.Component {
     constructor(props) {
@@ -32,10 +36,13 @@ export default class RolesDashboard extends React.Component {
     SortByKey(sortKey) {
         let sorted;
         if (this.state.isSorted) {
-            sorted = [].concat(this.state.orgRoles).sort((a, b) => a[sortKey] > b[sortKey] ? 1 : -1);
+            // sorted = [].concat(this.state.orgRoles).sort((a, b) => a[sortKey] > b[sortKey] ? 1 : -1);
+            sorted = this.state.orgRoles.sort((a, b) => a[sortKey] > b[sortKey] ? 1 : -1);
+
         }
         else {
-            sorted = [].concat(this.state.orgRoles).sort((a, b) => a[sortKey] < b[sortKey] ? 1 : -1);
+            sorted = this.state.orgRoles.sort((a, b) => a[sortKey] < b[sortKey] ? 1 : -1);
+            // sorted = [].concat(this.state.orgRoles).sort((a, b) => a[sortKey] < b[sortKey] ? 1 : -1);
         }
         this.setState({ roles: sorted, isSorted: !this.state.isSorted })
     }
@@ -55,7 +62,15 @@ export default class RolesDashboard extends React.Component {
             
                 const roles = res.data.map(role => ({
                     ...role, 
-                    permissions: role.permissions.map(permission => permission.description).join(' ,')
+                    permissions: role.permissions.map(permission => permission.name).join(' ,'),
+                    actions: [
+                        <button type="button" title="Edit" class="btn btn-outline float-left ">
+                            <Link to={`/newrole/${role.id}`}><FontAwesomeIcon className="fa-lg" icon={faEdit}></FontAwesomeIcon>
+                            </Link>
+                        </button>,
+                        <button type="button" title="Delete" class="btn  btn-outline float-right" >
+                            <FontAwesomeIcon className="fa-lg " icon={faTrash}></FontAwesomeIcon></button>,
+                        ]
                   }));
           
                   this.setState({ orgRoles: roles, roles: roles });
@@ -64,7 +79,7 @@ export default class RolesDashboard extends React.Component {
            
       
 
-    tableHeaders = ['ID', 'Rolename', 'Permissions'];
+    tableHeaders = ['ID', 'Rolename', 'Permissions','Actions'];
 
     render() {
         return (
@@ -79,17 +94,19 @@ export default class RolesDashboard extends React.Component {
                     </div>
                     <div className="ml-2 mb-3">
                         <button type="button"
+                                     className="ml-2 mr-4 btn btn-secondary"
                             onClick={() => this.renderRedirect("newrole")}
                             className="ml-2 mr-4 btn btn-secondary">New role</button>
-                        <button type="button"
+                        <button type="button" 
                             onClick={() => this.renderRedirect("usersmanagement")}
                             className="btn btn-secondary">Users Managment</button>
                     </div>
 
-                    <div className="ml-3 mr-3">
+                    <div className=" ml-3 mr-3">
+
                         <div className="row">
                             <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
-                                <MyTable
+                                <MyTable 
                                     header={this.tableHeaders}
                                     data={this.state.roles}
                                     key={this.state.roles.ID}

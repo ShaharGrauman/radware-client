@@ -14,7 +14,7 @@ import LogIn from './components/admin/LogIn';
 // import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
 import SearchSignature from './components/reports/SearchSignature/SearchSignature';
 // import ControlSteps from '../components/shared/ControlSteps';
-
+import ResetPassword from './components/admin/ResetPassword';
 import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
 import ResearcherDashboard from './components/reports/SearchSignature/ResearcherDashboard';
 
@@ -23,7 +23,7 @@ class App extends React.Component {
         return (
             <BrowserRouter>
                 <Switch>
-                    <Route path="/edit_user">
+                    <Route path="/edit_user/:id">
                         <EditUserDashbaord />
                     </Route>
                     <Route path="/newuser">
@@ -42,6 +42,12 @@ class App extends React.Component {
                     <Route path="/audit">
                         <Audit />
                     </Route>
+                    <Route path="/researcher">
+                        <Audit />
+                    </Route>
+                    <Route path="/support">
+                        <NewRole />
+                    </Route>
                     <Route path="/users">
                         <AdminDashbaord />
                     </Route>
@@ -55,6 +61,9 @@ class App extends React.Component {
                     <Route path="/SearchSignature">
                         <SearchSignature />
                     </Route> 
+                    <Route path="/resetPassword">
+                        <ResetPassword />
+                    </Route>
                     <Route path="/">
                         <AdminDashbaord />
                     </Route>

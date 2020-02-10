@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Redirect, withRouter, useHistory, useLocation } from 'react-router-dom'
 import axios from 'axios';
-
+import { Link } from 'react-router-dom';
 import MyTable from '../shared/MyTable';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faLink, faWindowClose, faEdit, faCalculator, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 class AdminDashboard extends React.Component {
   constructor(props) {
@@ -47,14 +48,18 @@ class AdminDashboard extends React.Component {
     ).then(res => {
         const users = res.data.map(user => ({
           ...user, 
-          roles: user.roles.map(role => role.description).join(',')
+          roles: user.roles.map(role => role.description).join(','),
+          actions: [
+            <button type="button" title="Edit" class="btn btn-outline float-left "><Link to={`/edit_user/${user.id}`}><FontAwesomeIcon className="fa-lg " icon={faEdit}> </FontAwesomeIcon></Link></button>,
+            <button type="button" title="Delete" class="btn  btn-outline float-right" ><FontAwesomeIcon className="fa-lg " icon={faTrash}></FontAwesomeIcon></button>,
+            ]
         }));
 
         this.setState({ orgUsers: users, users: users });
       });
   }
   
-  tableHeaders = ["SeqID", "Username", "Phone", "Roles", "Status"];
+  tableHeaders = ["SeqID", "Username", "Phone", "Status", "Roles","Actions"];
 
 
   render() {
@@ -62,8 +67,8 @@ class AdminDashboard extends React.Component {
     return (
       <>
         <div>
-          {this.state.rolesManagementClicked && <Redirect to='/admin/roles' />}
-          {this.state.newUserClicked && <Redirect to='/newuser' />}
+          {this.state.rolesManagementClicked && <Redirect to='/admin/roles'/>}
+          {this.state.newUserClicked && <Redirect to='/newuser'/>}
           <div className="ml-3 mb-3">
             <h2>Admin Dashboard</h2>
             <h4>Users` Management</h4>
@@ -77,7 +82,7 @@ class AdminDashboard extends React.Component {
             >Roles Managment</button>
           </div>
 
-          <div className="container ml-0">
+          <div className=" ml-3 mr-3">
             <div className="row">
               <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
                 <MyTable
