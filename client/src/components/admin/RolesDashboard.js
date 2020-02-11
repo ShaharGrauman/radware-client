@@ -35,26 +35,15 @@ export default class RolesDashboard extends React.Component {
 
     SortByKey(sortKey) {
         let sorted;
-        if (this.state.isSorted) {
-            // sorted = [].concat(this.state.orgRoles).sort((a, b) => a[sortKey] > b[sortKey] ? 1 : -1);
-            sorted = this.state.orgRoles.sort((a, b) => a[sortKey] > b[sortKey] ? 1 : -1);
+        if (sortKey.sortOrder) 
+            sorted = this.state.orgRoles.sort((a, b) => a[sortKey.key] > b[sortKey.key] ? 1 : -1);
 
-        }
-        else {
-            sorted = this.state.orgRoles.sort((a, b) => a[sortKey] < b[sortKey] ? 1 : -1);
-            // sorted = [].concat(this.state.orgRoles).sort((a, b) => a[sortKey] < b[sortKey] ? 1 : -1);
-        }
-        this.setState({ roles: sorted, isSorted: !this.state.isSorted })
+        else 
+            sorted = this.state.orgRoles.sort((a, b) => a[sortKey.key] < b[sortKey.key] ? 1 : -1);
+        sortKey.sortOrder= !sortKey.sortOrder;
+        this.setState({ roles: sorted })
     }
 
-
-    // componentDidMount() {
-    //     axios.get(`http://localhost:3000/admin/roles`, (req, res) => res.json()
-    //     ).then(res => {
-    //         const data = res.data;
-    //           this.setState({ roles: data, orgRoles: data });
-    //         });
-    //     }
     componentDidMount() {
         axios.get(`http://localhost:3000/admin/roles`, (req, res) => res.json()
         ).then 
@@ -77,9 +66,14 @@ export default class RolesDashboard extends React.Component {
                 });
         }
            
-      
 
-    tableHeaders = ['ID', 'Rolename', 'Permissions','Actions'];
+    tableHeaders = [{key: "id", value: "ID", toSort: true, sortOrder: true},
+  {key: "name", value: "Role name", toSort: true, sortOrder: true},
+  {key: "description", value: "Description", toSort: true, sortOrder: true},
+  {key: "permissions", value: "Permissions", toSort: true, sortOrder: true},
+  {key: "actions", value: "", toSort: false, sortOrder: true}
+
+];
 
     render() {
         return (
@@ -109,7 +103,6 @@ export default class RolesDashboard extends React.Component {
                                 <MyTable 
                                     header={this.tableHeaders}
                                     data={this.state.roles}
-                                    key={this.state.roles.ID}
                                     sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
                                     className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</MyTable>
                             </div>
