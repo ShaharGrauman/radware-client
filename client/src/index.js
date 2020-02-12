@@ -20,6 +20,8 @@ import ResearcherDashboard from './components/reports/SearchSignature/Researcher
 import Export from './components/reports/SearchSignature/Export';
 import ApplicationBar from './components/shared/ApplicationBar';
 
+import ReactNotifications from 'react-notifications-component'; 
+
 class App extends React.Component {
     render() {
         return (
@@ -61,7 +63,7 @@ class App extends React.Component {
                     <Route path="/researcher-dashboard">
                         <ResearcherDashboard />    
                     </Route>    
-                    <Route path="/createOrEditSignature">
+                    <Route path="/createOrEditSignature/:id">
                         <CreateOrEditSignatureWizard />
                     </Route> 
                     <Route path="/resetPassword">

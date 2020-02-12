@@ -7,17 +7,17 @@ export default class CreateOrEditSignatureStep3Validate extends React.Component 
     constructor(props) {
         super(props);
         this.state = {
-            get: 'Access-Control-Request-Headers: content-type Access-Control-Request-Method: GET',
-            post: 'Access-Control-Request-Headers: content-type Access-Control-Request-Method: POST'
+            get: 'GET <URI> HTTP Host: 10.205.156.51 – default IP , but need to be configurable. Connection: close',
+            post: 'POST <URI>  HTTP/1.1 Host: 10.205.156.51 Referer: attackscript.perl Content-Type: application/x-www-form-urlencoded Cache-Control: no-cache Accept-Encoding: identity Connection: close'
         }
         this.extendedTextHeaders = ['Description', 'Order', 'Actions'];
     }
     
     useGetClick = () => {
-        document.querySelector('#txtTextAreaUseMethods').value = this.state.get;
+        this.props.signatureData.test_data = document.querySelector('#txtTextAreaUseMethods').value = this.state.get;
     }
     usePostClick = () => {
-        document.querySelector('#txtTextAreaUseMethods').value = this.state.post;
+        this.props.signatureData.test_data = document.querySelector('#txtTextAreaUseMethods').value = this.state.post;
     }
 
     render() {
@@ -45,13 +45,13 @@ export default class CreateOrEditSignatureStep3Validate extends React.Component 
                                 <label className="custom-control-label" for="toggle">Keep order</label>
                             </div>
                         </div>
-                        <Table headers={this.extendedTextHeaders} data={this.props.signatureData.vuln_data_extras.map(data => { return ({ parameter: data.description }); })} />
+                        <Table headers={this.extendedTextHeaders} data={this.props.signatureData.vuln_data_extras.map(data => { return ({ Vuln_text: data.description }); })} />
                         <hr />
                         <Scanat signatureData={this.props.signatureData} disabled={true} />
                         <hr />
                         <div className="checkbox">
                             <label>
-                                <input type="checkbox" name="setStartBreak" disabled checked={this.props.signatureData.setStartBreak}></input> Set Start Break
+                                <input type="checkbox" name="setStartBreak" disabled checked={this.props.signatureData.start_break}></input> Set Start Break
                                 </label>
                             <div className="radio ml-4">
                                 <label className="form-check form-check-inline">
@@ -66,7 +66,7 @@ export default class CreateOrEditSignatureStep3Validate extends React.Component 
                         </div>
                         <div className="checkbox">
                             <label>
-                                <input type="checkbox" name="setEndBreak" disabled checked={this.props.signatureData.setEndBreak}></input> Set End Break
+                                <input type="checkbox" name="setEndBreak" disabled checked={this.props.signatureData.end_break}></input> Set End Break
                                 </label>
                             <div className="radio ml-4">
                                 <label className="form-check form-check-inline">
@@ -92,7 +92,8 @@ export default class CreateOrEditSignatureStep3Validate extends React.Component 
                         </div>
                         <div class="mb-3">
                             <br></br>
-                            <textarea class="form-control" id="txtTextAreaUseMethods" rows="18"></textarea>
+                            <textarea class="form-control" id="txtTextAreaUseMethods" rows="18" value={this.props.signatureData.test_data}></textarea>
+
                         </div>
                         <h6>File:</h6>
                         <button type="button" class="btn btn-outline-secondary btn-block">Attach</button>
