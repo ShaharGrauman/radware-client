@@ -6,22 +6,22 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import PhoneIcon from '@material-ui/icons/Phone';
 import FavoriteIcon from '@material-ui/icons/Favorite';
-import PersonPinIcon from '@material-ui/icons/PersonPin';
 import HelpIcon from '@material-ui/icons/Help';
 import ShoppingBasket from '@material-ui/icons/ShoppingBasket';
-import ThumbDown from '@material-ui/icons/ThumbDown';
-import ThumbUp from '@material-ui/icons/ThumbUp';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+import { faThermometerHalf, faPlus, faCopy, faEdit, faUserShield, faUserFriends, faUserTag, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import axios from 'axios';
+
 import CreateOrEditSignatureWizard from '../signature/CreateOrEditSignatureWizard';
 import ResearcherDashboard from '../reports/SearchSignature/ResearcherDashboard';
-import SearchSignature from '../reports/SearchSignature/SearchSignature';
 import AdminDashboard from '../admin/AdminDashboard';
 import Audit from '../admin/Audit';
-import { faThermometerHalf } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import NewUserDashboard from '../admin/NewUserDashboard';
 import RolesDashboard from '../admin/RolesDashboard';
+import SearchSignature from '../reports/SearchSignature/SearchSignature';
+import QADashboard from '../reports/QADashboard/QADashboard';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -49,9 +49,36 @@ TabPanel.propTypes = {
 export default class ApplicationBar extends Component {
     constructor(props) {
         super(props);
+        this.guestUser = { userId: null, username: null, roles: [] };
+        const lsLoginDetails = localStorage.getItem('loginDetails');
+        let loginDetails = this.guestUser;
+        if (lsLoginDetails) {
+            loginDetails = JSON.parse(lsLoginDetails);
+        }
         this.state = {
-            value: 0
+            value: 0,
+            loginDetails: {
+                userId: loginDetails.id,
+                username: loginDetails.username,
+                roles: loginDetails.roles.map(role => role.name)
+            }
         };
+
+        this.topMenuAllItems = [
+            { visibleFor: ['manual_qa', 'performance_qa', 'automation_qa'], label: 'QA Dashboard', icon: <FontAwesomeIcon icon={faCopy} size="2x" />, component: <QADashboard /> },
+            { visibleFor: ['researcher'], label: 'Researcher Dashboard', icon: <FontAwesomeIcon icon={faCopy} size="2x" />, component: <ResearcherDashboard /> },
+            { visibleFor: ['researcher'], label: 'Search Signatures', icon: <FontAwesomeIcon icon={faSearch} size="2x" />, component: <SearchSignature /> },
+            { visibleFor: ['admin'], label: 'Users', icon: <FontAwesomeIcon icon={faUserShield} size="2x" />, component: <AdminDashboard /> },
+            { visibleFor: ['admin'], label: 'Roles', icon: <FontAwesomeIcon icon={faUserTag} size="2x" />, component: <RolesDashboard /> },
+            { visibleFor: ['admin'], label: 'Audit', icon: <FontAwesomeIcon icon={faEdit} size="2x" />, component: <Audit /> }
+        ];
+
+        this.topMenuVisibleItems = this.topMenuAllItems.filter(topMenuItem => topMenuItem.visibleFor.some(role => this.state.loginDetails.roles.includes(role)));
+
+        Promise.all([this.getStatuses(), this.getAttacks()]).then(([statuses, attacks]) => {
+            this.statuses = statuses;
+            this.attacks = attacks;
+        });
     }
 
     a11yProps = index => {
@@ -72,9 +99,35 @@ export default class ApplicationBar extends Component {
         this.setValue(newValue);
     };
 
+    logout = () => {
+        this.setState({ loginDetails: this.guestUser });
+        localStorage.removeItem('loginDetails');
+        window.location.reload();
+    }
+
+    getStatuses = () => {
+        return new Promise((resolve, reject) => {
+            try {
+                axios.get('http://localhost:3001/getStatuses').then(response => resolve(response.data));
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    getAttacks = () => {
+        return new Promise((resolve, reject) => {
+            try {
+                axios.get('http://localhost:3001/getAttacks').then(response => resolve(response.data));
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
     render() {
         return (
-            <div className={this.classes.root} style={{ marginTop: '70px' }}>
+            <div style={{ marginTop: '70px' }}>
                 <AppBar position="fixed" color="default">
                     <Tabs
                         value={this.state.value}
@@ -85,37 +138,40 @@ export default class ApplicationBar extends Component {
                         textColor="primary"
                         aria-label="scrollable force tabs example"
                     >
-                        <Tab label="Create OR EDIT SIGNATURE" icon={<PhoneIcon />} {...this.a11yProps(0)} />
-                        <Tab label="RESEARCHER DASHBOARD" icon={<FavoriteIcon />} {...this.a11yProps(1)} />
-                        <Tab label="SEARCH SIGNATURE" icon={<PersonPinIcon />} {...this.a11yProps(2)} />
-                        <Tab label="ADMIN DASHBOARD" icon={<HelpIcon />} {...this.a11yProps(3)} />
-                        <Tab label="AUDIT" icon={<ShoppingBasket />} {...this.a11yProps(4)} />
-                        <Tab label="NEW USER DASHBOARD" icon={<FontAwesomeIcon icon={faThermometerHalf} size="2x" />} {...this.a11yProps(5)} />
-                        <Tab label="ROLES DASHBOARD" icon={<ThumbUp />} {...this.a11yProps(6)} />
+                        {
+                            this.topMenuVisibleItems.map((topMenuItem, index) =>
+                                <Tab label={topMenuItem.label} icon={topMenuItem.icon} {...this.a11yProps(index)} />)
+                        }
+                        <div style={{ paddingLeft: '20px', display: 'table', height: '70px' }}>
+                            <div style={{ display: 'table-cell', verticalAlign: 'middle' }}>
+                                {
+                                    this.state.loginDetails.username && <span>
+                                        Welcome, {this.state.loginDetails.username}
+                                        <br />
+                                        <a href="#" onClick={this.logout}>Logout</a>
+                                    </span>
+                                }
+                                {
+                                    !this.state.loginDetails.username && <span>
+                                        Welcome, Guest
+                                        <br />
+                                        <a href="login">Login</a>
+                                    </span>
+                                }
+                            </div>
+                        </div>
                     </Tabs>
                 </AppBar>
-                <TabPanel value={this.state.value} index={0}>
-                    <CreateOrEditSignatureWizard />
-                </TabPanel>
-                <TabPanel value={this.state.value} index={1}>
-                    <ResearcherDashboard />
-                </TabPanel>
-                <TabPanel value={this.state.value} index={2}>
-                    <SearchSignature />
-                </TabPanel>
-                <TabPanel value={this.state.value} index={3}>
-                    <AdminDashboard />
-                </TabPanel>
-                <TabPanel value={this.state.value} index={4}>
-                    <Audit />
-                </TabPanel>
-                <TabPanel value={this.state.value} index={5}>
-                    <NewUserDashboard />
-                </TabPanel>
-                <TabPanel value={this.state.value} index={6}>
-                    <RolesDashboard />
-                </TabPanel>
-            </div>
+                <div style={{ marginTop: '50px' }}>
+                    {
+                        this.topMenuVisibleItems.map((topMenuItem, index) =>
+                            <TabPanel value={this.state.value} index={index}>
+                                {topMenuItem.component}
+                            </TabPanel>
+                        )
+                    }
+                </div>
+            </div >
         );
     }
 }

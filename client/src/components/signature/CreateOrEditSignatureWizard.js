@@ -315,7 +315,7 @@ class CreateOrEditSignatureWizard extends Component {
         return (
             <div style={{ margin: '20px' }}>
                 <ControlSteps currentStep={this.state.currentStep} setCurrentStep={this.setCurrentStep} />
-                <div style={{ paddingBottom: '100px' }}>
+                <div style={{ paddingTop: '10px', paddingBottom: '80px' }}>
                     {steps[this.state.currentStep]}
                 </div>
                 <WizardFooterButtons

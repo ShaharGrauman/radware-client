@@ -55,12 +55,13 @@ export default class LogIn extends React.Component {
       console.log(role);
       this.setState({ role: data.roles[0].name });
       this.setState({ errorMsg: '' });
-
+      localStorage.setItem('loginDetails', JSON.stringify(data));
     } catch (error) {
       this.setState({
         errorMsg: 'Invalid email or password'
       });
     }
+    window.location.reload();
   }
   
   // componentDidMount() {
@@ -80,8 +81,8 @@ export default class LogIn extends React.Component {
   
   render() {
 
-    if (this.state.role != '') {
-      return <Redirect to={`/${this.state.role}`} />
+    if (this.state.role !== '') {
+      return <Redirect to='/' />
     }
     return (
       <>
