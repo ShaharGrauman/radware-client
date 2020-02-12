@@ -14,10 +14,9 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 
+
+
 export default class Export extends React.Component {
-
-
-
     constructor(props) {
         super(props)
         this.state = {
@@ -31,21 +30,31 @@ export default class Export extends React.Component {
             putData:[],
             date:'',
             status:'',
-            errorMsg:''
+            errorMsg:'',
+            page:1,
+            selectall:false
         };
-
+        this.selectAllCbs = [];
         this.urlDetails={
             page: 1 ,
-            size: 2,
+            size: 20,
           };
         this.handleChange=this.handleChange.bind(this);
+        this.selectAll=this.selectAll.bind(this);
         this.updateData=[];
 
     }
 
+
+    selectAll=(event)=>{
+      this.selectAllCbs.forEach(id => {
+        document.querySelector(`#cb${id}`).checked = true;
+        this.handleChange(null,true,id);
+      });
+     }
+
+
     handleChange=(event,value,p)=>{
-       // alert(p)
-      // alert(value)
       if(value === true)
       {
           this.updateData.push(p);
@@ -60,26 +69,23 @@ export default class Export extends React.Component {
       } 
 
     //updateData(put)
+
+    updateDataExport = async e=>{
+      const id = {
+        id : this.updateData
+      }
+ 
+      console.log(JSON.stringify(this.updateData))
+      console.log(JSON.stringify(id))
+      try{
+          // console.log(JSON.stringify(urlBody));
+        const {data:dataExport}=await axios.post('http://localhost:3001/signature/export/xml',JSON.stringify(id),{headers: {"Content-Type": "application/json"}});
+        console.log(dataExport)
+  
+      }catch(error){
    
-    updateD=async(e)=>{
-        this.setState({putData:this.updateData});
-        console.log(this.state.putData)
-        e.preventDefault();
-        try{
-          const {data} = await axios.put('http://localhost:3001/login', 
-                                            this.state.putData, 
-                                            {withCredentials: true});
-          console.log(data);
-          this.setState({errorMsg: ''});
-          
-          //Redirect to role page
-        
-        }catch(error){
-            this.setState({
-              errorMsg: 'ERORR 400'
-            });
-        }
-    }
+      }
+  } 
 
     componentWillMount() {
         this.loadData();
@@ -106,14 +112,25 @@ export default class Export extends React.Component {
             const tempdata=[];
             //this.setState({data:res.data.signatureData});
             for (var i=0; i < res.data.signatureData.length ; i++){
-                let t =res.data.signatureData[i].pattern_id
-                tempdata.push({PatternID: res.data.signatureData[i].pattern_id,
-                Description: res.data.signatureData[i].description,
-                Select: <input class="form-check-input-xl" 
-                type="checkbox" 
-                onChange={event => this.handleChange(event,event.target.checked,t)}/>
-                });
+              let t =res.data.signatureData[i].id
+              this.selectAllCbs.push(t);
+              if(res.data.signatureData[i].test_data==true){
+              tempdata.push({PatternID: res.data.signatureData[i].pattern_id+"           V",
+              Description: res.data.signatureData[i].description,
+              Select: <input class="form-check-input-xl" id={`cb${t}`}
+              type="checkbox" 
+              onChange={event => this.handleChange(event,event.target.checked,t)}/>
+              });
             }
+            else{
+              tempdata.push({PatternID: res.data.signatureData[i].pattern_id,
+              Description: res.data.signatureData[i].description,
+              Select: <input class="form-check-input-xl" id={`cb${t}`}
+              type="checkbox" 
+              onChange={event => this.handleChange(event,event.target.checked,t)}/>
+              });
+            }
+          }
             console.log(tempdata);
             this.setState({data:tempdata})
           }
@@ -134,12 +151,8 @@ export default class Export extends React.Component {
 
 
     render() {
-        
         return (
-            
             <>
-    
-            
                 <div className="container mt-4 font-italic">
                     <div class="row   ">
                         <h1>Export</h1>
@@ -174,7 +187,9 @@ export default class Export extends React.Component {
                 </span>
                 : null  
               }
-
+              <div className="col-1 col-lg-0 mx-2 mx-sm-2 mx-md-0">
+            <span class="badge badge-secondary">{this.state.page}</span>
+              </div>
               </div>
               <div className="col-1 col-lg-0 mx-2 mx-sm-2 mx-md-0"></div>
               <div className="col-3 col-sm-2">
@@ -197,15 +212,18 @@ export default class Export extends React.Component {
             </div>
     
             <div className="row"></div>
+            <div className="row"></div>
             <div className="row">
-                <div className="col-3"></div>
-                <div className="col-3"></div>
-                <div className="col-3"></div>
-                <div className="col-3">
-                <button className="btn btn-secondary" onClick={this.updateD} >Export to {this.state.experto}</button>   
-                </div>
-                </div> 
-                </div> 
+              <div className="col-6"></div>
+              <div className="col-2"></div>
+              <div className="col-sm-2">
+                <button className="btn btn-secondary" onClick={this.selectAll}>Select all</button>
+              </div>
+              <div className="col-sm-2">
+                <button className="btn btn-secondary" onClick={this.updateDataExport} >Export to {this.state.experto}</button>   
+              </div>
+              </div>
+              </div> 
             </>
         )
 
