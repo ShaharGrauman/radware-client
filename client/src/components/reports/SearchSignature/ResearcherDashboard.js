@@ -196,9 +196,9 @@ export default class ResearcherDashboard extends React.Component {
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
-            <Dropdown.Item href="#/action-1">QA</Dropdown.Item>
-            <Dropdown.Item href="#/action-2">Testing</Dropdown.Item>
-            <Dropdown.Item href="#/action-3">Git</Dropdown.Item>
+            <Dropdown.Item href="/Export">QA</Dropdown.Item>
+            <Dropdown.Item href="/Export">Testing</Dropdown.Item>
+            <Dropdown.Item href="/Export">Git</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
         </div>
