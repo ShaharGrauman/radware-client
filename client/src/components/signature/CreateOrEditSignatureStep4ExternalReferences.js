@@ -1,7 +1,7 @@
 import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
-import { faFont } from '@fortawesome/free-solid-svg-icons';
+import { faTextHeight } from '@fortawesome/free-solid-svg-icons';
 
 import Table from '../shared/Table';
 import Actions from '../shared/Actions';
@@ -26,21 +26,21 @@ export default class CreateOrEditSignatureStep4ExternalReferences extends React.
             <input className="form-control" placeholder="Reference" type="text" id="referenceId" />
           </div>
           <div className="input-group col-md-5">
-         
-              <label className="mb-3 mt-1">
-              <FontAwesomeIcon className="mt-2 fa-lg mr-2" icon={faFont}></FontAwesomeIcon>
-              </label>
-              <select id="inputType" className="form-control">
-                <option selected>CveId</option>
-                <option>bugtraqid</option>
-              </select>
-              <div className="col-md-5 col-xl-3 col-lg-4">
+
+            <label className="mb-3 mt-1">
+              <FontAwesomeIcon className="mt-2 fa-lg mr-2" icon={faTextHeight}></FontAwesomeIcon>
+            </label>
+            <select id="inputType" className="form-control">
+              <option selected>CveId</option>
+              <option>bugtraqid</option>
+            </select>
+            <div className="col-md-5 col-xl-3 col-lg-4">
               <button type="button" className="btn btn-secondary btn-block ml-3 " onClick={() => {
-                  this.setState({ increment_index: this.state.increment_index + 1 });
-                  this.props.addToStateArray('external_references', { id: `NEW_${this.state.increment_index}`, reference: document.querySelector('#referenceId').value, type: document.querySelector('#inputType').value })
-                }}>Add</button>
-              </div>
-        
+                this.setState({ increment_index: this.state.increment_index + 1 });
+                this.props.addToStateArray('external_references', { id: `NEW_${this.state.increment_index}`, reference: document.querySelector('#referenceId').value, type: document.querySelector('#inputType').value })
+              }}>Add</button>
+            </div>
+
           </div>
           <div className="col-md-2 col-xs-4 mb-2"></div>
         </div>
@@ -60,7 +60,7 @@ export default class CreateOrEditSignatureStep4ExternalReferences extends React.
               <div className="input-group-append">
                 <button type="button" className="btn btn-secondary" onClick={() => {
                   this.setState({ increment_index: this.state.increment_index + 1 });
-                  this.props.addToStateArray('web_servers', { id: `NEW_${this.state.increment_index}`, webserver: document.querySelector('#webServerName').value })
+                  this.props.addToStateArray('web_servers', { id: `NEW_${this.state.increment_index}`, web: document.querySelector('#webServerName').value })
                 }}>Add</button>
               </div>
             </div>
@@ -70,7 +70,7 @@ export default class CreateOrEditSignatureStep4ExternalReferences extends React.
         <div className="row mt-3">
           <div className="col-md-5 col-sm-3">
             <Table headers={this.webServerHeader} data={this.props.signatureData.web_servers.map(ws => {
-              return ({ webServer: ws.webserver, actions: [<Actions id={ws.id} stateName="web_servers" excludeFromStateArrayById={this.props.excludeFromStateArrayById} />] });
+              return ({ webServer: ws.web, actions: [<Actions id={ws.id} stateName="web_servers" excludeFromStateArrayById={this.props.excludeFromStateArrayById} />] });
             })} />
           </div>
         </div>

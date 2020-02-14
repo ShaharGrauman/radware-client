@@ -283,17 +283,17 @@ export default class Register extends React.Component {
 
     }
 
-    // componentDidMount() {
-    //     axios.get(`http://localhost:3000/users/roles`, (req, res) => res.json()
-    //     ).then(res => {
-    //         const roles = res.data.map(role => ({
-    //             role: role.name,
-    //             selected: <input type="checkbox" name="myTextEditBox" value="checked"></input>
-    //         }));
+    componentDidMount() {
+        axios.get(`http://localhost:3000/users/roles`, (req, res) => res.json()
+        ).then(res => {
+            const roles = res.data.map(role => ({
+                role: role.name,
+                selected: <input type="checkbox" name="myTextEditBox" value="checked"></input>
+            }));
 
-    //         this.setState({ roles: roles });
-    //     });
-    // }
+            this.setState({ roles: roles });
+        });
+    }
 
     rolesData = [
         { rolename: "Researcher", selected: <input type="checkbox" name="myTextEditBox" value="checked" /> },
@@ -414,6 +414,8 @@ export default class Register extends React.Component {
 
                         </div>
 
+
+                    
 
                     
 

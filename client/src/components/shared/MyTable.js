@@ -7,12 +7,13 @@ let index = 0;
 function TableHeader(props) {
   return (
     <th scope="col">
-      {props.header}
+      {props.header.value}
       <FontAwesomeIcon
-    icon={faSort}
-    onClick = {() => props.sortOn(props.header)}
-        // onClick={() => props.sortOn(props.header)}
-  ></FontAwesomeIcon>
+        className="ml-1"
+        icon={faSort}
+        hidden={!props.header.toSort}
+        onClick={() => props.sortOn(props.header)}
+      ></FontAwesomeIcon>
     </th>
   );
 }
@@ -20,14 +21,14 @@ function TableHeader(props) {
 export default class Table extends React.Component {
   constructor(props) {
     super(props);
-    
- 
+
+
   }
 
   render() {
     return (
       <table className="table table-striped table-hover table-bordered border-dark"
-      style={{ borderWidth: "3px" }}>
+        style={{ borderWidth: "3px" }}>
         <thead className="thead font-weight-normal">
           <tr>
             {this.props.header.map(key => (

@@ -82,10 +82,10 @@ export default class ResearcherDashboard extends React.Component {
     console.log("current:"+this.state.currentButton);
     if(this.state.currentButton == filter){//to return to all when double clicking
       this.setState({currentButton:"all"}); // to set currentButton to all when clicking twice at button
-      requestURL=`http://localhost:3001/signature/researcher`;
+      requestURL=`http://localhost:3000/signature/researcher`;
       this.setState({dataFilter:"All Signatures"}); 
     }else{
-      requestURL=`http://localhost:3001/signature/researcher?status=${filter}`;
+      requestURL=`http://localhost:3000/signature/researcher?status=${filter}`;
       Object.keys(this.urlDetails).forEach(key=>requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`))
       requestURL.slice(1)
     }
@@ -142,9 +142,9 @@ export default class ResearcherDashboard extends React.Component {
   render() {
 
     return (
-      <>
+      <div className='mx-3'>
         {this.state.searchClicked && <Redirect to='/SearchSignature' />}
-        <h2 className="ml-2 mb-3">Researcher dashboard</h2>
+        <h2 className="ml mb-3">Researcher dashboard</h2>
         <div className='row'>
         <div className='ml-2 mr-4'>
           <button type="button" className="ml-2 mr-4 btn btn-secondary">
@@ -203,7 +203,11 @@ export default class ResearcherDashboard extends React.Component {
         </Dropdown>
         </div>
         </div>
-        <div className="ml-2 mt-3 mx-">{this.state.dataFilter} by Create Date</div>
+        <div className="ml-2 mt-3 mx-">
+        <h5 className=" mb-2">{this.state.dataFilter} by Create Date</h5>
+
+          {/* {this.state.dataFilter} by Create Date */}
+          </div>
         <div className="container ml-0">
           <div className="row">
             <div className="col-7">
@@ -340,7 +344,7 @@ export default class ResearcherDashboard extends React.Component {
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 }
