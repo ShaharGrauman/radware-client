@@ -1,15 +1,11 @@
 import React, { Component } from "react";
 import axios from 'axios'
+import { Link } from 'react-router-dom';
+// import { withRouter } from 'react-router-dom';
+
 import { UncontrolledCollapse, Button, CardBody, Card } from 'reactstrap';
 import { InputGroup, InputGroupText, InputGroupAddon, Input } from 'reactstrap';
-
 import {ButtonToolbar, OverlayTrigger, Tooltip} from 'react-bootstrap';
-
-
-
-// import MultiSelectField from './MultiSelectField'
-
-import Table from "../../shared/Table";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -20,6 +16,9 @@ import {
   faCopy
 } from "@fortawesome/free-solid-svg-icons";
 
+
+// import MultiSelectField from './MultiSelectField'
+import Table from "../../shared/Table";
 import SeverityRange from "./SeverityRange";
 import AttackTypeSelection from "./AttackTypeSelection";
 import AttackStatusSelection from "./AttackStatusSelection";
@@ -30,7 +29,7 @@ import RefrencesSelection from "./RefrencesSelection";
 import { object } from "prop-types";
 
 
-export default class SearchSignature extends Component {
+class SearchSignature extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -60,12 +59,13 @@ export default class SearchSignature extends Component {
     tableData.map(signatur=>{
       signatur['']=
       <div>
+        <Link to="/Export/QA">
           <FontAwesomeIcon 
             className="fa-lg float-left" 
             icon={faEdit}  
             style={{ color: 'blue',cursor:'pointer' }}
-            onClick={()=>{window.location.href="http://localhost:3002/QaDashboard"}}
             ></FontAwesomeIcon>
+        </Link>
           <FontAwesomeIcon className="fa-lg float-right" icon={faCopy} style={{ color: 'red',cursor:'pointer' }}></FontAwesomeIcon>
       </div>
     })
@@ -294,3 +294,5 @@ export default class SearchSignature extends Component {
     );
   }
 }
+
+export default SearchSignature;

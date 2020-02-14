@@ -113,10 +113,10 @@ export default class QADashboard extends React.Component {
                         <Button variant="secondary" onClick={() => {
                             this.setState({ popupAlert: false });
                         }}>
-                            Close
+                            Cancel
                 </Button>
                         <Button variant="primary" onClick={onAccept}>
-                            Accepte
+                            Yes
                 </Button>
                     </Modal.Footer>
                 </Modal>
@@ -156,8 +156,8 @@ export default class QADashboard extends React.Component {
         } else {
             return (
                 <>
-                    <h2 className="ml-2 mb-3">QA dashboard</h2>
-                    <h5 className="ml-2 mb-3">Update signatures status at QA (signatures in QA status)</h5>
+                    <h2 className="ml-3 mb-3">QA dashboard</h2>
+                    <h5 className="ml-3 mb-3">Update signatures status at QA (signatures in QA status)</h5>
                     <div className="container ml-0 mt-2">
                         <div className="row">
                             <div className="col">
@@ -245,7 +245,7 @@ export default class QADashboard extends React.Component {
                                         clickedButton: {
                                             role: this.role,
                                             value: 'passed',
-                                            msg: `Are you sure you want to select all ${this.role.join(' and ')} signatures as passed`,
+                                            msg: `Are you sure you want to select all ${this.role.join(' and ')} signatures as passed?`,
                                             callBack: this.selectData
                                         },
                                         popupAlert: true
@@ -259,7 +259,7 @@ export default class QADashboard extends React.Component {
                                                 clickedButton: {
                                                     role: [role],
                                                     value: 'passed',
-                                                    msg: `Are you sure you want to select all ${role} signatures as passed`,
+                                                    msg: `Are you sure you want to select all ${role} signatures as passed?`,
                                                     callBack: this.selectData
                                                 },
                                                 popupAlert: true
@@ -277,7 +277,7 @@ export default class QADashboard extends React.Component {
                                         clickedButton: {
                                             role: this.role,
                                             value: 'failed',
-                                            msg: `Are you sure you want to select all ${this.role.join(' and ')} signatures as failed`,
+                                            msg: `Are you sure you want to select all ${this.role.join(' and ')} signatures as failed?`,
                                             callBack: this.selectData
                                         },
                                         popupAlert: true
@@ -291,7 +291,7 @@ export default class QADashboard extends React.Component {
                                                 clickedButton: {
                                                     role: [role],
                                                     value: 'failed',
-                                                    msg: `Are you sure you want to select all ${role} signatures as failed`,
+                                                    msg: `Are you sure you want to select all ${role} signatures as failed?`,
                                                     callBack: this.selectData
                                                 },
                                                 popupAlert: true
