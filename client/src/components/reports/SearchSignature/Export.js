@@ -29,6 +29,8 @@ export default class Export extends React.Component {
             exportTo:'QA',
             type:'',
             putData:[],
+            updateData:[],
+            exportText: 'Export to',
             date:'',
             status:'',
             errorMsg:''
@@ -36,10 +38,15 @@ export default class Export extends React.Component {
 
         this.urlDetails={
             page: 1 ,
-            size: 2,
+            size: 20,
           };
         this.handleChange=this.handleChange.bind(this);
-        this.updateData=[];
+        this.sortArrByKey=this.sortArrByKey.bind(this)
+        this.exportAll=false
+
+
+    }
+    sortArrByKey(arr, key) {
 
     }
 
@@ -48,28 +55,99 @@ export default class Export extends React.Component {
       // alert(value)
       if(value === true)
       {
-          this.updateData.push(p);
-          console.log(this.updateData)
+          this.state.updateData.push(p);
+          console.log(this.state.updateData)
 
       }else{
-          var index = this.updateData.indexOf(p); 
-          this.updateData.splice(index, 1);
-          console.log(this.updateData)
+          var index = this.state.updateData.indexOf(p); 
+          this.state.updateData.splice(index, 1);
+          console.log(this.state.updateData)
       }
 
       } 
 
     //updateData(put)
+
+    updateDataExport = async e=>{
+
+      const id = {
+        id : this.state.updateData
+      }
+ 
+      console.log('1111111111111')
+      console.log(JSON.stringify(this.state.updateData))
+      console.log(JSON.stringify(id))
+
    
+      
+      try{
+          // console.log(JSON.stringify(urlBody));
+        this.setState({exportText:'loading...'})
+        if(!this.exportAll){
+
+         
+            axios.post('http://localhost:3001/signature/export/xml',{
+              "id":this.state.updateData
+              },{
+                responseType: 'blob'
+            }).then((response) => {
+               var fileURL = window.URL.createObjectURL(new Blob([response.data]));
+               var fileLink = document.createElement('a');
+            
+               fileLink.href = fileURL;
+               fileLink.setAttribute('download', 'file.xml');
+               document.body.appendChild(fileLink);
+             
+               fileLink.click();
+          });
+          
+
+        console.log('export to')
+
+
+      }else{
+        console.log('export All')
+        this.exportAll=false
+        const {data:dataExport}=await axios.post('http://localhost:3001/signature/export/xml','all',{headers: {"Content-Type": "application/json"}});
+
+        }
+        this.setState({exportText:'Exported successfully'})
+        setTimeout(() => {
+          this.setState({exportText:'Export to'})
+        }, 3000);
+        this.setState({updateData:[]})
+
+        //   console.log(msg,this.state.msg)
+      }catch(error){
+        this.setState({exportText:'Exported failed'})
+        setTimeout(() => {
+          this.setState({exportText:'Export to'})
+        }, 3000);   
+      }
+      // console.log(urlBody)
+  } 
+   
+
+
     updateD=async(e)=>{
-        this.setState({putData:this.updateData});
-        console.log(this.state.putData)
+
+        this.setState({putData:this.state.updateData});
         e.preventDefault();
         try{
-          const {data} = await axios.put('http://localhost:3001/login', 
+          if(!this.exportAll){
+          const {data} = await axios.post('http://localhost:3001/signature/export/xml', 
                                             this.state.putData, 
                                             {withCredentials: true});
-          console.log(data);
+                                          
+            }else{
+              const {data} = await axios.post('http://localhost:3001/signature/export/xml', 
+                                                'all', 
+                                                {withCredentials: true});
+
+            }
+
+            
+          // console.log(data);
           this.setState({errorMsg: ''});
           
           //Redirect to role page
@@ -106,13 +184,24 @@ export default class Export extends React.Component {
             const tempdata=[];
             //this.setState({data:res.data.signatureData});
             for (var i=0; i < res.data.signatureData.length ; i++){
-                let t =res.data.signatureData[i].pattern_id
+                let t =res.data.signatureData[i].id
+                if(this.state.updateData.includes(t)){
+                  tempdata.push({PatternID: res.data.signatureData[i].pattern_id,
+                  Description: res.data.signatureData[i].description,
+                  Select: <input class="form-check-input-xl" 
+                  type="checkbox" 
+                  onChange={event => this.handleChange(event,event.target.checked,t)}
+                  checked
+                  />
+                  });
+                }else{
                 tempdata.push({PatternID: res.data.signatureData[i].pattern_id,
                 Description: res.data.signatureData[i].description,
                 Select: <input class="form-check-input-xl" 
                 type="checkbox" 
                 onChange={event => this.handleChange(event,event.target.checked,t)}/>
                 });
+              }
             }
             console.log(tempdata);
             this.setState({data:tempdata})
@@ -155,7 +244,7 @@ export default class Export extends React.Component {
                 <div className="row">
                     <div className="col"></div>
                 </div>        
-                       <Table data={this.state.data} />
+                       <Table data={this.state.data} sortDataByKey={this.sortArrByKey}/>
                        <div className="row">
                 <div className="col-2 col-sm-2 col-md-3 col-lg-4 mx-sm-2 mx-md-3 mx-lg-0"></div>
                 <div className="col-3 col-sm-3 col-md-2" >
@@ -200,9 +289,14 @@ export default class Export extends React.Component {
             <div className="row">
                 <div className="col-3"></div>
                 <div className="col-3"></div>
-                <div className="col-3"></div>
                 <div className="col-3">
-                <button className="btn btn-secondary" onClick={this.updateD} >Export to {this.state.experto}</button>   
+                <button className="btn btn-secondary" onClick={this.updateDataExport} >{this.state.exportText} {this.state.experto}</button>   
+                </div>
+                <div className="col-3">
+                <button className="btn btn-secondary" onClick={()=>{
+                  this.exportAll=true
+                  this.updateDataExport();
+                  }} >Export All {this.state.experto}</button>   
                 </div>
                 </div> 
                 </div> 
