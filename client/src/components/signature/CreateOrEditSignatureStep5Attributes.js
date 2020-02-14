@@ -13,8 +13,7 @@ class CreateOrEditSignatureStep5Attributes extends Component {
               <select name="left_index" className="custom-select my-1 mr-sm-2" id="Left" value={this.props.signatureData.left_index} onChange={this.props.onChangeHandler}>
                 <option value="0">0</option>
                 <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
+                <option value="-1">-1</option>
               </select>
             </div>
           </div>
@@ -26,8 +25,8 @@ class CreateOrEditSignatureStep5Attributes extends Component {
               <select name="right_index" className="custom-select my-1 mr-sm-2" id="Right" value={this.props.signatureData.right_index} onChange={this.props.onChangeHandler}>
                 <option value="0">0</option>
                 <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
+                <option value="-1">-1</option>
+
               </select>
             </div>
           </div>

@@ -6,7 +6,7 @@ let indx = 0;
 const capitalizeFirstLetter = str => str.replace(/^\w/, function (chr) {return chr.toUpperCase();});
 function TableHedaer(props) {
   return (
-    <th scope="col" key={indx++}> 
+    <th scope="col"> 
       {capitalizeFirstLetter(props.header)}
       <FontAwesomeIcon
         icon={faSort}
@@ -42,7 +42,7 @@ export default class Table extends React.Component {
           {this.props.data.map(entries => (
             <tr>
               {Object.values(entries).map(column => (
-                <td key={indx++}>{column}</td>
+                <td >{column}</td>
               ))}
             </tr>
           ))}
