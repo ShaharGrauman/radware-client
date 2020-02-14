@@ -38,7 +38,8 @@ export default class ResearcherDashboard extends React.Component {
       currentButton:'all',
       clickedButton:'',
       errorMsg:'',
-      searchClicked: false
+      searchClicked: false,
+      createOrEditSignatureClicked: false
     }
     this.urlDetails={
       page: 1 ,
@@ -48,9 +49,14 @@ export default class ResearcherDashboard extends React.Component {
 
   renderRedirect = page => {
     if (page === "search") {
-        this.setState({
-            searchClicked: true
-        });
+      this.setState({
+        searchClicked: true
+      });
+    }
+    if (page === "createOrEditSignature") {
+      this.setState({
+        createOrEditSignatureClicked: true
+      });
     }
 }
 
@@ -144,10 +150,11 @@ export default class ResearcherDashboard extends React.Component {
     return (
       <div className='mx-3'>
         {this.state.searchClicked && <Redirect to='/SearchSignature' />}
+        {this.state.createOrEditSignatureClicked && <Redirect to='/createOrEditSignature' />}
         <h2 className="ml mb-3">Researcher dashboard</h2>
         <div className='row'>
         <div className='ml-2 mr-4'>
-          <button type="button" className="ml-2 mr-4 btn btn-secondary">
+          <button type="button" className="ml-2 mr-4 btn btn-secondary" onClick={() => this.renderRedirect("createOrEditSignature")}>
             New
           </button>
           
