@@ -1,16 +1,10 @@
 import React from "react";
 import Table from '../shared/Table';
-
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Dropdown from 'react-bootstrap/Dropdown'
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
 import FormControl from 'react-bootstrap/FormControl'
 import InputGroup from 'react-bootstrap/InputGroup'
-// import axios from 'axios';
-
-// import { lastUpdates } from './api/audit';
-// import { rangeDates } from './api/audit';
-// import { rangeDatesId } from './api/audit';
 
 export default class Audit extends React.Component {
 
@@ -24,9 +18,6 @@ export default class Audit extends React.Component {
         ];  
         this.roleHeader = ['id' , 'Email' , 'role' , 'Event' , 'Lastupdate'];
     }
-
-
-
 
     render() {
         return (
@@ -59,11 +50,6 @@ export default class Audit extends React.Component {
                                             ),
                                         )}
                                     </ButtonToolbar>
-
-
-
-
-
                                 </div>
 
                             </div>
@@ -84,8 +70,6 @@ export default class Audit extends React.Component {
                                             aria-describedby="basic-addon3"
                                             onChange={this.changeHandler}
                                         />
-
-
                                     </div>
                                 </div>
                                 <div className="col-md-6">
@@ -99,12 +83,10 @@ export default class Audit extends React.Component {
                                             placeholder="00:00"
                                             aria-describedby="basic-addon3"
                                         />
-
                                     </div>
                                 </div>
                             </div>
                             <label for="basic-url"><h4>End date</h4></label>
-
                             <div className="row">
                                 <div className="col-md-6">
                                     <div class="input-group mb-3">
@@ -132,7 +114,6 @@ export default class Audit extends React.Component {
                                             class="form-control"
                                             placeholder="00:00"
                                             aria-describedby="basic-addon3"
-                                        //    onChange={this.changeHandler}
                                         />
 
                                     </div>
@@ -231,15 +212,9 @@ export default class Audit extends React.Component {
                                 </div>
                                 <div className="col-md-10 mt-4">
 
-                                    <Table header = {this.roleHeader} data={this.data} />   {/*  צריך לשלוח PROPS   */}
+                                    <Table header = {this.roleHeader} data={this.data} />   
 
-                                    {/* {console.log(this.state.data[0])} */}
-
-                                    {/* {console.log({ id: 1, Email: 'Example1@emaple.com', role: 'Reasearcher', Event: 'update', Lastupdate: '12-12-2019 15:45' })} */}
-
-                                    {/* {console.log(Object.keys({ id: '1', Email: 'Example1@emaple.com', role: 'Reasearcher', Event: 'update', Lastupdate: '12-12-2019 15:45' }))} */}
-
-                                    {/* {console.log(Object.keys(this.state.data))} */}
+                            
                                 </div>
                                 <div className="col-md-1 mt-4">
 

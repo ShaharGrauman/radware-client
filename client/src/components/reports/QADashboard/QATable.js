@@ -12,11 +12,9 @@ constructor(props) {
     this.sortIcon=<FontAwesomeIcon icon={faSort}></FontAwesomeIcon> 
     this.trueIcon=<FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
     this.falseIcon=<FontAwesomeIcon icon={faTimes}></FontAwesomeIcon>
+    this.falseIconRed=<FontAwesomeIcon icon={faTimes} style={{color: 'red'}}></FontAwesomeIcon>
     this.role=this.props.role    
-
 }
-
-
 
 render() {
 return (
@@ -43,6 +41,8 @@ return (
                                 return this.trueIcon;
                             case 0:
                                 return this.falseIcon;
+                            case null:
+                                return this.falseIconRed;
                             default:
                                 return column;
                         }
@@ -50,7 +50,6 @@ return (
                     }
                     </td>
                 ))}
-
                 {(Object.entries(item).slice(7)).map((status,index)=>(
                     <td scope="row" className="Centered border-secondary border-right border-top-0 font-weight-normal" key={index}>
                     {this.role.includes(status[0])?(
@@ -59,9 +58,7 @@ return (
                     status[1]}
                     </td>
                 ))}
-                
                 </tr>
-
               ))
           }
       </tbody>

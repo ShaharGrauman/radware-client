@@ -24,7 +24,7 @@ export default class AttackTypeSelection extends SwitchableComponent {
       this.setState(
         { selectedOption }
       );
-    this.props.onSelect('attackType',url)
+    this.props.onSelect('[attackType]',url)
   };
 
   // onChange = e => {
@@ -39,8 +39,6 @@ export default class AttackTypeSelection extends SwitchableComponent {
 
   render() {
     const { selectedOption } = this.state;
-    console.log(this.state.selectedOption)
-
 
     return (
       <>

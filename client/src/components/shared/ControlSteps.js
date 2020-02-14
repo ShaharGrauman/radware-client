@@ -13,6 +13,7 @@ class ControlSteps extends Component {
                     <Step title="Step 3" subTitle="Validate" description="Description for Validate" />
                     <Step title="Step 4" subTitle="External References" description="Description for External References" />
                     <Step title="Step 5" subTitle="Attributes" description="Description for Attributes" />
+                    {/* <Step title="Step 6" subTitle="History" description="Signature History" /> */}
                 </Steps>
             </div>
         );

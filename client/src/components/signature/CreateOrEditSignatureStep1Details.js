@@ -6,6 +6,52 @@ import Description from './Description';
 
 export default class CreateOrEditSignatureStep1Details extends React.Component {
   render() {
+    const attacks = ['URL Access Violation',
+      'Brute Force',
+      'LDAP Injection',
+      'Cross Site Scripting',
+      'SSI Injection',
+      'Path Traversal',
+      'Hot Link',
+      'Folder Access Violation',
+      'Security Misconfiguration',
+      'Invalid Client Certificate Attributes',
+      'Server Information Leakage',
+      'HTTP Request Header Size Violation',
+      'Revoked Client Certificate Request',
+      'Access from Unauthorized source IP',
+      'HTTP Method Violation',
+      'Credit Card Number Leakage',
+      'Social Security Number Leakage',
+      'Other Pattern Leakage',
+      'Cookie Poisoning',
+      'Session Fixation',
+      'Server Misconfiguration',
+      'File Upload Violation',
+      'Evasion',
+      'Web Services Abuse',
+      'Non-Valid XML Structure',
+      'Null Byte Injection',
+      'Remote File Inclusion',
+      'XPath Injection',
+      'High Resource Utilization',
+      'Buffer Overflow',
+      'Abuse of Functionality',
+      'Application Misconfiguration',
+      'Mail Command Injection',
+      'Fingerprinting',
+      'Input Validation Violation',
+      'Application Information Leakage',
+      'Web Worms',
+      'Directory Indexing',
+      'Predictable Resource Location',
+      'Unauthorized Access Attempt',
+      'Session Flow Violation',
+      'Cross Site Request Forgery',
+      'Unauthorized access attempt',
+      'Wrong Username Password Authentication',
+      'Authentication Event',
+      'Israeli ID Leakage']
     return (
       <div>
         <div id="container-fluid row">
@@ -16,18 +62,22 @@ export default class CreateOrEditSignatureStep1Details extends React.Component {
           </div>
           <div className="row ml-2 justify-content-around">
             <div className="col-lg-5 col-md-5 mb-2 col-sm-10 col-xs-8">
-            <h5 className="display-5">Attack name:</h5>
+              <h5 className="display-5">Attack name:</h5>
               <small>The customer will identity the attack by this name</small>
               <div id="btns">
-                <div className="input-group sm-3">
-                  <input type="text" className="form-control" name="attackName" placeholder="Attack name" value={this.props.signatureData.attackName} onChange={this.props.onChangeHandler} onBlur={this.props.onBlur}></input>
-                  <div className="input-group-append">
-                    <button type="button" className="btn btn-secondary">Search</button>
-                  </div>
-                </div>
+
+
+                <div className="input-group-append">
+
+                  <select className="form-control" value={this.props.signatureStatus} onChange={this.props.onChangeHandler}>
+                    <option selected>Attack...</option>
                     {
-                      this.props.signatureErrors.attackName.map(error => <div className="text-danger">{error}</div>)
+                      attacks.map((s, index) => <option key={index}>{s}</option>)
                     }
+                  </select>
+
+                </div>
+            
               </div>
             </div>
             <Status status={this.props.signatureData.status} onChangeHandler={this.props.onChangeHandler} />
