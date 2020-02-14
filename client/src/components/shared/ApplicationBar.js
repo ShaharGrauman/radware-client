@@ -54,7 +54,6 @@ export default class ApplicationBar extends Component {
         }
 
         this.state = {
-            value: 0,
             loginDetails: {
                 userId: loginDetails.id,
                 username: loginDetails.username,
@@ -83,13 +82,9 @@ export default class ApplicationBar extends Component {
         { root: { flexGrow: 1, width: '100%', backgroundColor: theme.palette.background.paper } }
     ));
 
-    setValue = newValue => {
+    setActiveTab = newValue => {
         this.setState({ value: newValue });
     }
-
-    handleChange = (event, newValue) => {
-        this.setValue(newValue);
-    };
 
     logout = () => {
         this.setState({ loginDetails: this.guestUser });
@@ -99,28 +94,30 @@ export default class ApplicationBar extends Component {
 
     render() {
         return (
-            <div style={{ marginTop: '70px' }}>
+            <div style={{ marginTop: '70px', marginBottom: '100px' }}>
                 <AppBar position="fixed" color="default">
                     <Tabs
                         value={this.state.value}
-                        onChange={this.handleChange}
                         variant="scrollable"
                         scrollButtons="on"
                         indicatorColor="primary"
                         textColor="primary"
                         aria-label="scrollable force tabs example"
                     >
-                        {this.topMenuVisibleItems.map((topMenuItem, index) =>
-                            <NavLink to={topMenuItem.link} activeClassName="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit MuiTab-labelIcon">
-                                <Tab label={topMenuItem.label} icon={topMenuItem.icon} {...this.a11yProps(index)} />
-                            </NavLink>)}
+                        {
+                            this.topMenuVisibleItems.map((topMenuItem, index) =>
+                                <NavLink to={topMenuItem.link} activeStyle={{ color: "blue" }} onClick={() => this.setActiveTab(index)} className="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit MuiTab-labelIcon PrivateTabIndicator-root-74 PrivateTabIndicator-colorPrimary-75">
+                                    <Tab label={topMenuItem.label} icon={topMenuItem.icon} />
+                                </NavLink>
+                            )
+                        }
                         <div style={{ paddingLeft: '20px', display: 'table', height: '70px' }}>
                             <div style={{ display: 'table-cell', verticalAlign: 'middle' }}>
                                 {
                                     this.state.loginDetails.username && <span>
                                         Welcome, {this.state.loginDetails.username}
                                         <br />
-                                        <a href="#" onClick={this.logout}>Logout</a>
+                                        <a href="/" onClick={this.logout}>Logout</a>
                                     </span>
                                 }
                                 {
@@ -134,20 +131,6 @@ export default class ApplicationBar extends Component {
                         </div>
                     </Tabs>
                 </AppBar>
-                <div style={{ marginTop: '50px' }}>
-                    {/* {
-                        this.topMenuVisibleItems.map((topMenuItem, index) =>
-                            <TabPanel value={this.state.value} index={index}>
-                                {topMenuItem.component}
-                            </TabPanel>
-                        )
-                    } */}
-                    {<Switch>
-                        <Route path="/edit_user/:id">
-                            <EditUserDashbaord />
-                        </Route>
-                    </Switch>}
-                </div>
             </div >
         );
     }
