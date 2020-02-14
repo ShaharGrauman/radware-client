@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { NavLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -8,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 import { faCopy, faEdit, faUserShield, faUserTag, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import ResearcherDashboard from '../reports/SearchSignature/ResearcherDashboard';
 import AdminDashboard from '../admin/AdminDashboard';
@@ -15,6 +17,7 @@ import Audit from '../admin/Audit';
 import RolesDashboard from '../admin/RolesDashboard';
 import SearchSignature from '../reports/SearchSignature/SearchSignature';
 import QADashboard from '../reports/QADashboard/QADashboard';
+import EditUserDashbaord from '../admin/EditUserDashbaord';
 
 function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -60,12 +63,12 @@ export default class ApplicationBar extends Component {
         };
 
         this.topMenuAllItems = [
-            { visibleFor: ['manual_qa', 'performance_qa', 'automation_qa'], label: 'QA Dashboard', icon: <FontAwesomeIcon icon={faCopy} size="2x" />, component: <QADashboard /> },
-            { visibleFor: ['researcher'], label: 'Researcher Dashboard', icon: <FontAwesomeIcon icon={faCopy} size="2x" />, component: <ResearcherDashboard /> },
-            { visibleFor: ['researcher'], label: 'Search Signatures', icon: <FontAwesomeIcon icon={faSearch} size="2x" />, component: <SearchSignature /> },
-            { visibleFor: ['admin'], label: 'Users', icon: <FontAwesomeIcon icon={faUserShield} size="2x" />, component: <AdminDashboard /> },
-            { visibleFor: ['admin'], label: 'Roles', icon: <FontAwesomeIcon icon={faUserTag} size="2x" />, component: <RolesDashboard /> },
-            { visibleFor: ['admin'], label: 'Audit', icon: <FontAwesomeIcon icon={faEdit} size="2x" />, component: <Audit /> }
+            { visibleFor: ['manual_qa', 'performance_qa', 'automation_qa'], label: 'QA Dashboard', icon: <FontAwesomeIcon icon={faCopy} size="2x" />, link: '/QaDashboard' },
+            { visibleFor: ['researcher'], label: 'Researcher Dashboard', icon: <FontAwesomeIcon icon={faCopy} size="2x" />, link: '/researcher-dashboard' },
+            { visibleFor: ['researcher'], label: 'Search Signatures', icon: <FontAwesomeIcon icon={faSearch} size="2x" />, link: '/SearchSignature' },
+            { visibleFor: ['admin'], label: 'Users', icon: <FontAwesomeIcon icon={faUserShield} size="2x" />, link: '/users' },
+            { visibleFor: ['admin'], label: 'Roles', icon: <FontAwesomeIcon icon={faUserTag} size="2x" />, link: '/admin/roles' },
+            { visibleFor: ['admin'], label: 'Audit', icon: <FontAwesomeIcon icon={faEdit} size="2x" />, link: '/audit' }
         ];
         this.topMenuVisibleItems = this.topMenuAllItems.filter(topMenuItem => topMenuItem.visibleFor.some(role => this.state.loginDetails.roles.includes(role)));
     }
@@ -107,10 +110,10 @@ export default class ApplicationBar extends Component {
                         textColor="primary"
                         aria-label="scrollable force tabs example"
                     >
-                        {
-                            this.topMenuVisibleItems.map((topMenuItem, index) =>
-                                <Tab label={topMenuItem.label} icon={topMenuItem.icon} {...this.a11yProps(index)} />)
-                        }
+                        {this.topMenuVisibleItems.map((topMenuItem, index) =>
+                            <NavLink to={topMenuItem.link} activeClassName="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit MuiTab-labelIcon">
+                                <Tab label={topMenuItem.label} icon={topMenuItem.icon} {...this.a11yProps(index)} />
+                            </NavLink>)}
                         <div style={{ paddingLeft: '20px', display: 'table', height: '70px' }}>
                             <div style={{ display: 'table-cell', verticalAlign: 'middle' }}>
                                 {
@@ -132,13 +135,18 @@ export default class ApplicationBar extends Component {
                     </Tabs>
                 </AppBar>
                 <div style={{ marginTop: '50px' }}>
-                    {
+                    {/* {
                         this.topMenuVisibleItems.map((topMenuItem, index) =>
                             <TabPanel value={this.state.value} index={index}>
                                 {topMenuItem.component}
                             </TabPanel>
                         )
-                    }
+                    } */}
+                    {<Switch>
+                        <Route path="/edit_user/:id">
+                            <EditUserDashbaord />
+                        </Route>
+                    </Switch>}
                 </div>
             </div >
         );

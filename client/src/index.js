@@ -23,73 +23,74 @@ import ResearcherDashboard from './components/reports/SearchSignature/Researcher
 import Export from './components/reports/SearchSignature/Export';
 import ApplicationBar from './components/shared/ApplicationBar';
 
-import ReactNotifications from 'react-notifications-component'; 
+import ReactNotifications from 'react-notifications-component';
 
 class App extends React.Component {
     render() {
         return (
             <BrowserRouter>
-                <Switch>
-                    <Route path="/edit_user/:id">
-                        <EditUserDashbaord />
-                    </Route>
-                    <Route path="/newuser">
-                        <NewUserDashbaord />
-                    </Route>
-                    <Route path="/admin/roles">
-                        <RolesDashboard />
-                    </Route>
-                    <Route path="/newrole">
-                        <NewRole />
-                    </Route>
-                    <Route path="/login">
-                        <LogIn />
-                    </Route>
-                    <Route path="/audit">
-                        <Audit />
-                    </Route>
-                    <Route path="/researcher">
-                        <Audit />
-                    </Route>
-                    <Route path="/support">
-                        <NewRole />
-                    </Route>
-                    <Route path="/users">
-                        <AdminDashbaord />
-                    </Route>
-                    <Route path="/resetpassword">
-                        <ResetPassword />    
-                    </Route>  
-                     <Route path="/SearchSignature">
-                        <SearchSignature />
-                    </Route> 
-                    <Route path="/researcher-dashboard">
-                        <ResearcherDashboard />    
-                    </Route>    
-                    <Route path="/createOrEditSignature/:id">
-                        <CreateOrEditSignatureWizard />
-                    </Route>
-                    <Route path="/createOrEditSignature">
-                        <CreateOrEditSignatureWizard />
-                    </Route>
-                    <Route path="/QaDashboard">
-                        <QaDashboard />
-                    </Route> 
-                    <Route path="/Export/:type">
-                        <Export />
-                    </Route> 
-                    <Route path="/CveIdReport">
-                        <CveIdReport />
-                    </Route> 
-                    <Route path="/resetPassword">
-                        <ResetPassword />
-                    </Route>
-                    <Route path="/">
-                        <ApplicationBar />
-                    </Route>
-                </Switch>
-            </BrowserRouter>
-             );
+                <ApplicationBar />
+                    <Switch>
+                        <Route path="/edit_user/:id">
+                            <EditUserDashbaord />
+                        </Route>
+                        <Route path="/newuser">
+                            <NewUserDashbaord />
+                        </Route>
+                        <Route path="/admin/roles">
+                            <RolesDashboard />
+                        </Route>
+                        <Route path="/newrole">
+                            <NewRole />
+                        </Route>
+                        <Route path="/login">
+                            <LogIn />
+                        </Route>
+                        <Route path="/audit">
+                            <Audit />
+                        </Route>
+                        <Route path="/researcher">
+                            <Audit />
+                        </Route>
+                        <Route path="/support">
+                            <NewRole />
+                        </Route>
+                        <Route path="/users">
+                            <AdminDashbaord />
+                        </Route>
+                        <Route path="/resetpassword">
+                            <ResetPassword />
+                        </Route>
+                        <Route path="/SearchSignature">
+                            <SearchSignature />
+                        </Route>
+                        <Route path="/researcher-dashboard">
+                            <ResearcherDashboard />
+                        </Route>
+                        <Route path="/createOrEditSignature/:id">
+                            <CreateOrEditSignatureWizard  />
+                        </Route>
+                        <Route path="/createOrEditSignature">
+                            <CreateOrEditSignatureWizard />
+                        </Route>
+                        <Route path="/QaDashboard">
+                            <QaDashboard />
+                        </Route>
+                        <Route path="/Export/:type">
+                            <Export />
+                        </Route>
+                        <Route path="/CveIdReport">
+                            <CveIdReport />
+                        </Route>
+                        <Route path="/resetPassword">
+                            <ResetPassword />
+                        </Route>
+                        <Route path="/">
+                            <ApplicationBar />
+                        </Route>
+                    </Switch>
+                </BrowserRouter>
+        );
     }
 }
 ReactDOM.render(<App />, document.getElementById("root"));
