@@ -56,12 +56,12 @@ export default class LogIn extends React.Component {
       this.setState({ role: data.roles[0].name });
       this.setState({ errorMsg: '' });
       localStorage.setItem('loginDetails', JSON.stringify(data));
+      window.location.reload();
     } catch (error) {
       this.setState({
         errorMsg: 'Invalid email or password'
       });
     }
-    window.location.reload();
   }
   
   // componentDidMount() {

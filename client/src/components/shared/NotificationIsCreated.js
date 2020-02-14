@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 
 
-class NotificationIsCreated extends React.Component {
+export default class NotificationIsCreated extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -46,16 +46,3 @@ class NotificationIsCreated extends React.Component {
     }
 }
 
-export default function () {
-    return (
-        store.addNotification({
-            content: NotificationIsCreated,
-            container: 'top-center',
-            animationIn: ["animated", "fadeIn"],
-            animationOut: ["animated", "fadeOut"],
-            dismiss: {
-                duration: 0,
-            }
-        })
-    )
-}

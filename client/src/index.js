@@ -68,7 +68,10 @@ class App extends React.Component {
                     </Route>    
                     <Route path="/createOrEditSignature/:id">
                         <CreateOrEditSignatureWizard />
-                    </Route> 
+                    </Route>
+                    <Route path="/createOrEditSignature">
+                        <CreateOrEditSignatureWizard />
+                    </Route>
                     <Route path="/QaDashboard">
                         <QaDashboard />
                     </Route> 
