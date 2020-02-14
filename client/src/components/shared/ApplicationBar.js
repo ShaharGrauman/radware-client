@@ -4,21 +4,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import PhoneIcon from '@material-ui/icons/Phone';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import HelpIcon from '@material-ui/icons/Help';
-import ShoppingBasket from '@material-ui/icons/ShoppingBasket';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
-import { faThermometerHalf, faPlus, faCopy, faEdit, faUserShield, faUserFriends, faUserTag, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faCopy, faEdit, faUserShield, faUserTag, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import axios from 'axios';
 
-import CreateOrEditSignatureWizard from '../signature/CreateOrEditSignatureWizard';
 import ResearcherDashboard from '../reports/SearchSignature/ResearcherDashboard';
 import AdminDashboard from '../admin/AdminDashboard';
 import Audit from '../admin/Audit';
-import NewUserDashboard from '../admin/NewUserDashboard';
 import RolesDashboard from '../admin/RolesDashboard';
 import SearchSignature from '../reports/SearchSignature/SearchSignature';
 import QADashboard from '../reports/QADashboard/QADashboard';
@@ -49,12 +42,14 @@ TabPanel.propTypes = {
 export default class ApplicationBar extends Component {
     constructor(props) {
         super(props);
+
         this.guestUser = { userId: null, username: null, roles: [] };
         const lsLoginDetails = localStorage.getItem('loginDetails');
         let loginDetails = this.guestUser;
         if (lsLoginDetails) {
             loginDetails = JSON.parse(lsLoginDetails);
         }
+
         this.state = {
             value: 0,
             loginDetails: {
@@ -72,13 +67,7 @@ export default class ApplicationBar extends Component {
             { visibleFor: ['admin'], label: 'Roles', icon: <FontAwesomeIcon icon={faUserTag} size="2x" />, component: <RolesDashboard /> },
             { visibleFor: ['admin'], label: 'Audit', icon: <FontAwesomeIcon icon={faEdit} size="2x" />, component: <Audit /> }
         ];
-
         this.topMenuVisibleItems = this.topMenuAllItems.filter(topMenuItem => topMenuItem.visibleFor.some(role => this.state.loginDetails.roles.includes(role)));
-
-        Promise.all([this.getStatuses(), this.getAttacks()]).then(([statuses, attacks]) => {
-            this.statuses = statuses;
-            this.attacks = attacks;
-        });
     }
 
     a11yProps = index => {
@@ -103,26 +92,6 @@ export default class ApplicationBar extends Component {
         this.setState({ loginDetails: this.guestUser });
         localStorage.removeItem('loginDetails');
         window.location.reload();
-    }
-
-    getStatuses = () => {
-        return new Promise((resolve, reject) => {
-            try {
-                axios.get('http://localhost:3001/getStatuses').then(response => resolve(response.data));
-            } catch (error) {
-                reject(error);
-            }
-        });
-    }
-
-    getAttacks = () => {
-        return new Promise((resolve, reject) => {
-            try {
-                axios.get('http://localhost:3001/getAttacks').then(response => resolve(response.data));
-            } catch (error) {
-                reject(error);
-            }
-        });
     }
 
     render() {

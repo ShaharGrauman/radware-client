@@ -30,7 +30,7 @@ export default class Table extends React.Component {
       >
         <thead>
           <tr>
-            {Object.keys(this.props.data[0]).map(key => (
+             { Object.keys(this.props.data.length !== 0 && this.props.data[0]).map(key => (
               <TableHedaer
                 header={key}
                 sortOn={() => this.props.sortDataByKey(this.props.data, key)}
