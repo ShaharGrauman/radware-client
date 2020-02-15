@@ -11,19 +11,15 @@ import NewRole from './components/admin/NewRole';
 import Audit from './components/admin/Audit';
 import RolesDashboard from './components/admin/RolesDashboard';
 import LogIn from './components/admin/LogIn';
-// import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
 import SearchSignature from './components/reports/SearchSignature/SearchSignature';
-// import ControlSteps from '../components/shared/ControlSteps';
-import QaDashboard from './components/reports/QADashboard/QADashboard'
-import CveIdReport from './components/reports/CveIdReport/CveIdReport'
+import QaDashboard from './components/reports/QADashboard/QADashboard';
+import CveIdReport from './components/reports/CveIdReport/CveIdReport';
 
 import ResetPassword from './components/admin/ResetPassword';
 import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
 import ResearcherDashboard from './components/reports/SearchSignature/ResearcherDashboard';
 import Export from './components/reports/SearchSignature/Export';
 import ApplicationBar from './components/shared/ApplicationBar';
-
-import ReactNotifications from 'react-notifications-component';
 
 class App extends React.Component {
     render() {
