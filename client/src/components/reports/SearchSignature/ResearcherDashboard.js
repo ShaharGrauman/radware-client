@@ -2,10 +2,10 @@ import React from "react";
 
 import axios from 'axios';
 import { Dropdown } from 'react-bootstrap';
+import {Badge} from 'react-bootstrap'; 
 import { Redirect } from 'react-router-dom';
 
 import { Link } from 'react-router-dom';
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRight,
@@ -29,6 +29,7 @@ export default class ResearcherDashboard extends React.Component {
         
 
       ] ,
+      signaturesCountByStatus:[{Count:0},{Count:0},{Count:0},{Count:0},{Count:0}],
       in_progress:true,
       in_test:true,
       inQa:true,
@@ -71,6 +72,9 @@ export default class ResearcherDashboard extends React.Component {
              
             ]});         
           }else{
+            this.setState({signaturesCountByStatus:res.data.signaturesCountByStatus})
+            console.log(res.data.signaturesCountByStatus);
+            console.log(this.state.signaturesCountByStatus[1].Count );
             this.setState({data:res.data.signatureData});
           }
           
@@ -88,10 +92,10 @@ export default class ResearcherDashboard extends React.Component {
     console.log("current:"+this.state.currentButton);
     if(this.state.currentButton == filter){//to return to all when double clicking
       this.setState({currentButton:"all"}); // to set currentButton to all when clicking twice at button
-      requestURL=`http://localhost:3000/signature/researcher`;
+      requestURL=`http://localhost:3001/signature/researcher`;
       this.setState({dataFilter:"All Signatures"}); 
     }else{
-      requestURL=`http://localhost:3000/signature/researcher?status=${filter}`;
+      requestURL=`http://localhost:3001/signature/researcher?status=${filter}`;
       Object.keys(this.urlDetails).forEach(key=>requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`))
       requestURL.slice(1)
     }
@@ -285,7 +289,8 @@ export default class ResearcherDashboard extends React.Component {
                       }
                     
                     >
-                      <i className="fas fa-star"></i> In progress
+                      <i className="fas fa-star"></i> In progress 
+                      <Badge pill variant="info" className=" ml-3"> {this.state.signaturesCountByStatus[1].Count} </Badge>
                     </button>
                     <button
                       type="button"
@@ -294,12 +299,14 @@ export default class ResearcherDashboard extends React.Component {
                           {
                             this.selectButton("inTest");
                             this.loadData("in_test");
+                            
                             // this.setState({this.urlDetails.page:1});
                             }
                       }
                     
                     >
                       <i className="fas fa-star-half-alt"></i> In test
+                      <Badge pill variant="info" className=" ml-3"> {this.state.signaturesCountByStatus[3].Count} </Badge>
                     </button>
                     <button
                       type="button"
@@ -313,6 +320,7 @@ export default class ResearcherDashboard extends React.Component {
                       }
                                           >
                       <i className="fas fa-star-half"></i> In QA
+                      <Badge pill variant="info" className=" ml-3"> {this.state.signaturesCountByStatus[2].Count} </Badge>
                     </button>
                   </div>
                   <div className="col">
@@ -329,6 +337,7 @@ export default class ResearcherDashboard extends React.Component {
                       }
                     >
                       <i className="far fa-star"></i> Published
+                      <Badge pill variant="info" className=" ml-3"> {this.state.signaturesCountByStatus[0].Count} </Badge>
                     </button>
                     <button
 
@@ -343,7 +352,10 @@ export default class ResearcherDashboard extends React.Component {
                       }
 
                     >
-                      <i className="fas fa-exclamation-triangle"></i> Suspended
+                      <i className="fas fa-exclamation-triangle"></i> Suspended 
+                      
+                      <Badge pill variant="info" className=" ml-3"> 0 </Badge>
+                      
                     </button>
                   </div>
                 </div>
