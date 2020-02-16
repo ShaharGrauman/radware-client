@@ -1,11 +1,11 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Redirect, withRouter} from 'react-router-dom'
-import axios from 'axios';
+import { Redirect, withRouter, useHistory, useLocation, matchPath } from 'react-router-dom'
+import { getUsers } from '../../api/controllers/admin';
 import { Link } from 'react-router-dom';
 import MyTable from '../shared/MyTable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLink, faWindowClose, faEdit, faCalculator, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faLink, faWindowClose, faEdit, faCalculator, faTrash, faAlignCenter, faUser, faUserPlus } from '@fortawesome/free-solid-svg-icons';
 
 class AdminDashboard extends React.Component {
   constructor(props) {
@@ -13,7 +13,7 @@ class AdminDashboard extends React.Component {
     this.state = {
       orgUsers: [],
       users: [],
-      rolesManagementClicked: false,
+      id: 0,
       newUserClicked: false
     }
   }
@@ -24,66 +24,70 @@ class AdminDashboard extends React.Component {
         newUserClicked: true
       });
     }
-    if (page === "/admin/roles") {
-      this.setState({
-        rolesManagementClicked: true
-      });
-    }
   }
 
   SortByKey(sortKey) {
     let sorted;
-    if(sortKey.sortOrder)
+    if (sortKey.sortOrder)
       sorted = this.state.orgUsers.sort((a, b) => a[sortKey.key] > b[sortKey.key] ? 1 : -1);
-    
-    else 
+
+    else
       sorted = this.state.orgUsers.sort((a, b) => a[sortKey.key] < b[sortKey.key] ? 1 : -1);
-    sortKey.sortOrder= !sortKey.sortOrder;
-    this.setState({ users: sorted})
+    sortKey.sortOrder = !sortKey.sortOrder;
+    this.setState({ users: sorted })
   }
 
-  componentDidMount() {
-    axios.get(`http://localhost:3000/users`, (req, res) => res.json()
-    ).then(res => {
-        const users = res.data.map(user => ({
-          ...user, 
-          roles: user.roles.map(role => role.description).join(', '),
-          actions: [
-            <button type="button" key={user.id+"edit"} title="Edit" className="btn btn-outline float-left "><Link to={`/edit_user/${user.id}`}><FontAwesomeIcon className="fa-lg " icon={faEdit}> </FontAwesomeIcon></Link></button>,
-            <button type="button" key={user.id+"delete"} title="Delete" className="btn  btn-outline float-left" ><FontAwesomeIcon className="fa-lg " icon={faTrash}></FontAwesomeIcon></button>,
-            ]
-        }));
+  async componentDidMount() {
+    const users = await getUsers();
 
-        this.setState({ orgUsers: users, users: users });
-      });
+    const usersWithRoles = users.map(user => ({
+      ...user,
+      roles: user.roles.map(role => role.description).join(', '),
+      actions: [
+        //key={user.id + "edit"}
+        // key={user.id + "edit"}
+        <button type="button" key={user.id + "edit"} title="Edit" className="btn btn-outline float-left "><Link to={`/edit_user/${user.id}`} ><FontAwesomeIcon className="fa-lg " icon={faEdit}> </FontAwesomeIcon></Link></button>,
+        <button type="button" key={user.id + "delete"} title="Delete" className="btn  btn-outline float-left" ><FontAwesomeIcon className="fa-lg " icon={faTrash}></FontAwesomeIcon></button>,
+      ]
+    }));
+
+    this.setState({ 
+      orgUsers: usersWithRoles, 
+      users: usersWithRoles 
+    });
   }
-  tableHeaders = [{key: "id", value: "SeqID", toSort: true, sortOrder: true},
-  {key: "username", value: "Username", toSort: true, sortOrder: true},
-  {key: "phone", value: "Phone", toSort: false, sortOrder: true},
-  {key: "status", value: "Status", toSort: true, sortOrder: true},
-  {key: "roles", value: "Roles", toSort: true, sortOrder: true},
-  {key: "actions", value: "", toSort: false, sortOrder: true}
 
-];
+  tableHeaders = [{ key: "id", value: "SeqID", toSort: true, sortOrder: true },
+  { key: "name", value: "Name", toSort: true, sortOrder: true },
+  { key: "username", value: "Username", toSort: true, sortOrder: true },
+  { key: "phone", value: "Phone", toSort: false, sortOrder: true },
+  { key: "status", value: "Status", toSort: true, sortOrder: true },
+  { key: "roles", value: "Roles", toSort: true, sortOrder: true },
+  { key: "actions", value: "", toSort: false, sortOrder: true }
+
+  ];
 
   render() {
 
     return (
       <>
         <div>
-          {this.state.rolesManagementClicked && <Redirect to='/admin/roles'/>}
-          {this.state.newUserClicked && <Redirect to='/newuser'/>}
-          <div className="ml-3 mb-3">
-            <h2>Admin Dashboard</h2>
-            <h4>Users` Management</h4>
+          {this.state.newUserClicked && <Redirect to='/newuser' />}
+          <div className="row">
+            <div className="col-md-11 col-sm-11 col-11">
+              <div className="ml-3 mb-3">
+                <h2>Admin Dashboard</h2>
+                <h4>Users` Management</h4>
+              </div>
+            </div>
+
+            <div className=" ml-3 mb-4">
+              <button type="button" title="add user" className="btn btn-outline float-left" onClick={() => this.renderRedirect("newuser")}>
+                <FontAwesomeIcon size="3x" icon={faUserPlus}></FontAwesomeIcon></button>
+            </div>
           </div>
-          <div className="ml-2 mb-3">
-            <button type="button" className="ml-2 mr-4 btn btn-secondary"
-              onClick={() => this.renderRedirect("newuser")}
-            >New user</button>
-            <button type="button" className="btn btn-secondary"
-              onClick={() => this.renderRedirect('/admin/roles')}
-            >Roles Managment</button>
+          <div className="row">
+            <div className=" mr-3 mb-4"></div>
           </div>
 
           <div className=" ml-3 mr-3">
@@ -101,9 +105,6 @@ class AdminDashboard extends React.Component {
 
     );
   }
-
-
-
 }
 
 export default withRouter(AdminDashboard);

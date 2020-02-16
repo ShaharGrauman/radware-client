@@ -29,39 +29,39 @@ export default class PermissionsTable extends React.Component {
  
   }
 
-  // componentDidMount() {
-  //   axios.get(`http://localhost:3000/new_role/permissions`, (req, res) => res.json()
-  //   ).then(res => {
-  //       const permissions = res.data.map(permission => ({
-  //         ...permission
-  //         //, 
-  //         // roles: user.roles.map(role => role.description).join(','),
-  //       }));
+  componentDidMount() {
+    axios.get(`http://localhost:3001/role/permissions`, (req, res) => res.json()
+    ).then(res => {
+        const permissions = res.data.map(permission => ({
+          ...permission
+          //, 
+          // roles: user.roles.map(role => role.description).join(','),
+        }));
 
-  //       this.setState({permissions: permissions });
-  //     });
-  // }
-  
-  componentDidMount(){
-    //fetch permissions from db
-    //
-    this.setState({
-      permissions: [
-        {id: 1, name: 'Researcher dashboard'},
-        {id: 2, name: 'Create/update signature'},
-        {id: 3, name: 'Search signatures'},
-        {id: 4, name: 'Export signatures'},
-        {id: 5, name: 'Update signature status'},
-        {id: 6, name: 'QA dashboard'},
-        {id: 7, name: 'Update QA performance internal status'},
-        
-      ]
-    });
+        this.setState({permissions: permissions });
+      });
   }
+  
+  // componentDidMount(){
+  //   //fetch permissions from db
+  //   this.setState({
+  //     permissions: [
+  //       {id: 1, name: 'Researcher dashboard'},
+  //       {id: 2, name: 'Create/update signature'},
+  //       {id: 3, name: 'Search signatures'},
+  //       {id: 4, name: 'Export signatures'},
+  //       {id: 5, name: 'Update signature status'},
+  //       {id: 6, name: 'QA dashboard'},
+  //       {id: 7, name: 'Update QA performance internal status'},
+        
+  //     ]
+  //   });
+  // }
 
   render() {
     return (
-        <table class="table table-striped table-hover table-bordered border-dark" style={{textAlign:"center"}}>
+        <table className="table table-striped table-hover table-bordered border-dark"
+        style={{ borderWidth: "3px", textAlign:'center' }}>
         <thead>
             <tr class="m-0">
                 <th class="w-50">Avaliable permissions</th>

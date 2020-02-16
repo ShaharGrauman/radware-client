@@ -7,25 +7,27 @@ import Input from './input';
 import { Redirect } from 'react-router-dom'
 import axios from 'axios';
 
-export default class Register extends React.Component {
+export default class RegisterEdit extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            ifUserCreated: false,
-            account: { name: "", username: "", phone: "", password: "" },
+            account: { name:"", username: "", phone: "", status: "active", password: "" },
             errors: {},
             orgRoles: [],
             roles: [],
-            selectedRoles: []
+            userdata:[],
+            user:this.props.user
         };
-        this.handleChange = this.handleChange.bind(this);
-        this.updateData = []
+   
+       
+
     }
 
-    tableHeaders = [
-        { key: "select", value: "Select Roles", toSort: false, sortOrder: true },
-        { key: "selected", value: "Selected Roles", toSort: false, sortOrder: true }]
+
+
+
+    tableHeaders = ["Select Roles", "Selected Roles"];
 
     renderRedirect = () => {
         this.setState({
@@ -34,7 +36,7 @@ export default class Register extends React.Component {
     }
 
     schema = {
-        name: Joi.string().required().label("Firstname"),
+        name: Joi.string().required().label("Name"),
         //lastname: Joi.string().required().label("Lastname"),
         phone: Joi.string().trim().regex(/[0-9]/).max(10).min(10).label('Phone Number'),
         username: Joi.string().required().email().label("Email"),
@@ -44,81 +46,23 @@ export default class Register extends React.Component {
 
     }
 
-    async componentDidMount() {
-        const { data } = await axios.get(`http://localhost:3001/users/roles`);
-        const tempData = [];
 
-        for (var i = 0; i < data.length; i++) {
-            let id = data[i].id;
-            // console.log(id);
-            tempData.push({
-                rolename: data[i].name,
-                select: <input type="checkbox" name="myTextEditBox" onChange={event => this.handleChange(event, event.target.checked, id)}> </input>
-            })
+    
+        
 
-        }
-        console.log('tempData')
-        console.log(tempData)
-        this.setState({ selectedRoles: tempData })
-        const roles = data.map(role => ({
-            role: role.name,
-            selected: <input type="checkbox" name="myTextEditBox" onChange={event => this.handleChange(event, event.target.checked, role.id)}></input>
-        }));
+    rolesData = [
+        { rolename: "Researcher", selected: <input type="checkbox" name="myTextEditBox" value="checked" /> },
+        { rolename: "Support", selected: <input type="checkbox" name="myTextEditBox" value="checked" /> },
+        { rolename: "Manual QA", selected: <input type="checkbox" name="myTextEditBox" value="checked" /> },
+        { rolename: "Performance QA", selected: <input type="checkbox" name="myTextEditBox" value="checked" /> },
+        { rolename: "Automation QA", selected: <input type="checkbox" name="myTextEditBox" value="checked" /> }
 
-        this.setState({ roles });
-    }
+    ];
+    tableHeaders = ["Roles", "Select"];
 
-    onRoleSelect = roleId => {
-        if (this.state.roles.includes(roleId)) {
-            this.setState({
-                roles: [
-                    ...this.state.roles.filter(pid => pid != roleId)
-                ]
-            })
-        } else {
-            this.setState({
-                roles: [...this.state.roles, roleId]
-            });
-        }
-    }
 
-    // componentDidMount() {
-    //     this.setState({
-    //         select: [
-    //             { id: "1", rolename: "Researcher", selected: false },
-    //             { id: "2", rolename: "Support", selected: false },
-    //             { id: "3", rolename: "Manual QA", selected: false },
-    //             { id: "4", rolename: "Performance QA", selected: false },
-    //             { id: "5", rolename: "Automation QA", selected: false }
 
-    //         ]
-    //     });
-    // }
 
-    // roleChecked(roleId) {
-    //     const selectedRole = this.state.select.find(role => role.id == roleId);
-    //     selectedRole.selected = !selectedRole.selected;
-    //     console.log(selectedRole);
-    //     this.setState({ selectedRoles: [selectedRole.id] })
-    //     console.log(this.state.selectedRoles);
-    //     this.setState({
-    //         select: [
-    //             ...this.state.select
-    //             ,
-    //             selectedRole
-    //         ]
-    //     })
-    //     // console.log(this.state.select)
-    // }
-
-    // rolesData = [
-    //     { id: "1", rolename: "Researcher", selected: <input type="checkbox" onChange={() => this.roleChecked(1)} /> },
-    //     { id: "2", rolename: "Support", selected: <input type="checkbox" onChange={() => this.roleChecked(2)} /> },
-    //     { id: "3", rolename: "Manual QA", selected: <input type="checkbox" onChange={() => this.roleChecked(3)} /> },
-    //     { id: "4", rolename: "Performance QA", selected: <input type="checkbox" onChange={() => this.roleChecked(4)} /> },
-    //     { id: "5", rolename: "Automation QA", selected: <input type="checkbox" onChange={() => this.roleChecked(5)} /> }
-
-    // ];
 
     validate = () => {
         const options = { abortEarly: false }
@@ -137,76 +81,74 @@ export default class Register extends React.Component {
         const schema = { [name]: this.schema[name] };
         const { error } = Joi.validate(obj, schema)
         return error ? error.details[0].message : null;
+
+
     }
 
+    componentWillReceiveProps (nextProps){
+        this.setState({account:{
+            name:nextProps.user.name,
+            username:nextProps.user.username,
+            phone:nextProps.user.phone
+        }})
+        }
+
     handleSumbit = async e => {
+
         e.preventDefault();
-        const errors = this.validate();            //method return object looks like error 
-        this.setState({ errors: errors || {} });   //we render the object errors  in the setstate 
-        // if (!errors) return null;
-        console.log('account : ',this.state.account)
-        let user = {
-            name: this.state.account.name,
+        const errors = this.validate();//method return object looks like error 
+        this.setState({ errors: errors || {} });//we render the object errors  in the setstate 
+      //   if (errors) return;
+      const id = this.props.id
+
+        const user = {
+             name: this.state.account.name,
+            status:this.state.account.status,
             username: this.state.account.username,
             phone: this.state.account.phone,
-            password: this.state.account.password,
-            roles: this.updateData
+            password: this.state.account.password
         };
-        // const selectedRoles = this.state.roles.map(role => {
-        //     console.log(role.selected);
-        // })
-        // console.log(selectedRoles);
-
-        console.log('updateData' , this.updateData);
-        console.log('error : ', errors);
-        if(errors) return;
-        console.log(this.state.ifUserCreated);
-        axios.post('http://localhost:3001/users/new_user', user)
+    
+      axios.put(`http://localhost:3001/users/${id.id}`, user)
             .then(response => {
-                this.setState({ ifUserCreated: true });
+                
                 console.log(response)
                 console.log(response.data);
             })
             .catch(error => {
                 console.log(error)
             })
+           
+        
     };
 
-    handleeChange = ({ currentTarget: input }) => {
+    handleChange = ({ currentTarget: input }) => {
         const errors = { ...this.state.errors };
         const errorMessage = this.validateProperty(input);
         if (errorMessage) errors[input.name] = errorMessage;
         else delete errors[input.name];
+
         const account = { ...this.state.account };
         account[input.name] = input.value;
         this.setState({ account, errors });
         console.log(this.state.account)
-
     };
+    
+ 
+ 
 
-    handleChange = (event, value, id) => {
-        if (value === true) {
-            this.updateData.push(id);
-            // console.log('aaaa');
-            // console.log(this.updateData);
-        } else {
-            var index = this.updateData.indexOf(id);
-            this.updateData.splice(index, 1);
-            console.log(this.updateData)
-        }
-    }
 
     render() {
-        const { account, errors } = this.state;
-        // if (this.state.ifUserCreated) {
-        //     return (
-        //         <NotificationIsCreated />
-        //     )
-        // }
+        const { account, errors} = this.state;
+
         return (
             <>
+
+ 
                 {this.state.cancelClicked && <Redirect to='/users' />}
                 <form className="ml-3" onSubmit={this.handleSumbit}>
+
+
                     <fieldset className="scheduler-border">
                         <legend className="scheduler-border">Personal info</legend>
                         <div className="form-group mt-2 ml-2">
@@ -215,11 +157,15 @@ export default class Register extends React.Component {
                                 type="text"
                                 id="name"
                                 name="name"
-                                value={account.name}
-                                onChange={this.handleeChange}
+                                value={this.state.account.name}
+                                onChange={this.handleChange}
                                 error={errors.name}
                             />
+               
+
                         </div>
+
+                    
 
                         <div className="form-group ml-2">
                             <label htmlFor="Rphone">Phone :</label>
@@ -227,8 +173,8 @@ export default class Register extends React.Component {
                                 type="text"
                                 id="phone"
                                 name="phone"
-                                value={account.phone}
-                                onChange={this.handleeChange}
+                                value={this.state.account.phone}
+                                onChange={this.handleChange}
                                 error={errors.phone} />
                         </div>
                     </fieldset>
@@ -244,8 +190,8 @@ export default class Register extends React.Component {
                                 id="username"
                                 name="username"
                                 placeholder="name@example.com"
-                                defaultValue={account.username}
-                                onChange={this.handleeChange}
+                                value={this.state.account.username}
+                                onChange={this.handleChange}
                                 error={errors.username}
                             />
                             <small className="form-text text-muted">This will be used as username.</small>
@@ -259,25 +205,32 @@ export default class Register extends React.Component {
                                 name="password"
                                 id="password"
                                 className="form-control"
-                                value={account.password}
-                                onChange={this.handleeChange}
+                                value={this.props.user.password}
+                                onChange={this.handleChange}
+                                disabled
                                 error={errors.password}
                                 ref="password"
                             />
                             <small id="passwordHelp" className="form-text text-muted">Must be 6 at least 6 letters.</small>
                         </div>
 
+
                         <p className="ml-2">Select role :</p>
+
+
                         <MyTable
-                            onSelect={this.onRoleSelect}
                             header={this.tableHeaders}
                             // data={this.rolesData}
                             data={this.state.roles}
                             sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
                             className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</MyTable>
+
+
                     </fieldset>
-                    <button className="btn btn-secondary btn-block" >Save</button>
+
+                    <button  className="btn btn-secondary btn-block" >Save</button>
                     <button type="button" onClick={() => this.renderRedirect("users")} className="btn btn-secondary  btn-block">Cancel</button>
+
                 </form>
             </>
         );
