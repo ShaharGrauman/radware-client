@@ -38,7 +38,12 @@ export default class ResearcherDashboard extends React.Component {
       currentButton:'all',
       clickedButton:'',
       errorMsg:'',
-      searchClicked: false
+      searchClicked: false,
+      QAClicked:false,
+      TestingClicked:false,
+      GitClicked:false
+      
+
     }
     this.urlDetails={
       page: 1 ,
@@ -51,6 +56,21 @@ export default class ResearcherDashboard extends React.Component {
         this.setState({
             searchClicked: true
         });
+    }
+    if (page === "QA") {
+      this.setState({
+          QAClicked: true
+      });
+    }
+    if (page === "Testing") {
+      this.setState({
+          TestingClicked: true
+      });
+    }
+    if (page === "Git") {
+      this.setState({
+          GitClicked: true
+      });
     }
 }
 
@@ -82,10 +102,10 @@ export default class ResearcherDashboard extends React.Component {
     console.log("current:"+this.state.currentButton);
     if(this.state.currentButton == filter){//to return to all when double clicking
       this.setState({currentButton:"all"}); // to set currentButton to all when clicking twice at button
-      requestURL=`http://localhost:3000/signature/researcher`;
+      requestURL=`http://localhost:3001/signature/researcher`;
       this.setState({dataFilter:"All Signatures"}); 
     }else{
-      requestURL=`http://localhost:3000/signature/researcher?status=${filter}`;
+      requestURL=`http://localhost:3001/signature/researcher?status=${filter}`;
       Object.keys(this.urlDetails).forEach(key=>requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`))
       requestURL.slice(1)
     }
@@ -144,6 +164,9 @@ export default class ResearcherDashboard extends React.Component {
     return (
       <div className='mx-3'>
         {this.state.searchClicked && <Redirect to='/SearchSignature' />}
+        {this.state.QAClicked && <Redirect to='/Export/QA' />}
+        {this.state.TestingClicked && <Redirect to='/Export/Testing' />}
+        {this.state.GitClicked && <Redirect to='/Export/Git' />}
         <h2 className="ml mb-3">Researcher dashboard</h2>
         <div className='row'>
         <div className='ml-2 mr-4'>
@@ -196,9 +219,10 @@ export default class ResearcherDashboard extends React.Component {
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
-            <Dropdown.Item href="/Export">QA</Dropdown.Item>
-            <Dropdown.Item href="/Export">Testing</Dropdown.Item>
-            <Dropdown.Item href="/Export">Git</Dropdown.Item>
+          {/* <Link to="/Export/QA"> <Dropdown.Item > QA </Dropdown.Item> </Link> */}
+            <Dropdown.Item onClick={() => this.renderRedirect("QA")}>QA</Dropdown.Item>
+            <Dropdown.Item onClick={() => this.renderRedirect("Testing")}>Testing</Dropdown.Item>
+            <Dropdown.Item onClick={() => this.renderRedirect("Git")}>Git</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
         </div>
