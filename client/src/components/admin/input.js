@@ -8,7 +8,7 @@ import React from 'react';
 <lable htmlFor={name}>{lable}</lable>
 <input
 size="115"
-value={value}
+defaultValue={value}
 onChange={onChange}
 id={name}
 name={name}

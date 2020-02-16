@@ -43,7 +43,7 @@ export default class Table extends React.Component {
           {this.props.data.map(entries => (
             <tr>
               {Object.values(entries).map(column => (
-                <td>{column}</td>
+                <td style={{width: "40px"}}>{column}</td>
               ))}
             </tr>
           ))}
