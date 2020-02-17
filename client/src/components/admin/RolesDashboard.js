@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink, faWindowClose, faEdit, faCalculator, faTrash, faUserTag } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import MyTable from '../shared/MyTable';
+import { getRoles } from '../../api/controllers/admin';
+
 
 export default class RolesDashboard extends React.Component {
     constructor(props) {
@@ -35,25 +37,44 @@ export default class RolesDashboard extends React.Component {
         this.setState({ roles: sorted })
     }
 
-    componentDidMount() {
-        axios.get(`http://localhost:3001/admin/roles`, (req, res) => res.json()
-        ).then
-            (res => {
-                const roles = res.data.map(role => ({
-                    ...role,
-                    permissions: role.permissions.map(permission => permission.name).join(' ,'),
-                    actions: [
-                        <button type="button" key={role.id + "edit"} title="Edit" className="btn btn-outline float-left ">
-                            <Link to={`/edit_role/${role.id}`}><FontAwesomeIcon className="fa-lg "
-                                icon={faEdit}> </FontAwesomeIcon></Link></button>,
-                        <button type="button" key={role.id + "delete"} title="Delete" className="btn  btn-outline float-left" ><FontAwesomeIcon className="fa-lg " icon={faTrash}></FontAwesomeIcon></button>,
 
-                    ]
+    async componentDidMount() {
+        const rolesPermission = await getRoles();
+        console.log(rolesPermission);
+        const roles = rolesPermission.map(role =>({
+            ...role,
+            permissions:  role.permissions.map(permission => permission.name).join(' ,'),
+            actions: [
+                <button type="button" key={role.id + "edit"} title="Edit" className="btn btn-outline float-left ">
+                    <Link to={`/edit_role/${role.id}`}><FontAwesomeIcon className="fa-lg "
+                        icon={faEdit}> </FontAwesomeIcon></Link></button>,
+                <button type="button" key={role.id + "delete"} title="Delete" className="btn  btn-outline float-left" ><FontAwesomeIcon className="fa-lg " icon={faTrash}></FontAwesomeIcon></button>,
+            ]
+
                 }));
-
                 this.setState({ orgRoles: roles, roles: roles });
-            });
-    }
+            };
+      
+    
+    // componentDidMount() {
+    //     axios.get(`http://localhost:3001/admin/roles`, (req, res) => res.json()
+    //     ).then
+    //         (res => {
+    //             const roles = res.data.map(role => ({
+    //                 ...role,
+    //                 permissions: role.permissions.map(permission => permission.name).join(' ,'),
+    //                 actions: [
+    //                     <button type="button" key={role.id + "edit"} title="Edit" className="btn btn-outline float-left ">
+    //                         <Link to={`/edit_role/${role.id}`}><FontAwesomeIcon className="fa-lg "
+    //                             icon={faEdit}> </FontAwesomeIcon></Link></button>,
+    //                     <button type="button" key={role.id + "delete"} title="Delete" className="btn  btn-outline float-left" ><FontAwesomeIcon className="fa-lg " icon={faTrash}></FontAwesomeIcon></button>,
+
+    //                 ]
+    //             }));
+
+    //             this.setState({ orgRoles: roles, roles: roles });
+    //         });
+    // }
 
 
     tableHeaders = [{ key: "id", value: "ID", toSort: true, sortOrder: true },

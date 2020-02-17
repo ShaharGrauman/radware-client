@@ -6,7 +6,7 @@ import Joi from 'joi-browser'
 import Input from './input';
 import { Redirect } from 'react-router-dom'
 import axios from 'axios';
-
+import {getRolesNew, postNewUser} from '../../api/controllers/admin';
 export default class Register extends React.Component {
 
     constructor(props) {
@@ -44,10 +44,33 @@ export default class Register extends React.Component {
 
     }
 
-    async componentDidMount() {
-        const { data } = await axios.get(`http://localhost:3001/users/roles`);
-        const tempData = [];
+    // async componentDidMount() {
+    //     const { data } = await axios.get(`http://localhost:3001/users/roles`);
+    //     const tempData = [];
 
+    //     for (var i = 0; i < data.length; i++) {
+    //         let id = data[i].id;
+    //         // console.log(id);
+    //         tempData.push({
+    //             rolename: data[i].name,
+    //             select: <input type="checkbox" name="myTextEditBox" onChange={event => this.handleChange(event, event.target.checked, id)}> </input>
+    //         })
+
+    //     }
+    //     console.log('tempData')
+    //     console.log(tempData)
+    //     this.setState({ selectedRoles: tempData })
+    //     const roles = data.map(role => ({
+    //         role: role.name,
+    //         selected: <input type="checkbox" name="myTextEditBox" onChange={event => this.handleChange(event, event.target.checked, role.id)}></input>
+    //     }));
+
+    //     this.setState({ roles });
+    // }
+    async componentDidMount() {
+        const  data  = await getRolesNew();
+        const tempData = [];
+        console.log(data);
         for (var i = 0; i < data.length; i++) {
             let id = data[i].id;
             // console.log(id);
@@ -55,7 +78,6 @@ export default class Register extends React.Component {
                 rolename: data[i].name,
                 select: <input type="checkbox" name="myTextEditBox" onChange={event => this.handleChange(event, event.target.checked, id)}> </input>
             })
-
         }
         console.log('tempData')
         console.log(tempData)
@@ -64,7 +86,6 @@ export default class Register extends React.Component {
             role: role.name,
             selected: <input type="checkbox" name="myTextEditBox" onChange={event => this.handleChange(event, event.target.checked, role.id)}></input>
         }));
-
         this.setState({ roles });
     }
 
@@ -161,15 +182,21 @@ export default class Register extends React.Component {
         console.log('error : ', errors);
         if(errors) return;
         console.log(this.state.ifUserCreated);
-        axios.post('http://localhost:3001/users/new_user', user)
-            .then(response => {
-                this.setState({ ifUserCreated: true });
-                console.log(response)
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.log(error)
-            })
+        // const user = await login(this.state.username, this.state.password);
+        
+          await postNewUser(user); 
+
+        
+       
+        // axios.post('http://localhost:3001/users/new_user', user)
+        //     .then(response => {
+        //         this.setState({ ifUserCreated: true });
+        //         console.log(response)
+        //         console.log(response.data);
+        //     })
+        //     .catch(error => {
+        //         console.log(error)
+        //     })
     };
 
     handleeChange = ({ currentTarget: input }) => {

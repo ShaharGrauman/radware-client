@@ -2,6 +2,8 @@ import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSort } from "@fortawesome/free-solid-svg-icons";
 import axios from 'axios';
+import { getpermissionNew } from '../../api/controllers/admin';
+
 /**
  * Permissions aren't dynamic because it has to be supported in client and server.
  * If permissions were dynamic, then how can we force its usage without changing the code?
@@ -28,19 +30,28 @@ export default class PermissionsTable extends React.Component {
     };
  
   }
-
-  componentDidMount() {
-    axios.get(`http://localhost:3001/role/permissions`, (req, res) => res.json()
-    ).then(res => {
-        const permissions = res.data.map(permission => ({
+  async componentDidMount() {
+    const permissionRole = await getpermissionNew()
+        const permissions = permissionRole.map(permission => ({
           ...permission
           //, 
           // roles: user.roles.map(role => role.description).join(','),
         }));
-
         this.setState({permissions: permissions });
-      });
+      
   }
+  // componentDidMount() {
+  //   axios.get(`http://localhost:3001/role/permissions`, (req, res) => res.json()
+  //   ).then(res => {
+  //       const permissions = res.data.map(permission => ({
+  //         ...permission
+  //         //, 
+  //         // roles: user.roles.map(role => role.description).join(','),
+  //       }));
+
+  //       this.setState({permissions: permissions });
+  //     });
+  // }
   
   // componentDidMount(){
   //   //fetch permissions from db

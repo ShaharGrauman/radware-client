@@ -6,6 +6,7 @@ import Joi from 'joi-browser'
 import Input from './input';
 import { Redirect } from 'react-router-dom'
 import axios from 'axios';
+import { putUser } from '../../api/controllers/admin';
 
 export default class RegisterEdit extends React.Component {
 
@@ -109,17 +110,16 @@ export default class RegisterEdit extends React.Component {
             password: this.state.account.password
         };
     
-      axios.put(`http://localhost:3001/users/${id.id}`, user)
-            .then(response => {
+        const data = await putUser(id.id)
+        // axios.put(`http://localhost:3001/users/${id.id}`, user)
+        //     .then(response => {
                 
-                console.log(response)
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.log(error)
-            })
-           
-        
+        //         console.log(response)
+        //         console.log(response.data);
+        //     })
+        //     .catch(error => {
+        //         console.log(error)
+        //     })
     };
 
     handleChange = ({ currentTarget: input }) => {

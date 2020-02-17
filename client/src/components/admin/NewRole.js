@@ -2,6 +2,8 @@ import React from 'react';
 import { Redirect } from 'react-router-dom'
 import axios from 'axios';
 import PermissionsTable from './PermissionsTable';
+import { postNewRole } from '../../api/controllers/admin';
+
 
 export default class NewRole extends React.Component {
     constructor(props) {
@@ -22,7 +24,7 @@ export default class NewRole extends React.Component {
         });
     }
 
-    registerClick = () => {
+     registerClick = async e  => {
         let dataRole = {
             name: this.state.rolename,
             description: this.state.description,
@@ -30,7 +32,10 @@ export default class NewRole extends React.Component {
 
         }
         console.log(dataRole);
-        axios.post('http://localhost:3001/role/new_role', dataRole);
+        // axios.post('http://localhost:3001/role/new_role', dataRole);
+        await postNewRole(dataRole); 
+
+
     }
 
 
