@@ -24,13 +24,16 @@ export default class Audit extends React.Component {
             hasNext: false,
             hasPrev: false,
             noResult: false,
+            searchClicked: false
         }
     }
-    tableHeaders = [{ key: "username", value: "Username", toSort: false, sortOrder: true },
-    { key: "action_name", value: "Event", toSort: true, sortOrder: false },
-    { key: "description", value: "Description", toSort: false, sortOrder: true },
-    { key: "lastupdated", value: "Last Updated", toSort: false, sortOrder: true }
+    tableHeaders = [{ key: "username", value: "Username", toSort: false },
+    { key: "action_name", value: "Event", toSort: false },
+    { key: "description", value: "Description", toSort: false },
+    { key: "lastupdated", value: "Last Updated", toSort: false }
     ];
+
+    actions = ["edit", "add", "export", "report", "delete"];
 
     submitHandler = async e => {
         const result = await getAudit(this.state.event, this.state.users_names, this.state.orderby, this.state.page, this.state.size, this.state.startdate, this.state.enddate, this.state.starttime, this.state.endtime);
@@ -57,7 +60,8 @@ export default class Audit extends React.Component {
                 audit: audit,
                 hasNext: result.hasNext,
                 hasPrev: result.hasPrev,
-                noResult: false
+                noResult: false,
+                searchClicked: true
             });
         }
     }
@@ -76,7 +80,7 @@ export default class Audit extends React.Component {
     }
 
     handleSelect = target => {
-        this.setState({event: target});
+        this.setState({ event: target });
     }
 
     render() {
@@ -86,76 +90,33 @@ export default class Audit extends React.Component {
                 <div className="">
                     <div className="container mt-5">
                         <div className="row mb-2">
-                            <h1>Audit Search</h1>
+                            <h2>Audit Search</h2>
                         </div>
-
-                        <label htmlFor="basic-url"><h5>Start date</h5></label>
-                        <div className="row">
-                        </div>
-                        <div className="row">
-
-
+                        <div className="row mt-4">
                             <div className="col-md-6">
                                 <div className="input-group mb-3">
                                     <div className="input-group-prepend">
-                                        <span className="input-group-text" id="basic-addon3">From</span>
+                                        <span className="input-group-text" id="basic-addon3">From date</span>
                                     </div>
-                                    <input
-                                        type="text"
-                                        name="startDate"
-                                        className="form-control"
-                                        placeholder="YYYY-MM-DD"
-                                        aria-describedby="basic-addon3"
-                                        onChange={event => this.onChangeHandler(event, "startdate")}
-                                    />
+                                    <input className="form-control"
+                                        type="date"
+                                        defaultValue=""
+                                        id="date-local-input"
+                                        onChange={event => this.onChangeHandler(event, "startdate")}>
+                                    </input>
                                 </div>
                             </div>
                             <div className="col-md-6">
                                 <div className="input-group mb-3">
                                     <div className="input-group-prepend">
-                                        <span className="input-group-text" id="basic-addon3">Hour</span>
+                                        <span className="input-group-text" id="basic-addon3">From hour</span>
                                     </div>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="HH:MM:SS"
-                                        aria-describedby="basic-addon3"
-                                        onChange={event => this.onChangeHandler(event, "starttime")}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        <label for="basic-url"><h5>End date</h5></label>
-                        <div className="row">
-                            <div className="col-md-6">
-                                <div className="input-group mb-3">
-                                    <div className="input-group-prepend">
-                                        <span className="input-group-text" >To</span>
-                                    </div>
-                                    <input
-                                        type="text"
-                                        name="endDate"
-                                        className="form-control"
-                                        placeholder="YYYY-MM-DD"
-                                        aria-describedby="basic-addon3"
-                                        onChange={event => this.onChangeHandler(event, "enddate")}
-                                    />
-                                </div>
-                            </div>
-
-                            <div className="col-md-6 col-sm-12">
-                                <div className="input-group mb-3">
-                                    <div className="input-group-prepend">
-                                        <span className="input-group-text" id="basic-addon3">Hour</span>
-                                    </div>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        placeholder="HH:MM:SS"
-                                        aria-describedby="basic-addon3"
-                                        onChange={event => this.onChangeHandler(event, "endtime")}
-                                    />
-
+                                    <input className="form-control"
+                                        type="time"
+                                        defaultValue="00:00:00"
+                                        id="time-local-input"
+                                        onChange={event => this.onChangeHandler(event, "starttime")}>
+                                    </input>
                                 </div>
                             </div>
                         </div>
@@ -164,20 +125,50 @@ export default class Audit extends React.Component {
                             <div className="col-md-6">
                                 <div className="input-group mb-3">
                                     <div className="input-group-prepend">
+                                        <span className="input-group-text" >To date</span>
+                                    </div>
+                                    <input className="form-control"
+                                        type="date"
+                                        defaultValue=""
+                                        id="date-local-input"
+                                        onChange={event => this.onChangeHandler(event, "enddate")}>
+                                    </input>
+                                </div>
+                            </div>
+
+                            <div className="col-md-6 col-sm-12">
+                                <div className="input-group mb-3">
+                                    <div className="input-group-prepend">
+                                        <span className="input-group-text" id="basic-addon3">To hour</span>
+                                    </div>
+                                    <input className="form-control"
+                                        type="time"
+                                        defaultValue="23:59:59"
+                                        id="time-local-input"
+                                        onChange={event => this.onChangeHandler(event, "endtime")}>
+                                    </input>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="row mt-4">
+                            <div className="col-md-6">
+                                <div className="input-group">
+                                    <div className="input-group-prepend">
                                         <span className="input-group-text" >Username</span>
                                     </div>
                                     <input
                                         type="text"
                                         name="username"
                                         className="form-control"
-                                        placeholder="Search by username"
+                                        placeholder="Enter one username or more separated by comma"
                                         aria-describedby="basic-addon3"
                                         onChange={event => this.onChangeHandler(event, "user")}
                                     />
                                 </div>
                             </div>
                             <div className="col-lg-3 col-sm-6">
-                                <ButtonToolbar >
+                                <ButtonToolbar className="float-right" >
                                     {['Secondary'].map(
                                         variant => (
                                             <DropdownButton
@@ -186,16 +177,16 @@ export default class Audit extends React.Component {
                                                 id={`dropdown-variants-${variant}`}
                                                 key={variant}
                                                 onSelect={this.handleSelect}>
-                                                <Dropdown.Item eventKey="edit"> Edit</Dropdown.Item>
-                                                <Dropdown.Item eventKey="add"> Add</Dropdown.Item>
-                                                <Dropdown.Item eventKey="delete"> Delete</Dropdown.Item>
                                                 <Dropdown.Item eventKey="all">All </Dropdown.Item>
+                                                {this.actions.map(action => (      
+                                                    <Dropdown.Item eventKey={action}> {action.charAt(0).toUpperCase() + action.slice(1)}</Dropdown.Item>
+                                                ))}
                                             </DropdownButton>
                                         ),
                                     )}
                                 </ButtonToolbar>
                             </div>
-                            <div className="col-lg-3 col-sm-6">
+                            <div className="col-lg-3 col-sm-6 ">
                                 <button
                                     type="submit"
                                     className="btn btn-primary"
@@ -204,54 +195,54 @@ export default class Audit extends React.Component {
                                 </button>
                             </div>
                         </div>
+                        {this.state.noResult &&
+                            <div className="row float-center"><h5>There are no results that match your search</h5></div>}
 
-                        <div className="row">
+                        {(this.state.searchClicked && !this.state.noResult) &&
+                            <>
+                                <div className="row">
+                                    <div className="col-md-8 mt-4">
+                                        <label htmlFor="basic-url"><h4>Results:</h4></label>
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-md-12 mt-2">
 
-                            <div className="col-md-8 mt-4">
-                                <label for="basic-url"><h4>Results:</h4></label>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="col-md-12 mt-2">
-
-                                <MyTable header={this.tableHeaders} data={this.state.audit} />
-
-
-                            </div>
-                        </div>
-
-                        <div className="row">
-                            <div className="col-2"></div>
-                            <div className="col-4">
-                                {this.state.hasPrev &&
-                                    <span className="fas" className="noselect ml-5"
-                                        onClick={() => {
-                                            this.state.page--
-                                            this.submitHandler();
-                                        }}>
-                                        <FontAwesomeIcon
-                                            icon={faArrowLeft}
-                                        ></FontAwesomeIcon>{" "}
-                                        Previous
+                                        <MyTable header={this.tableHeaders} data={this.state.audit} />
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div className="col-2"></div>
+                                    <div className="col-4">
+                                        {this.state.hasPrev &&
+                                            <span className="fas" className="noselect ml-5"
+                                                onClick={() => {
+                                                    this.state.page--
+                                                    this.submitHandler();
+                                                }}>
+                                                <FontAwesomeIcon
+                                                    icon={faArrowLeft}
+                                                ></FontAwesomeIcon>{" "}
+                                                Previous
                                     </span>
-                                }
-                            </div>
-                            <div className="col-4">
-                                {this.state.hasNext &&
-                                    <span className="fas" onClick={() => {
-                                        this.state.page++
-                                        this.submitHandler();
-                                    }}>
-                                        Next{" "}
-                                        <FontAwesomeIcon
-                                            icon={faArrowRight}
-                                        ></FontAwesomeIcon>
-                                    </span>
-                                }
+                                        }
+                                    </div>
+                                    <div className="col-4">
+                                        {this.state.hasNext &&
+                                            <span className="fas" onClick={() => {
+                                                this.state.page++
+                                                this.submitHandler();
+                                            }}>
+                                                Next{" "}
+                                                <FontAwesomeIcon
+                                                    icon={faArrowRight}
+                                                ></FontAwesomeIcon>
+                                            </span>
+                                        }
 
-                            </div>
-                        </div>
-
+                                    </div>
+                                </div>
+                            </>}
                     </div>
                 </div>
             </>
