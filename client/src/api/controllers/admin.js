@@ -33,6 +33,15 @@ const getRolesEdit = async (id) => {
         throw error.message;
     }
 }
+const getAudit = async (event, user_id, orderby, page, size, startdate, enddate, starttime, endtime) => {
+    try {
+
+        const { data } = await fetcher.get(`/admin/audit?event=${event}&user_id=${user_id}&orderby=${orderby}&page=${page}&size=${size}&startdate=${startdate}&enddate=${enddate}&starttime=${starttime}&endtime=${endtime}`);
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
 const putUser = async (id) => {
     try {
         const { data } = await fetcher.put(`/users/${id}`)
@@ -74,6 +83,7 @@ const postNewRole = async (role) => {
         throw error.message;
     }
 }
+
 export {
     getUsers,
     login,
@@ -83,5 +93,6 @@ export {
     postNewUser,
     postNewRole,
     getRolesEdit,
-    putUser
+    putUser,
+    getAudit
 };
