@@ -33,10 +33,10 @@ const getRolesEdit = async (id) => {
         throw error.message;
     }
 }
-const getAudit = async (event, user_id, orderby, page, size, startdate, enddate, starttime, endtime) => {
+const getAudit = async (event, users_names, orderby, page, size, startdate, enddate, starttime, endtime) => {
     try {
 
-        const { data } = await fetcher.get(`/admin/audit?event=${event}&user_id=${user_id}&orderby=${orderby}&page=${page}&size=${size}&startdate=${startdate}&enddate=${enddate}&starttime=${starttime}&endtime=${endtime}`);
+        const { data } = await fetcher.get(`/admin/audit?event=${event}&users_names=${users_names}&orderby=${orderby}&page=${page}&size=${size}&startdate=${startdate}&enddate=${enddate}&starttime=${starttime}&endtime=${endtime}`);
         return data;
     } catch (error) {
         throw error.message;
