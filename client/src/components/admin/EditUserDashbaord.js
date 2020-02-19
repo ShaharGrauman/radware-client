@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import RoleList from './RolesDashboard';
 import RegisterEdit from './RegisterEdit';
 import axios from 'axios';
-import AdminDashboard from './AdminDashboard';
 import { getRolesEdit } from '../../api/controllers/admin';
 
 class EditUserDashbaord extends React.Component {
@@ -20,11 +19,8 @@ class EditUserDashbaord extends React.Component {
     async componentWillMount() {
         const id = this.props.match.params;
         this.setState({id});
-        console.log('id : ', id);
         const data = await getRolesEdit(id.id);
-        // const {data} = await axios.get(`http://localhost:3001/users/${id.id}`);
         this.setState({ user: data });
-        // console.log(this.state.user)
     }
 
     render() {

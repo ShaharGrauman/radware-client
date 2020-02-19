@@ -33,6 +33,18 @@ const getRolesEdit = async (id) => {
         throw error.message;
     }
 }
+
+const putUser = async (id , user) => {
+    try {
+        console.log("putUser: " ,id)
+        console.log("and user : ", user)
+        const { data } = await fetcher.put(`/users/${id}`, {user})
+                return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
+
 const getAudit = async (event, users_names, orderby, page, size, startdate, enddate, starttime, endtime) => {
     try {
 
@@ -42,14 +54,8 @@ const getAudit = async (event, users_names, orderby, page, size, startdate, endd
         throw error.message;
     }
 }
-const putUser = async (id) => {
-    try {
-        const { data } = await fetcher.put(`/users/${id}`)
-        return data;
-    } catch (error) {
-        throw error.message;
-    }
-}
+
+
 const login = async (username, password) => {
     try{
         const { data } = await fetcher.post('/login',  {username, password});
@@ -75,6 +81,32 @@ const postNewUser = async (user) => {
         throw error.message;
     }
 }
+
+const postResetPassword = async (username) => {
+    try {
+        const { data } = await fetcher.post('/login/resetPassword', username)
+        console.log('data', data)
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
+const deleteUser = async (username) => {
+    try {
+        const { data } = await fetcher.put('/users/delete_user', username)
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
+const putUpdatePassword = async (username, tempPwd, newPwd) => {
+    try {
+        const { data } = await fetcher.put('/login/resetPassword', {username,tempPwd,newPwd})
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
 const postNewRole = async (role) => {
     try {
         const { data } = await fetcher.post('/role/new_role', role)
@@ -83,7 +115,6 @@ const postNewRole = async (role) => {
         throw error.message;
     }
 }
-
 export {
     getUsers,
     login,
@@ -94,5 +125,10 @@ export {
     postNewRole,
     getRolesEdit,
     putUser,
+    postResetPassword,
+    putUpdatePassword,
+    deleteUser
+
     getAudit
+
 };

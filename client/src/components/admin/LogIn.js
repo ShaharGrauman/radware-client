@@ -44,9 +44,8 @@ export default class LogIn extends React.Component {
   }
   onSubmit = async e => { 
     e.preventDefault();
+    const user = await login(this.state.username, this.state.password);
     try {
-      const user = await login(this.state.username, this.state.password);
-      
       let role= user.roles[0].name;
       console.log(user);
       console.log(role);
@@ -56,7 +55,7 @@ export default class LogIn extends React.Component {
       window.location.reload();
     } catch (error) {
       this.setState({
-        errorMsg: 'Invalid email or password'
+        errorMsg: user
       });
     }
   }
