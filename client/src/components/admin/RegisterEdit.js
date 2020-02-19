@@ -57,16 +57,11 @@ export default class RegisterEdit extends React.Component {
   
     async componentDidMount() {
         const  data  = await getRolesNew();
-        const usr= this.props.user.roles;
-        console.log(usr);
+        const {roles:userRoles}= this.props.user;
+        console.log(this.props.user);
+        console.log({userRoles});
     
-        console.log('usr: ',  usr.roles[0].id);
         const tempData = [];
-      
-        for (var i = 0; i < usr.roles.length; i++) {
-            let id = data[i].id;
-            console.log("id: ",id);
-        }
         for (var i = 0; i < data.length; i++) {
             let id = data[i].id;
             console.log(id);
@@ -81,8 +76,7 @@ export default class RegisterEdit extends React.Component {
         this.setState({ selectedRoles: tempData })
         const roles = data.map(role => ({
             role: role.name,
-            selected: <input id="checkbox"  type="checkbox" name="myTextEditBox" onChange={event => this.handleChange(event, event.target.checked, role.id)}></input>
-        
+            selected: <input id="checkbox" defaultChecked={userRoles.some(ur => ur.id == role.id)} type="checkbox" name="myTextEditBox" onChange={event => this.handleChange(event, event.target.checked, role.id)}></input>
         } ));
         this.setState({ roles });
 
