@@ -11,11 +11,9 @@ import NewRole from './components/admin/NewRole';
 import Audit from './components/admin/Audit';
 import RolesDashboard from './components/admin/RolesDashboard';
 import LogIn from './components/admin/LogIn';
-// import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
 import SearchSignature from './components/reports/SearchSignature/SearchSignature';
-// import ControlSteps from '../components/shared/ControlSteps';
-import QaDashboard from './components/reports/QADashboard/QADashboard'
-import CveIdReport from './components/reports/CveIdReport/CveIdReport'
+import QaDashboard from './components/reports/QADashboard/QADashboard';
+import CveIdReport from './components/reports/CveIdReport/CveIdReport';
 
 import ResetPassword from './components/admin/ResetPassword';
 import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
@@ -24,12 +22,11 @@ import Export from './components/reports/SearchSignature/Export';
 import AttacksOrSeverityChart from './components/reports/AttacksOrSeverityChart/AttacksOrSeverityChart';
 import ApplicationBar from './components/shared/ApplicationBar';
 
-import ReactNotifications from 'react-notifications-component'; 
-
 class App extends React.Component {
     render() {
         return (
             <BrowserRouter>
+                <ApplicationBar />
                 <Switch>
                     <Route path="/edit_user/:id">
                         <EditUserDashbaord />
@@ -59,23 +56,26 @@ class App extends React.Component {
                         <AdminDashbaord />
                     </Route>
                     <Route path="/resetpassword">
-                        <ResetPassword />    
-                    </Route>  
-                     <Route path="/SearchSignature">
+                        <ResetPassword />
+                    </Route>
+                    <Route path="/SearchSignature">
                         <SearchSignature />
-                    </Route> 
+                    </Route>
                     <Route path="/researcher-dashboard">
-                        <ResearcherDashboard />    
-                    </Route>    
+                        <ResearcherDashboard />
+                    </Route>
                     <Route path="/createOrEditSignature/:id">
                         <CreateOrEditSignatureWizard />
-                    </Route> 
+                    </Route>
+                    <Route path="/createOrEditSignature">
+                        <CreateOrEditSignatureWizard />
+                    </Route>
                     <Route path="/QaDashboard">
                         <QaDashboard />
-                    </Route> 
+                    </Route>
                     <Route path="/Export/:type">
                         <Export />
-                    </Route> 
+                    </Route>
                     <Route path="/CveIdReport">
                         <CveIdReport />
                     </Route> 
@@ -85,12 +85,15 @@ class App extends React.Component {
                     <Route path="/resetPassword">
                         <ResetPassword />
                     </Route>
+                    <Route path="/admin/login">
+                        <LogIn />
+                    </Route>
                     <Route path="/">
                         <ApplicationBar />
                     </Route>
                 </Switch>
             </BrowserRouter>
-             );
+        );
     }
 }
 ReactDOM.render(<App />, document.getElementById("root"));

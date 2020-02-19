@@ -4,11 +4,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Redirect } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLink, faWindowClose, faEdit, faCalculator, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faLink, faWindowClose, faEdit, faCalculator, faTrash, faUserTag } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
-
 import MyTable from '../shared/MyTable';
-import Table from '../shared/Table';
+import { getRoles } from '../../api/controllers/admin';
+
 
 export default class RolesDashboard extends React.Component {
     constructor(props) {
@@ -16,7 +16,6 @@ export default class RolesDashboard extends React.Component {
         this.state = {
             roles: [],
             orgRoles: [],
-            usersManagementClicked: false,
             newRoleClicked: false
         }
     }
@@ -26,81 +25,90 @@ export default class RolesDashboard extends React.Component {
                 newRoleClicked: true
             });
         }
-        if (page === "usersmanagement") {
-            this.setState({
-                usersManagementClicked: true
-            });
-        }
     }
 
     SortByKey(sortKey) {
         let sorted;
-        if (sortKey.sortOrder) 
+        if (sortKey.sortOrder)
             sorted = this.state.orgRoles.sort((a, b) => a[sortKey.key] > b[sortKey.key] ? 1 : -1);
-
-        else 
+        else
             sorted = this.state.orgRoles.sort((a, b) => a[sortKey.key] < b[sortKey.key] ? 1 : -1);
-        sortKey.sortOrder= !sortKey.sortOrder;
+        sortKey.sortOrder = !sortKey.sortOrder;
         this.setState({ roles: sorted })
     }
 
-    componentDidMount() {
-        axios.get(`http://localhost:3000/admin/roles`, (req, res) => res.json()
-        ).then 
-        (res => {
-            
-                const roles = res.data.map(role => ({
-                    ...role, 
-                    permissions: role.permissions.map(permission => permission.name).join(' ,'),
-                    actions: [
-                        <button type="button" title="Edit" class="btn btn-outline float-left ">
-                            <Link to={`/newrole/${role.id}`}><FontAwesomeIcon className="fa-lg" icon={faEdit}></FontAwesomeIcon>
-                            </Link>
-                        </button>,
-                        <button type="button" title="Delete" class="btn  btn-outline float-right" >
-                            <FontAwesomeIcon className="fa-lg " icon={faTrash}></FontAwesomeIcon></button>,
-                        ]
-                  }));
-          
-                  this.setState({ orgRoles: roles, roles: roles });
-                });
-        }
-           
 
-    tableHeaders = [{key: "id", value: "ID", toSort: true, sortOrder: true},
-  {key: "name", value: "Role name", toSort: true, sortOrder: true},
-  {key: "description", value: "Description", toSort: true, sortOrder: true},
-  {key: "permissions", value: "Permissions", toSort: true, sortOrder: true},
-  {key: "actions", value: "", toSort: false, sortOrder: true}
+    async componentDidMount() {
+        const rolesPermission = await getRoles();
+        console.log(rolesPermission);
+        const roles = rolesPermission.map(role =>({
+            ...role,
+            permissions:  role.permissions.map(permission => permission.name).join(' ,'),
+            actions: [
+                <button type="button" key={role.id + "edit"} title="Edit" className="btn btn-outline float-left ">
+                    <Link to={`/edit_role/${role.id}`}><FontAwesomeIcon className="fa-lg "
+                        icon={faEdit}> </FontAwesomeIcon></Link></button>,
+                <button type="button" key={role.id + "delete"} title="Delete" className="btn  btn-outline float-left" ><FontAwesomeIcon className="fa-lg " icon={faTrash}></FontAwesomeIcon></button>,
+            ]
 
-];
+                }));
+                this.setState({ orgRoles: roles, roles: roles });
+            };
+      
+    
+    // componentDidMount() {
+    //     axios.get(`http://localhost:3001/admin/roles`, (req, res) => res.json()
+    //     ).then
+    //         (res => {
+    //             const roles = res.data.map(role => ({
+    //                 ...role,
+    //                 permissions: role.permissions.map(permission => permission.name).join(' ,'),
+    //                 actions: [
+    //                     <button type="button" key={role.id + "edit"} title="Edit" className="btn btn-outline float-left ">
+    //                         <Link to={`/edit_role/${role.id}`}><FontAwesomeIcon className="fa-lg "
+    //                             icon={faEdit}> </FontAwesomeIcon></Link></button>,
+    //                     <button type="button" key={role.id + "delete"} title="Delete" className="btn  btn-outline float-left" ><FontAwesomeIcon className="fa-lg " icon={faTrash}></FontAwesomeIcon></button>,
+
+    //                 ]
+    //             }));
+
+    //             this.setState({ orgRoles: roles, roles: roles });
+    //         });
+    // }
+
+
+    tableHeaders = [{ key: "id", value: "ID", toSort: true, sortOrder: true },
+    { key: "name", value: "Role name", toSort: true, sortOrder: true },
+    { key: "description", value: "Description", toSort: true, sortOrder: true },
+    { key: "permissions", value: "Permissions", toSort: true, sortOrder: true },
+    { key: "actions", value: "", toSort: false, sortOrder: true }
+
+    ];
 
     render() {
         return (
             <>
                 <div>
-                    {this.state.usersManagementClicked && <Redirect to='/users' />}
                     {this.state.newRoleClicked && <Redirect to='/newrole' />}
-
-                    <div className="ml-3 mb-3">
-                        <h2>Admin Dashboard</h2>
-                        <h4>Roles` Management</h4>
+                    <div className="row">
+                        <div className="col-md-11 col-sm-11 col-11">
+                            <div className="ml-3 mb-3">
+                                <h2>Admin Dashboard</h2>
+                                <h4>Roles` Management</h4>
+                            </div>
+                        </div>
+                        <div className="ml-3 mb-4">
+                            <button type="button" title="add role" className="btn btn-outline float-left" onClick={() => this.renderRedirect("newrole")}>
+                                <FontAwesomeIcon size="3x" icon={faUserTag}></FontAwesomeIcon></button>
+                        </div>
                     </div>
-                    <div className="ml-2 mb-3">
-                        <button type="button"
-                                     className="ml-2 mr-4 btn btn-secondary"
-                            onClick={() => this.renderRedirect("newrole")}
-                            className="ml-2 mr-4 btn btn-secondary">New role</button>
-                        <button type="button" 
-                            onClick={() => this.renderRedirect("usersmanagement")}
-                            className="btn btn-secondary">Users Managment</button>
-                    </div>
-
+                    <div className="row">
+                        <div className="mr-3 mb-4"></div>
+                    </div>                    
                     <div className=" ml-3 mr-3">
-
                         <div className="row">
                             <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
-                                <MyTable 
+                                <MyTable
                                     header={this.tableHeaders}
                                     data={this.state.roles}
                                     sortDataByKey={(sortKey) => this.SortByKey(sortKey)}

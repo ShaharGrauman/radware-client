@@ -1,6 +1,6 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
-import axios from 'axios';
+import {login} from '../../api/controllers/admin';
 import {Link} from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink, faWindowClose, faEdit, faCalculator, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -45,23 +45,20 @@ export default class LogIn extends React.Component {
   onSubmit = async e => { 
     e.preventDefault();
     try {
-      const { data } = await axios.post('http://localhost:3000/login',  
-      this.state
-        // ,
-        // { withCredentials: true }
-        );
-      let role= data.roles[0].name;
-      console.log(data);
+      const user = await login(this.state.username, this.state.password);
+      
+      let role= user.roles[0].name;
+      console.log(user);
       console.log(role);
-      this.setState({ role: data.roles[0].name });
+      this.setState({ role: user.roles[0].name });
       this.setState({ errorMsg: '' });
-      localStorage.setItem('loginDetails', JSON.stringify(data));
+      localStorage.setItem('loginDetails', JSON.stringify(user));
+      window.location.reload();
     } catch (error) {
       this.setState({
         errorMsg: 'Invalid email or password'
       });
     }
-    window.location.reload();
   }
   
   // componentDidMount() {

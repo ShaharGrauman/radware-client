@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 
-class NotificationIsNotCreated extends React.Component {
+export default class NotificationIsNotCreated extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -27,7 +27,7 @@ class NotificationIsNotCreated extends React.Component {
             <div>
                 <div class="alert alert-danger text-center">
                 <i><FontAwesomeIcon icon={faExclamationTriangle}></FontAwesomeIcon></i>
-                    <strong className="ml-2">The network connection is lost please try again</strong>
+                    <strong className="ml-2">{this.props.errors}</strong>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
@@ -46,16 +46,3 @@ class NotificationIsNotCreated extends React.Component {
     }
 }
 
-export default function () {
-    return (
-        store.addNotification({
-            content: NotificationIsNotCreated,
-            container: 'top-center',
-            animationIn: ["animated", "fadeIn"],
-            animationOut: ["animated", "fadeOut"],
-            dismiss: {
-                duration: 0,
-            }
-        })
-    )
-}

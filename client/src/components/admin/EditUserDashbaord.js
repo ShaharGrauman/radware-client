@@ -1,9 +1,32 @@
 import React from 'react';
-
+import { withRouter } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import RoleList from './RolesDashboard';
-import Register from './Register';
+import RegisterEdit from './RegisterEdit';
+import axios from 'axios';
+import AdminDashboard from './AdminDashboard';
+import { getRolesEdit } from '../../api/controllers/admin';
 
-export default class EditUserDashbaord extends React.Component {
+class EditUserDashbaord extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            data: props.data,
+            user: [],
+            id:[]
+        }
+    }
+
+    async componentWillMount() {
+        const id = this.props.match.params;
+        this.setState({id});
+        console.log('id : ', id);
+        const data = await getRolesEdit(id.id);
+        // const {data} = await axios.get(`http://localhost:3001/users/${id.id}`);
+        this.setState({ user: data });
+        // console.log(this.state.user)
+    }
+
     render() {
         return (
             <>
@@ -16,7 +39,10 @@ export default class EditUserDashbaord extends React.Component {
 
                     <div className="row">
                         <div className="col-md-12">
-                            <Register/>
+                            <RegisterEdit 
+                            id={this.state.id}
+                            user={this.state.user}
+                             />
                         </div>
                     </div>
                 </div>
@@ -24,3 +50,5 @@ export default class EditUserDashbaord extends React.Component {
         );
     }
 }
+
+export default withRouter(EditUserDashbaord);

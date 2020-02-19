@@ -48,7 +48,7 @@ export default class QADashboard extends React.Component {
 
     async componentDidMount() {
         try {
-            const { data } = await axios.get('http://localhost:3000/Qa/dashboard');
+            const { data } = await axios.get('http://localhost:3001/Qa/dashboard');
             this.data = data.sort((a, b) => a.patternID - b.patternID);
             console.log(this.data)
             this.setState({ dataToShow: data.slice(0, this.size), page: 1 })
@@ -71,7 +71,7 @@ export default class QADashboard extends React.Component {
         })
 
         try {
-            const { data: msg } = await axios.put('http://localhost:3000/Qa/dashboard', JSON.stringify(urlBody), { headers: { "Content-Type": "application/json" } });
+            const { data: msg } = await axios.put('http://localhost:3001/Qa/dashboard', JSON.stringify(urlBody), { headers: { "Content-Type": "application/json" } });
             this.setState({ updateSelectedButton: msg })
             setTimeout(() =>
                 this.setState({ updateSelectedButton: 'Update Selected' })
@@ -314,4 +314,3 @@ export default class QADashboard extends React.Component {
         }
     }
 }
-

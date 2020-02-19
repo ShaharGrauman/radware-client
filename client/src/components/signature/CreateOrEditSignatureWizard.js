@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import axios from 'axios';
 import { withRouter } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 import ControlSteps from '../shared/ControlSteps';
 import WizardFooterButtons from '../shared/WizardFooterButtons';
@@ -15,6 +16,7 @@ import CreateOrEditSignatureStep3Validate from './CreateOrEditSignatureStep3Vali
 import CreateOrEditSignatureStep4ExternalReferences from './CreateOrEditSignatureStep4ExternalReferences';
 import CreateOrEditSignatureStep5Attributes from './CreateOrEditSignatureStep5Attributes';
 import CreateOrEditSignatureStep6History from './History';
+import constants from '../shared/constants';
 
 import { validateStep1 } from '../shared/validations/signature';
 const stepsIndexesContainingCreateWithDefaultsButton = [1, 2, 3];
@@ -37,10 +39,8 @@ class CreateOrEditSignatureWizard extends Component {
         this.state = {
             isCreateSignature: false,
             isErrorSignature: false,
-
-            errors: {
-                attackName: []
-            },
+            errors: '',
+            ifCancelButton: false,
             currentStep: 0,
             signatureData: {
                 userId: 1,
@@ -63,7 +63,6 @@ class CreateOrEditSignatureWizard extends Component {
                 test_data: '',
                 attackName: null,
                 limit: "UserAgent",
-                userId: 1,
                 files: [
                     { signatureId: 1, file: "Simple File" },
                     { signatureId: 1, file: "Simple File" }
@@ -99,6 +98,11 @@ class CreateOrEditSignatureWizard extends Component {
                 ]
             }
         };
+    }
+
+    componentDidMount = async () => {
+        const [attacks] = await Promise.all([constants.getAttacks()]);
+        this.setState({ attacks: attacks });
     }
 
     onBlur = ({ target: { name, value } }) => {
@@ -178,7 +182,6 @@ class CreateOrEditSignatureWizard extends Component {
             keep_order: this.state.signatureData.keep_order,
             start_break: this.state.signatureData.start_break,
             end_break: this.state.signatureData.end_break,
-            simple_text: this.state.signatureData.simple_text,
             right_index: this.state.signatureData.right_index,
             // left_index: this.state.signatureData.left_index,
             scan_uri: this.state.signatureData.scan_uri,
@@ -204,29 +207,30 @@ class CreateOrEditSignatureWizard extends Component {
     }
 
     createSignatureButtonClick = () => {
-        const createSignatureInput = this.mapStateToApiInput();
-        axios.post('http://localhost:3001/signature', createSignatureInput)
-            .then(respone => {
-                this.setState({ isCreateSignature: true })
-            })
-            .catch(error => {
-                this.setState({ isErrorSignature: true })
-            })
+        try {
+            const createSignatureInput = this.mapStateToApiInput();
+            const respone = axios.post('http://localhost:3001/signature', createSignatureInput)
+            this.setState({ isCreateSignature: true })
+            console.log(createSignatureInput);
+
+        } catch (error) {
+            this.setState({
+                isErrorSignature: true,
+                errors: error.message
+            });
+        }
     }
 
     async componentDidMount() {
         const sigId = this.props.match.params.id;
         if (sigId) {
-            console.log('edit', this.props.match.params);
             const { data: retrievedSignature } = await axios.get(`http://localhost:3001/signature/${sigId}`);
             const mappedSignature = this.mapApiResultToState(retrievedSignature[0]);
-            console.log(mappedSignature.severity);
             this.setState({ signatureData: mappedSignature });
         }
     }
 
     mapApiResultToState = (retrievedSignature) => {
-
         const mappedSignature = {
             id: retrievedSignature.id,
             user_id: retrievedSignature.user_id,
@@ -249,28 +253,30 @@ class CreateOrEditSignatureWizard extends Component {
             severity: valueBySeverity[retrievedSignature.severity],
             description: retrievedSignature.description,
             test_data: retrievedSignature.test_data,
-            files: this.state.signatureData.files,
+            files: retrievedSignature.files,
             attack: {
                 id: this.getRandomId(100000),
-                name: this.state.signatureData.attackName
+                name: retrievedSignature.attackName
             },
-            parameters: this.state.signatureData.parameters,
-            external_references: this.state.signatureData.external_references,
-            vuln_data_extras: this.state.signatureData.vuln_data_extras,
-            web_servers: this.state.signatureData.web_servers
+            parameters: retrievedSignature.parameters,
+            external_references: retrievedSignature.external_references,
+            vuln_data_extras: retrievedSignature.vuln_data_extras,
+            web_servers: retrievedSignature.web_servers
         }
         return mappedSignature;
     }
 
-    createWithDefaultsButtonClick = () => {
-        const createSignatureInput = this.mapStateToApiInput();
-        axios.post('http://localhost:3001/signature', createSignatureInput)
-            .then(respone => {
-                this.setState({ isCreateSignature: true })
+    createWithDefaultsButtonClick = async () => {
+        try {
+            const createSignatureInput = this.mapStateToApiInput();
+            const response = await axios.post('http://localhost:3001/signature', createSignatureInput);
+            this.setState({ isCreateSignature: true });
+        } catch (error) {
+            this.setState({
+                isErrorSignature: true,
+                errors: error.message
             })
-            .catch(error => {
-                this.setState({ isErrorSignature: true })
-            })
+        }
     }
 
     toggleshowRegularInStep2 = () => {
@@ -292,15 +298,27 @@ class CreateOrEditSignatureWizard extends Component {
         this.setState({ currentStep: currentStep });
     }
 
+    isCancelResarcherDashboard = () => {
+
+        // <Redirect to='/researcher-dashboard' />
+        //  this.setState({ifCancelButton:true})
+        // {this.state.ifCancelButton && <Redirect to='/researcher-dashboard' />}
+    }
+
+    updateSignatureButton = () => {
+        alert('update button clicked');
+    }
+
     render() {
         const steps = [
-            <CreateOrEditSignatureStep1Details signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} onBlur={this.onBlur} signatureErrors={this.state.errors} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} />,
-            <CreateOrEditSignatureStep2Volnarability signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} toggleshowRegularInStep2={this.toggleshowRegularInStep2} setLeftAndRightIndexes={this.setLeftAndRightIndexes} />,
-            <CreateOrEditSignatureStep3Validate signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} toggleshowRegularInStep2={this.toggleshowRegularInStep2} />,
-            <CreateOrEditSignatureStep4ExternalReferences signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} />,
-            <CreateOrEditSignatureStep5Attributes signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} />,
-            //<CreateOrEditSignatureStep6History signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} />
+            <CreateOrEditSignatureStep1Details signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} onBlur={this.onBlur} signatureErrors={this.state.errors} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} isCancelResarcherDashboard={this.isCancelResarcherDashboard} updateSignatureButton={this.updateSignatureButton} />,
+            <CreateOrEditSignatureStep2Volnarability signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} toggleshowRegularInStep2={this.toggleshowRegularInStep2} setLeftAndRightIndexes={this.setLeftAndRightIndexes} isCancelResarcherDashboard={this.isCancelResarcherDashboard} updateSignatureButton={this.updateSignatureButton} />,
+            <CreateOrEditSignatureStep3Validate signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} toggleshowRegularInStep2={this.toggleshowRegularInStep2} isCancelResarcherDashboard={this.isCancelResarcherDashboard} updateSignatureButton={this.updateSignatureButton} />,
+            <CreateOrEditSignatureStep4ExternalReferences signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} isCancelResarcherDashboard={this.isCancelResarcherDashboard} updateSignatureButton={this.updateSignatureButton} />,
+            <CreateOrEditSignatureStep5Attributes signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} isCancelResarcherDashboard={this.isCancelResarcherDashboard} updateSignatureButton={this.updateSignatureButton} />,
+            <CreateOrEditSignatureStep6History signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} isCancelResarcherDashboard={this.isCancelResarcherDashboard} updateSignatureButton={this.updateSignatureButton} />
         ];
+
         if (this.state.isCreateSignature) {
             return (
                 <NotificationIsCreated />
@@ -308,25 +326,28 @@ class CreateOrEditSignatureWizard extends Component {
         }
         if (this.state.isErrorSignature) {
             return (
-                <NotificationIsNotCreated />
+                <NotificationIsNotCreated errors={this.state.errors} />
             )
         }
 
         return (
             <div style={{ margin: '20px' }}>
-                <ControlSteps currentStep={this.state.currentStep} setCurrentStep={this.setCurrentStep} />
+                <ControlSteps currentStep={this.state.currentStep} setCurrentStep={this.setCurrentStep} isUpdateSignature={this.props.match.params.id} />
                 <div style={{ paddingTop: '10px', paddingBottom: '80px' }}>
                     {steps[this.state.currentStep]}
                 </div>
                 <WizardFooterButtons
                     isFirstStep={this.state.currentStep === 0}
-                    isLastStep={this.state.currentStep === steps.length - 1}
+                    isLastStep={this.state.currentStep === steps.length - 2}
                     signatureData={this.state.signatureData}
                     showCreateWithDefaultsButton={stepsIndexesContainingCreateWithDefaultsButton.includes(this.state.currentStep)}
                     onBackClick={this.onBackClick}
                     onNextClick={this.onNextClick}
                     createWithDefaultsButtonClick={this.createWithDefaultsButtonClick}
                     createSignatureButtonClick={this.createSignatureButtonClick}
+                    isUpdateSignature={this.props.match.params.id}
+                    isCancelResarcherDashboard={this.isCancelResarcherDashboard}
+                    updateSignatureButton={this.updateSignatureButton}
                 />
             </div>
         );
