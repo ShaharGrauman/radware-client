@@ -37,7 +37,7 @@ class SearchSignature extends Component {
       hasPrev:false,
       page: 1,
       tableData: [
-        { patternID: "", description: "", status:'' }
+        {patternID: "", description: "", status:'' }
       ],
       isRefined: false,
       errorMsg:''
@@ -51,15 +51,19 @@ class SearchSignature extends Component {
     };
     this.switchers = [];
     this.sortArrByKey=this.sortArrByKey.bind(this)
+
+    this.stam=[];
   }
 
   addingButtonsToTable() {
     const tableData=this.state.tableData;
+    console.log(tableData);
     if(tableData.length!=0){
     tableData.map(signatur=>{
       signatur['']=
       <div>
-        <Link to="/Export/QA">
+        <Link to={`/createOrEditSignature/${signatur.Id}`}>
+        {/* <Link to={`/Export/QA`}> */}
           <FontAwesomeIcon 
             className="fa-lg float-left" 
             icon={faEdit}  
@@ -69,6 +73,9 @@ class SearchSignature extends Component {
           <FontAwesomeIcon className="fa-lg float-right" icon={faCopy} style={{ color: 'red',cursor:'pointer' }}></FontAwesomeIcon>
       </div>
     })
+    tableData.forEach(sig=>{
+      delete sig.Id
+      })
     this.setState({tableData:tableData})
   }
 }
@@ -91,14 +98,15 @@ class SearchSignature extends Component {
       // console.log('data is:',data)
       let newData=data.map(sig=>(
         {
-          pattern_id: sig.pattern_id,
-          description: sig.description,
-          status:sig.status
+          Id: sig.id,
+          patternID: sig.pattern_id,
+          Description: sig.description,
+          Status:sig.status
         }
       ));
       // console.log('new data is:',data,newData)
       if(newData.length==0){
-        newData=[{ patternID: "NO RESULTS FOUND !", description: "NO RESULTS FOUND !", status:'NO RESULTS FOUND !' }]
+        newData=[{patternID: "NO RESULTS FOUND !", description: "NO RESULTS FOUND !", status:'NO RESULTS FOUND !' }]
         this.setState({tableData:newData, errorMsg: '',role:data.role});
       }else{
       this.setState({tableData:newData, errorMsg: '',role:data.role});

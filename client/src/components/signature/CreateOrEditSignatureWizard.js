@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 import {getSignature,createSignatureWithDefaults,updateSignature,createSignature} from '../../api/controllers/signature';
 import { withRouter } from 'react-router-dom';
-import { Redirect } from 'react-router-dom';
+// import { Redirect } from 'react-router-dom';
 
 import ControlSteps from '../shared/ControlSteps';
 import WizardFooterButtons from '../shared/WizardFooterButtons';
@@ -44,8 +44,8 @@ class CreateOrEditSignatureWizard extends Component {
             ifCancelButton: false,
             currentStep: 0,
             signatureData: {
-                userId: 1,
-                type: '',
+                //   userId: 1,
+                //type: '',
                 status: "in_progress",
                 vuln_data: "vuln data for this signature is: ",
                 showRegularInStep2: false,
@@ -106,10 +106,10 @@ class CreateOrEditSignatureWizard extends Component {
         this.step4ref = React.createRef();
     }
 
-    componentDidMount = async () => {
-        const [attacks] = await Promise.all([constants.getAttacks()]);
-        this.setState({ attacks: attacks });
-    }
+    // componentDidMount = async () => {
+    //     const [attacks] = await Promise.all([constants.getAttacks()]);
+    //     this.setState({ attacks: attacks });
+    // }
 
     onBlur = ({ target: { name, value } }) => {
         const errors = validateStep1({ [name]: value });
@@ -198,7 +198,7 @@ class CreateOrEditSignatureWizard extends Component {
         this.setState({ type: type });
 
         const createSignatureInput = {
-            userId: 1,
+            // userId: 1,
             attackId: 4,
             type: type,
             creation_time: now[1],
@@ -264,10 +264,10 @@ class CreateOrEditSignatureWizard extends Component {
     }
 
     mapApiResultToState = (retrievedSignature) => {
-        const mappedSignature = {
-            id: retrievedSignature.id,
-            user_id: retrievedSignature.user_id,
-            pattern_id: retrievedSignature.pattern_id,
+        const mappedSignature ={ 
+            // id: retrievedSignature.id,
+            //user_id: retrievedSignature.user_id,
+            // pattern_id: retrievedSignature.pattern_id,
             type: retrievedSignature.type,
             status: retrievedSignature.status,
             vuln_data: retrievedSignature.vuln_data,
@@ -282,8 +282,8 @@ class CreateOrEditSignatureWizard extends Component {
             scan_body: retrievedSignature.scan_body,
             scan_parameters: retrievedSignature.scan_parameters,
             scan_file_name: retrievedSignature.scan_file_name,
-            //severity: retrievedSignature.severity,
-            severity: valueBySeverity[retrievedSignature.severity],
+            severity: retrievedSignature.severity,
+            //severity: valueBySeverity[retrievedSignature.severity],
             description: retrievedSignature.description,
             test_data: retrievedSignature.test_data,
             files: retrievedSignature.files,
@@ -362,7 +362,7 @@ class CreateOrEditSignatureWizard extends Component {
             <CreateOrEditSignatureStep3Validate ref={this.step3ref} signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} toggleshowRegularInStep2={this.toggleshowRegularInStep2} isCancelResarcherDashboard={this.isCancelResarcherDashboard} updateSignatureButton={this.updateSignatureButton} />,
             <CreateOrEditSignatureStep4ExternalReferences ref={this.step4ref} signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} isCancelResarcherDashboard={this.isCancelResarcherDashboard} updateSignatureButton={this.updateSignatureButton} />,
             <CreateOrEditSignatureStep5Attributes signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} isCancelResarcherDashboard={this.isCancelResarcherDashboard} updateSignatureButton={this.updateSignatureButton} />,
-            <CreateOrEditSignatureStep6History signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} isCancelResarcherDashboard={this.isCancelResarcherDashboard} updateSignatureButton={this.updateSignatureButton} />
+            <CreateOrEditSignatureStep6History signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} isCancelResarcherDashboard={this.isCancelResarcherDashboard} updateSignatureButton={this.updateSignatureButton} />,
             <CreateOrEditSignatureStep7Analytics signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} />
         ];
 
