@@ -33,9 +33,11 @@ const getRolesEdit = async (id) => {
         throw error.message;
     }
 }
-const putUser = async (id) => {
+const putUser = async (id , user) => {
     try {
-        const { data } = await fetcher.put(`/users/${id}`)
+        console.log("putUser: " ,id)
+        console.log("and user : ", user)
+        const { data } = await fetcher.put(`/users/${id}`, {user})
         return data;
     } catch (error) {
         throw error.message;
@@ -63,6 +65,32 @@ const postNewUser = async (user) => {
         const { data } = await fetcher.post('/users/new_user', user)
         return data;
     } catch (error) {
+        console.log('aaaa')
+        throw error.message;
+    }
+}
+const postResetPassword = async (username) => {
+    try {
+        const { data } = await fetcher.post('/login/resetPassword', username)
+        console.log('data', data)
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
+const deleteUser = async (username) => {
+    try {
+        const { data } = await fetcher.put('/users/delete_user', username)
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
+const putUpdatePassword = async (username, tempPwd, newPwd) => {
+    try {
+        const { data } = await fetcher.put('/login/resetPassword', {username,tempPwd,newPwd})
+        return data;
+    } catch (error) {
         throw error.message;
     }
 }
@@ -83,5 +111,8 @@ export {
     postNewUser,
     postNewRole,
     getRolesEdit,
-    putUser
+    putUser,
+    postResetPassword,
+    putUpdatePassword,
+    deleteUser
 };

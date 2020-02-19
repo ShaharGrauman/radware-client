@@ -1,7 +1,7 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Redirect, withRouter, useHistory, useLocation, matchPath } from 'react-router-dom'
-import { getUsers } from '../../api/controllers/admin';
+import { getUsers,deleteUser } from '../../api/controllers/admin';
 import { Link } from 'react-router-dom';
 import MyTable from '../shared/MyTable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,7 +17,16 @@ class AdminDashboard extends React.Component {
       newUserClicked: false
     }
   }
-
+  deleteUser = async() =>{
+    try{
+    alert("Are you sure?");
+    console.log(this.state.users)
+    await deleteUser('admin')
+    }catch(error){
+      console.log(error);
+    }
+    
+  }
   renderRedirect = page => {
     if (page === "newuser") {
       this.setState({
@@ -44,10 +53,8 @@ class AdminDashboard extends React.Component {
       ...user,
       roles: user.roles.map(role => role.description).join(', '),
       actions: [
-        //key={user.id + "edit"}
-        // key={user.id + "edit"}
         <button type="button" key={user.id + "edit"} title="Edit" className="btn btn-outline float-left "><Link to={`/edit_user/${user.id}`} ><FontAwesomeIcon className="fa-lg " icon={faEdit}> </FontAwesomeIcon></Link></button>,
-        <button type="button" key={user.id + "delete"} title="Delete" className="btn  btn-outline float-left" ><FontAwesomeIcon className="fa-lg " icon={faTrash}></FontAwesomeIcon></button>,
+        <button type="button" key={user.id + "delete"} title="Delete" className="btn  btn-outline float-left" onClick ={()=> this.deleteUser()}><FontAwesomeIcon className="fa-lg " icon={faTrash}></FontAwesomeIcon></button>,
       ]
     }));
 

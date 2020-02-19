@@ -3,12 +3,14 @@ import { Redirect } from 'react-router-dom'
 import axios from 'axios';
 import PermissionsTable from './PermissionsTable';
 import { postNewRole } from '../../api/controllers/admin';
+import NotificationIsCreated from './NotificationIsCreated';
 
 
 export default class NewRole extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            ifUserCreated: false,
             rolename: null,
             description: null,
             permissions: [],
@@ -25,6 +27,7 @@ export default class NewRole extends React.Component {
     }
 
      registerClick = async e  => {
+         
         let dataRole = {
             name: this.state.rolename,
             description: this.state.description,
@@ -33,8 +36,14 @@ export default class NewRole extends React.Component {
         }
         console.log(dataRole);
         // axios.post('http://localhost:3001/role/new_role', dataRole);
-        await postNewRole(dataRole); 
+        const newRole = await postNewRole(dataRole); 
+        if(typeof(newRole) === "string"){
+            alert(newRole);
+        }
+        else{
+            this.setState({ ifUserCreated: true });
 
+        }   
 
     }
 
@@ -61,6 +70,11 @@ export default class NewRole extends React.Component {
     }
 
     render() {
+        if (this.state.ifUserCreated) {
+            return (
+                <NotificationIsCreated />
+            )
+        }
         return (
             <>
                 <div className="container">

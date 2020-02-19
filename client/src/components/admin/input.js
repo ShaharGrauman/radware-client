@@ -7,7 +7,7 @@ import React from 'react';
         <div className="form-group" >
 <lable htmlFor={name}>{lable}</lable>
 <input
-size="115"
+size="145"
 defaultValue={value}
 onChange={onChange}
 id={name}

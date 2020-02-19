@@ -7,6 +7,8 @@ import Input from './input';
 import { Redirect } from 'react-router-dom'
 import axios from 'axios';
 import {getRolesNew, postNewUser} from '../../api/controllers/admin';
+import NotificationIsCreated from './NotificationIsCreated';
+
 export default class Register extends React.Component {
 
     constructor(props) {
@@ -39,8 +41,7 @@ export default class Register extends React.Component {
         phone: Joi.string().trim().regex(/[0-9]/).max(10).min(10).label('Phone Number'),
         username: Joi.string().required().email().label("Email"),
         // password: Joi.string().required().min(5).alphanum().label("Password"),
-        password: Joi.string().min(6).max(20).required().label("password"),
-
+        password: Joi.string().min(6).max(20).required().label("password")
 
     }
 
@@ -86,6 +87,7 @@ export default class Register extends React.Component {
             role: role.name,
             selected: <input type="checkbox" name="myTextEditBox" onChange={event => this.handleChange(event, event.target.checked, role.id)}></input>
         }));
+        console.log('roles:' ,roles)
         this.setState({ roles });
     }
 
@@ -160,7 +162,15 @@ export default class Register extends React.Component {
         return error ? error.details[0].message : null;
     }
 
+    componentWillReceiveProps (nextProps){
+        this.setState({account:{
+            name:nextProps.user.name,
+            username:nextProps.user.username,
+            phone:nextProps.user.phone
+        }})
+        }
     handleSumbit = async e => {
+        try{
         e.preventDefault();
         const errors = this.validate();            //method return object looks like error 
         this.setState({ errors: errors || {} });   //we render the object errors  in the setstate 
@@ -183,10 +193,18 @@ export default class Register extends React.Component {
         if(errors) return;
         console.log(this.state.ifUserCreated);
         // const user = await login(this.state.username, this.state.password);
-        
-          await postNewUser(user); 
+        // this.setState({ ifUserCreated: true });
+        const newUser = await postNewUser(user);
+        if(typeof newUser !="number"){
+            alert(newUser)
+        }else
+        this.setState({ ifUserCreated: true });
 
-        
+    
+    }
+    catch(error){
+        console.log(error);
+    }
        
         // axios.post('http://localhost:3001/users/new_user', user)
         //     .then(response => {
@@ -225,19 +243,19 @@ export default class Register extends React.Component {
 
     render() {
         const { account, errors } = this.state;
-        // if (this.state.ifUserCreated) {
-        //     return (
-        //         <NotificationIsCreated />
-        //     )
-        // }
+        if (this.state.ifUserCreated) {
+            return (
+                <NotificationIsCreated page={'User'} />
+            )
+        }
         return (
             <>
                 {this.state.cancelClicked && <Redirect to='/users' />}
                 <form className="ml-3" onSubmit={this.handleSumbit}>
                     <fieldset className="scheduler-border">
-                        <legend className="scheduler-border">Personal info</legend>
+                        <legend className="scheduler-border font-weight-light">Personal info</legend>
                         <div className="form-group mt-2 ml-2">
-                            <label htmlFor="firstname"> name : </label>
+                            <label htmlFor="firstname"> Name : </label>
                             <Input className="form-control"
                                 type="text"
                                 id="name"
@@ -262,7 +280,7 @@ export default class Register extends React.Component {
 
 
                     <fieldset className="scheduler-border">
-                        <legend className="scheduler-border">User info</legend>
+                        <legend className="scheduler-border font-weight-light">User info</legend>
                         <div className="form-group ml-2">
                             <label htmlFor="Remail">Email address :</label>
                             <Input className="form-control"
@@ -291,7 +309,6 @@ export default class Register extends React.Component {
                                 error={errors.password}
                                 ref="password"
                             />
-                            <small id="passwordHelp" className="form-text text-muted">Must be 6 at least 6 letters.</small>
                         </div>
 
                         <p className="ml-2">Select role :</p>

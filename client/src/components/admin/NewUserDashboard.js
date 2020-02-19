@@ -2,14 +2,14 @@ import React from "react";
 import Register from "./Register";
 
 export default class NewUserDashboard extends React.Component {
-  componentDidMount() {
-    fetch('http://localhost:3001/users')
-      .then(response => response.json())
-      .then(
-        data => {
-          this.setState({ orgUsers: data } );
-        });
-  }
+  // componentDidMount() {
+  //   fetch('http://localhost:3001/users')
+  //     .then(response => response.json())
+  //     .then(
+  //       data => {
+  //         this.setState({ orgUsers: data } );
+  //       });
+  // }
 
   render() {
     return (
