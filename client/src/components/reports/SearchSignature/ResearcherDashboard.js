@@ -82,9 +82,9 @@ export default class ResearcherDashboard extends React.Component {
 
   componentDidMount() {
       try{
-        axios.get(`http://localhost:3001/signature/researcher`).then(res=>{
+        axios.get(`http://localhost:3000/signature/researcher`).then(res=>{
           this.setState({hasNext:res.hasNext,hasPrev:res.hasPrev})
-          console.log(res.data.signatureData);
+          console.log(res.data);
           if(res.data.signatureData.length == 0){
             this.setState({data: [
               { patternID: '', description: '' }

@@ -19,26 +19,36 @@ constructor(props) {
     this.state={
         openOrClose:this.openIcon
     }
-
+    this.totalSignatures=0;
+    this.props.data.forEach(cveId=>this.totalSignatures=this.totalSignatures+cveId.number)
     this.openCveId=this.props.openCveId;
+    
 }
 render() {
+    
+    // this.props.data.forEach(cveId=>this.totalSignatures=this.totalSignatures+cveId.number)
 return (
 
-<div className="table-responsive ml-0 ">
-    <table class="table table-hover table-bordered">
-        <thead className='thead-dark'>
+<div className=" ml-0 ">
+    {/* <table class="table table-hover table-bordered"> */}
+    <table
+        className="table table-striped table-hover table-bordered border-dark"
+        style={{ borderWidth: "3px" }}
+      >
+        <thead >
             <tr>
-                <th scope="col" className="Centered" onClick={()=>{
+                {/* <th scope="col" className="Centered" style={{cursor:'pointer'}} onClick={()=>{
                     this.props.data.forEach(cveId=>this.openCveId(cveId.key))
                     this.state.openOrClose==this.closeIcon?
                     this.setState({openOrClose:this.openIcon}):
                     this.setState({openOrClose:this.closeIcon})
                 }}>
                     {this.state.openOrClose} 
-                </th>
+                </th> */}
+                <th scope="col" className="Centered"></th>
                 <th scope="col" colspan="2" className="Centered">CveId</th>
-                <th scope="col" colspan="2" className="Centered">Number</th>
+                
+                <th scope="col" colspan="2" className="Centered">{`Number (Total=${this.totalSignatures})`}</th>
             </tr>
         </thead>
         <tbody>
@@ -47,10 +57,9 @@ return (
             <tr  onClick={()=>this.openCveId(cveId.key)}>
                 <th scope="row" className="Centered" style={{cursor:'pointer'}} >
                     <FontAwesomeIcon icon={cveId.hasOwnProperty('signatures')?faWindowMinimize:faPlus}/>
-
                 </th>
                 {Object.values(cveId).slice(0,2).map(item=>
-                <td colspan="2" className="Centered" >{item}</td>
+                <td colspan="2" className="Centered" style={{cursor:'pointer'}}>{item}</td>
                     )}
             </tr>
             {cveId.hasOwnProperty('signatures')?
@@ -70,9 +79,10 @@ return (
                     <td className="Centered ">{item}</td>
                     )}
                <td className="Centered">
-                <Link to="/Export/QA">
+
+                <Link to={`/createOrEditSignature/${sig.id}`}>
                   <FontAwesomeIcon 
-                    className="fa-lg float-left" 
+                    className="fa-lg" 
                     icon={faEdit}  
                     style={{ color: 'blue',cursor:'pointer' }}
                   ></FontAwesomeIcon>
@@ -86,13 +96,12 @@ return (
             :
             null
             }
-
-
             </>//the main map
             ))}
-
         </tbody>
     </table>
+
+
 </div>
 
 )
