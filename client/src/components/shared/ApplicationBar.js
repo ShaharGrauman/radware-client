@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import { NavLink } from 'react-router-dom';
+import {getGuestUser, getUser, logout} from '../../api/controllers/auth';
 
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -15,11 +16,11 @@ export default class ApplicationBar extends Component {
     constructor(props) {
         super(props);
 
-        this.guestUser = { userId: null, username: null, roles: [] };
-        const lsLoginDetails = localStorage.getItem('loginDetails');
+        this.guestUser = getGuestUser();
+        const loginDetailsCookie = getUser();
         let loginDetails = this.guestUser;
-        if (lsLoginDetails) {
-            loginDetails = JSON.parse(lsLoginDetails);
+        if (loginDetailsCookie) {
+            loginDetails = JSON.parse(loginDetailsCookie);
         }
 
         this.state = {
@@ -47,8 +48,8 @@ export default class ApplicationBar extends Component {
     }
 
     logout = () => {
+        logout();
         this.setState({ loginDetails: this.guestUser });
-        localStorage.removeItem('loginDetails');
     }
 
     render() {

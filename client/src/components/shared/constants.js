@@ -1,11 +1,10 @@
-import { Component } from 'react';
 import axios from 'axios';
 
-export default class constants extends Component {
+export default class constants {
     static getStatuses = () => {
         return new Promise((resolve, reject) => {
             try {
-                axios.get('http://localhost:3001/getStatuses').then(response => resolve(response.data));
+                axios.get('http://localhost:3000/getStatuses').then(response => resolve(response.data));
             } catch (error) {
                 reject(error);
             }
@@ -15,7 +14,7 @@ export default class constants extends Component {
     static getAttacks = () => {
         return new Promise((resolve, reject) => {
             try {
-                axios.get('http://localhost:3001/attack').then(response => resolve(response.data));
+                axios.get('http://localhost:3000/attack').then(response => resolve(response.data));
             } catch (error) {
                 reject(error);
             }
