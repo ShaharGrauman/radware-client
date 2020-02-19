@@ -82,7 +82,7 @@ export default class ResearcherDashboard extends React.Component {
 
   componentDidMount() {
       try{
-        axios.get(`http://localhost:3001/signature/researcher`).then(res=>{
+        axios.get(`http://localhost:3000/signature/researcher`).then(res=>{
           this.setState({hasNext:res.hasNext,hasPrev:res.hasPrev})
           console.log(res.data.signatureData);
           if(res.data.signatureData.length == 0){
@@ -111,10 +111,10 @@ export default class ResearcherDashboard extends React.Component {
     console.log("current:"+this.state.currentButton);
     if(this.state.currentButton == filter){//to return to all when double clicking
       this.setState({currentButton:"all"}); // to set currentButton to all when clicking twice at button
-      requestURL=`http://localhost:3001/signature/researcher`;
+      requestURL=`http://localhost:3000/signature/researcher`;
       this.setState({dataFilter:"All Signatures"}); 
     }else{
-      requestURL=`http://localhost:3001/signature/researcher?status=${filter}`;
+      requestURL=`http://localhost:3000/signature/researcher?status=${filter}`;
       Object.keys(this.urlDetails).forEach(key=>requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`))
       requestURL.slice(1)
     }
