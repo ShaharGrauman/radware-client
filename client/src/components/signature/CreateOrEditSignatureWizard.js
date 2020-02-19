@@ -381,7 +381,7 @@ class CreateOrEditSignatureWizard extends Component {
                 </div>
                 <WizardFooterButtons
                     isFirstStep={this.state.currentStep === 0}
-                    isLastStep={this.state.currentStep === steps.length - 2}
+                    isLastStep={this.state.currentStep === steps.length - 3}
                     signatureData={this.state.signatureData}
                     showCreateWithDefaultsButton={stepsIndexesContainingCreateWithDefaultsButton.includes(this.state.currentStep)}
                     onBackClick={this.onBackClick}
