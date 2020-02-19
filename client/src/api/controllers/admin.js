@@ -127,7 +127,7 @@ export {
     putUser,
     postResetPassword,
     putUpdatePassword,
-    deleteUser
+    deleteUser,
 
     getAudit
 
