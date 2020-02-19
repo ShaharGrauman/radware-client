@@ -33,16 +33,29 @@ const getRolesEdit = async (id) => {
         throw error.message;
     }
 }
+
 const putUser = async (id , user) => {
     try {
         console.log("putUser: " ,id)
         console.log("and user : ", user)
         const { data } = await fetcher.put(`/users/${id}`, {user})
+                return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
+
+const getAudit = async (event, users_names, orderby, page, size, startdate, enddate, starttime, endtime) => {
+    try {
+
+        const { data } = await fetcher.get(`/admin/audit?event=${event}&users_names=${users_names}&orderby=${orderby}&page=${page}&size=${size}&startdate=${startdate}&enddate=${enddate}&starttime=${starttime}&endtime=${endtime}`);
         return data;
     } catch (error) {
         throw error.message;
     }
 }
+
+
 const login = async (username, password) => {
     try{
         const { data } = await fetcher.post('/login',  {username, password});
@@ -65,10 +78,10 @@ const postNewUser = async (user) => {
         const { data } = await fetcher.post('/users/new_user', user)
         return data;
     } catch (error) {
-        console.log('aaaa')
         throw error.message;
     }
 }
+
 const postResetPassword = async (username) => {
     try {
         const { data } = await fetcher.post('/login/resetPassword', {username})
@@ -115,4 +128,7 @@ export {
     postResetPassword,
     putUpdatePassword,
     deleteUser
+
+    getAudit
+
 };

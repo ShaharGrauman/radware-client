@@ -19,13 +19,8 @@ class EditUserDashbaord extends React.Component {
     async componentWillMount() {
         const id = this.props.match.params;
         this.setState({id});
-        console.log('iddd : ', id);
         const data = await getRolesEdit(id.id);
-        console.log('data: ', data);
-        // const {data} = await axios.get(`http://localhost:3001/users/${id.id}`);
         this.setState({ user: data });
-        
-         console.log(this.state.user)
     }
 
     render() {
