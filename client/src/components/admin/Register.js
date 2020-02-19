@@ -87,7 +87,6 @@ export default class Register extends React.Component {
             role: role.name,
             selected: <input type="checkbox" name="myTextEditBox" onChange={event => this.handleChange(event, event.target.checked, role.id)}></input>
         }));
-        console.log('roles:' ,roles)
         this.setState({ roles });
     }
 
@@ -193,6 +192,7 @@ export default class Register extends React.Component {
         if(errors) return;
         console.log(this.state.ifUserCreated);
         // const user = await login(this.state.username, this.state.password);
+
         // this.setState({ ifUserCreated: true });
         const newUser = await postNewUser(user);
         if(typeof newUser !="number"){
@@ -205,6 +205,7 @@ export default class Register extends React.Component {
     catch(error){
         console.log(error);
     }
+
        
         // axios.post('http://localhost:3001/users/new_user', user)
         //     .then(response => {

@@ -40,7 +40,11 @@ export default class ResearcherDashboard extends React.Component {
       clickedButton:'',
       errorMsg:'',
       searchClicked: false,
-      createOrEditSignatureClicked: false
+      createOrEditSignatureClicked: false,
+      QAClicked: false,
+      TestingClicked: false,
+      GitClicked: false
+
     }
     this.urlDetails={
       page: 1 ,
@@ -57,6 +61,21 @@ export default class ResearcherDashboard extends React.Component {
     if (page === "createOrEditSignature") {
       this.setState({
         createOrEditSignatureClicked: true
+      });
+    }
+    if (page === "QA") {
+      this.setState({
+        QAClicked: true
+      });
+    }
+    if (page === "Testing") {
+      this.setState({
+        TestingClicked: true
+      });
+    }
+    if (page === "Git") {
+      this.setState({
+        GitClicked: true
       });
     }
 }
@@ -155,6 +174,9 @@ export default class ResearcherDashboard extends React.Component {
       <div className='mx-3'>
         {this.state.searchClicked && <Redirect to='/SearchSignature' />}
         {this.state.createOrEditSignatureClicked && <Redirect to='/createOrEditSignature' />}
+        {this.state.QAClicked && <Redirect to='/Export/QA' />}
+        {this.state.TestingClicked && <Redirect to='/Export/Testing' />}
+        {this.state.GitClicked && <Redirect to='/Export/Git' />}
         <h2 className="ml mb-3">Researcher dashboard</h2>
         <div className='row'>
         <div className='ml-2 mr-4'>
@@ -207,9 +229,9 @@ export default class ResearcherDashboard extends React.Component {
           </Dropdown.Toggle>
 
           <Dropdown.Menu>
-            <Dropdown.Item href="#/action-1">QA</Dropdown.Item>
-            <Dropdown.Item href="#/action-2">Testing</Dropdown.Item>
-            <Dropdown.Item href="#/action-3">Git</Dropdown.Item>
+            <Dropdown.Item onClick={() => this.renderRedirect("QA")}>QA</Dropdown.Item>
+            <Dropdown.Item onClick={() => this.renderRedirect("Testing")}>Testing</Dropdown.Item>
+            <Dropdown.Item onClick={() => this.renderRedirect("Git")}>Git</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
         </div>

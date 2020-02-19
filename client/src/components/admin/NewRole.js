@@ -6,6 +6,7 @@ import { postNewRole } from '../../api/controllers/admin';
 import NotificationIsCreated from './NotificationIsCreated';
 
 
+
 export default class NewRole extends React.Component {
     constructor(props) {
         super(props);
@@ -27,15 +28,13 @@ export default class NewRole extends React.Component {
     }
 
      registerClick = async e  => {
-         
         let dataRole = {
             name: this.state.rolename,
             description: this.state.description,
             permissions: this.state.permissions
 
         }
-        console.log(dataRole);
-        // axios.post('http://localhost:3001/role/new_role', dataRole);
+
         const newRole = await postNewRole(dataRole); 
         if(typeof(newRole) === "string"){
             alert(newRole);
@@ -44,6 +43,7 @@ export default class NewRole extends React.Component {
             this.setState({ ifUserCreated: true });
 
         }   
+
 
     }
 

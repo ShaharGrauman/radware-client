@@ -9,6 +9,7 @@ import axios from 'axios';
 import { putUser } from '../../api/controllers/admin';
 import { getRolesNew } from '../../api/controllers/admin';
 
+
 export default class RegisterEdit extends React.Component {
 
     constructor(props) {
@@ -168,9 +169,11 @@ export default class RegisterEdit extends React.Component {
              roles: this.state.updateData
 
         };
+
         console.log("the user: ", user);
         console.log("the id.id: ", id.id);
         await putUser(id.id , user);
+
         // axios.put(`http://localhost:3001/users/${id.id}`, user)
         //     .then(response => {
                 
