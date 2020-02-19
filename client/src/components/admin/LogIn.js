@@ -5,6 +5,8 @@ import {Link} from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink, faWindowClose, faEdit, faCalculator, faTrash } from '@fortawesome/free-solid-svg-icons';
 
+import { setUser } from '../../api/controllers/auth';
+
 export default class LogIn extends React.Component {
   constructor(props) {
     super(props)
@@ -51,7 +53,9 @@ export default class LogIn extends React.Component {
       console.log(role);
       this.setState({ role: user.roles[0].name });
       this.setState({ errorMsg: '' });
-      localStorage.setItem('loginDetails', JSON.stringify(user));
+      
+      setUser(user);
+
       window.location.reload();
     } catch (error) {
       this.setState({

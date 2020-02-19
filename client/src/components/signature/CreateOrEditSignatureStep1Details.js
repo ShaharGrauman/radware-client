@@ -2,9 +2,37 @@ import React from 'react';
 
 import Status from './Status';
 import Severity from './Severity';
-import Description from './Description';
+import validator, { field } from '../shared/validations/validator';
 
 export default class CreateOrEditSignatureStep1Details extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      description: field({ name: 'description', value: '', isRequired: true, minLength: 3 }),
+      attack: field({ name: 'attack', value: '', isRequired: true }),
+    };
+  }
+
+  onChange = ({ target: { name, value } }) => this.validate(name, value);
+
+  validate = (fieldName, value) => {
+    const errors = validator(fieldName, value, this.state[fieldName].validations);
+
+    this.setState({
+      [fieldName]: {
+        ...this.state[fieldName],
+        isPristine: false,
+        errors
+      }
+    });
+  }
+
+  isAllValid = () => {
+
+    Object.keys(this.state).forEach(field => this.validate(field, this.state[field].value));
+    return Object.keys(this.state).every(field => !this.state[field].isPristine && this.state[field].errors.length == 0);
+  }
+
   render() {
     const attacks = ['URL Access Violation',
       'Brute Force',
@@ -51,7 +79,8 @@ export default class CreateOrEditSignatureStep1Details extends React.Component {
       'Unauthorized access attempt',
       'Wrong Username Password Authentication',
       'Authentication Event',
-      'Israeli ID Leakage']
+      'Israeli ID Leakage'];
+
     return (
       <div>
         <div id="container-fluid row">
@@ -65,19 +94,17 @@ export default class CreateOrEditSignatureStep1Details extends React.Component {
               <h5 className="display-5">Attack name:</h5>
               <small>The customer will identity the attack by this name</small>
               <div id="btns">
-
-
                 <div className="input-group-append">
-
-                  <select className="form-control" value={this.props.signatureStatus} onChange={this.props.onChangeHandler}>
-                    <option selected>Attack...</option>
-                    {
-                      attacks.map((s, index) => <option key={index}>{s}</option>)
-                    }
+                  <select className="form-control" name="attack" value={this.props.signatureStatus} onChange={this.props.onChangeHandler} onBlur={this.onChange}>
+                    <option selected disabled>Attack...</option>
+                    {attacks.map((s, index) => <option key={index}>{s}</option>)}
                   </select>
-
                 </div>
-            
+                {
+                  this.state.attack.errors.map((error, index) => (
+                    <small className="form-text text-danger" key={index}>{error}</small>
+                  ))
+                }
               </div>
             </div>
             <Status status={this.props.signatureData.status} onChangeHandler={this.props.onChangeHandler} />
@@ -87,7 +114,26 @@ export default class CreateOrEditSignatureStep1Details extends React.Component {
             <div className="col-lg-5 col-md-5 col-sm-10 col-xs-8"></div>
           </div>
           <div className="row justify-content-around">
-            <Description description={this.props.signatureData.description} onChangeHandler={this.props.onChangeHandler} />
+            <div className="col-lg-11 ml-4 col-md-11 col-sm-10 col-xs-8" style={{ marginTop: 40 }}>
+              <h5>Description:</h5>
+              <div className="form-group shadow-textarea">
+                <textarea rows="20"
+                  name="description"
+                  defaultValue={this.props.signatureData.description}
+                  onChange={this.props.onChangeHandler}
+                  onBlur={this.onChange}
+                  className="form-control z-depth-1"
+                  rows="5"
+                  style={{ resize: "none" }}
+                  placeholder="Write something here...">
+                </textarea>
+              </div>
+              <div class="mb-3">
+              </div>
+              {this.state.description.errors.map((error, index) => (
+                <small className="form-text text-danger" key={index}>{error}</small>
+              ))}
+            </div>
           </div>
         </div>
         <div class="row">

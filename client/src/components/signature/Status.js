@@ -9,6 +9,7 @@ export default class Status extends React.Component {
         <h5>Status:</h5>
         <small>Choose the status</small>
         <select name="status" className="form-control" value={this.props.status} onChange={this.props.onChangeHandler}>
+        <option selected disabled>Choose...</option>
           {
             status.map((s, index) => <option key={index}>{s}</option>)
           }

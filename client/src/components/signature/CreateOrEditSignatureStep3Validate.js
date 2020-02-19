@@ -2,22 +2,61 @@ import React from 'react';
 
 import Table from '../shared/Table';
 import Scanat from './Scanat';
+import validator, { field } from '../shared/validations/validator';
 
 export default class CreateOrEditSignatureStep3Validate extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            get: 'GET <URI> HTTP Host: 10.205.156.51 – default IP , but need to be configurable. Connection: close',
-            post: 'POST <URI>  HTTP/1.1 Host: 10.205.156.51 Referer: attackscript.perl Content-Type: application/x-www-form-urlencoded Cache-Control: no-cache Accept-Encoding: identity Connection: close'
+            get: 'GET <URI> HTTP Host: \n10.205.156.51 - default IP , but need to be configurable. Connection: close',
+            post: 'POST <URI>  HTTP/1.1\nHost: 10.205.156.51\nReferer: attackscript.perl\nContent-Type: application/x-www-form-urlencoded\nCache-Control: no-cache Accept-Encoding: identity\nConnection: close\nContent-Length: <Length>\n',
+            fields: {
+                texPostOrGet: field({ name: 'texPostOrGet', value: '', isRequired: true }),
+            }
         }
         this.extendedTextHeaders = ['Description', 'Order', 'Actions'];
     }
-    
+
     useGetClick = () => {
         this.props.signatureData.test_data = document.querySelector('#txtTextAreaUseMethods').value = this.state.get;
     }
+
     usePostClick = () => {
         this.props.signatureData.test_data = document.querySelector('#txtTextAreaUseMethods').value = this.state.post;
+    }
+
+    validate = (fieldName, value) => {
+        value = this.state.fields.value = this.props.signatureData.test_data
+        console.log(value)
+        return new Promise(resolve => {
+            const errors = validator(fieldName, value, this.state.fields[fieldName].validations);
+            const field = {
+                ...this.state.fields[fieldName],
+                value,
+                isPristine: false,
+                errors
+            };
+
+            this.setState({
+                fields: {
+                    ...this.state.fields,
+                    [fieldName]: field
+                }
+            }, () => resolve(field));
+        });
+    }
+
+    isAllValid = async () => {
+        const fields = {};
+
+        for await (const validateField of Object.keys(this.state.fields).map(field => this.validate(field, this.state.fields[field].value))) {
+            fields[validateField.name] = validateField;
+        }
+
+        this.setState({
+            fields
+        });
+        return Object.keys(this.state.fields).every(field => !this.state.fields[field].isPristine && this.state.fields[field].errors.length == 0);
     }
 
     render() {
@@ -27,11 +66,11 @@ export default class CreateOrEditSignatureStep3Validate extends React.Component 
                     <div className="col-md-6">
                         <h5 className="display-5"> 1.Review the vulrability data</h5>
                         <div className="form-check">
-                            <input type="radio" name="simpleOrExtendedText" id="rbSimpleText" value="SimpleText" checked={this.props.signatureData.simpleOrExtendedText === 'SimpleText'} disabled="true" onClick={this.simpleOrExtendedTextClick} />
+                            <input type="radio" name="simpleOrExtendedText" id="rbSimpleText" value="SimpleText" checked={this.props.signatureData.simpleOrExtendedText === 'SimpleText'} disabled={true} onClick={this.simpleOrExtendedTextClick} />
                             <label className="form-check-label" for="rbSimpleText">Simple text</label>
                             <input type="text" class="form-control" id="text" value={this.props.signatureData.txtSimpleText} disabled></input>
                             <div className="form-group form-check">
-                                <input className="form-check-input" type="checkbox" id="cbToggleshowRegular" checked={this.props.signatureData.showRegularInStep2} onClick={this.props.toggleshowRegularInStep2} disabled="true" />
+                                <input className="form-check-input" type="checkbox" id="cbToggleshowRegular" checked={this.props.signatureData.showRegularInStep2} onClick={this.props.toggleshowRegularInStep2} disabled={true} />
                                 <label className="form-check-label" for="cbToggleshowRegular">Regular expression</label>
                             </div>
                         </div>
@@ -92,11 +131,13 @@ export default class CreateOrEditSignatureStep3Validate extends React.Component 
                         </div>
                         <div class="mb-3">
                             <br></br>
-                            <textarea class="form-control" id="txtTextAreaUseMethods" rows="18" value={this.props.signatureData.test_data}></textarea>
-
+                            <div class="form-group">
+                                <textarea class="form-control" id="txtTextAreaUseMethods" defaultValue={this.props.signatureData.test_data} onChange={this.props.onChangeHandler} name="test_data" rows="18"></textarea>
+                            </div>
                         </div>
-                        <h6>File:</h6>
-                        <button type="button" class="btn btn-outline-secondary btn-block">Attach</button>
+                        {this.state.fields.texPostOrGet.errors.map((error, index) => (
+                            <small key={index} className="form-text text-danger">{error}</small>
+                        ))}
                     </div>
                 </div>
                 <div class="row">
