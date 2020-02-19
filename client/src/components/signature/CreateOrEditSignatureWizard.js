@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import axios from 'axios';
+import {getSignature,createSignatureWithDefaults,updateSignature,createSignature} from '../../api/controllers/signature';
 import { withRouter } from 'react-router-dom';
-import { Redirect } from 'react-router-dom';
+// import { Redirect } from 'react-router-dom';
 
 import ControlSteps from '../shared/ControlSteps';
 import WizardFooterButtons from '../shared/WizardFooterButtons';
@@ -16,6 +16,7 @@ import CreateOrEditSignatureStep3Validate from './CreateOrEditSignatureStep3Vali
 import CreateOrEditSignatureStep4ExternalReferences from './CreateOrEditSignatureStep4ExternalReferences';
 import CreateOrEditSignatureStep5Attributes from './CreateOrEditSignatureStep5Attributes';
 import CreateOrEditSignatureStep6History from './History';
+import CreateOrEditSignatureStep7Analytics from './SignatureLifeCycleAnalytics';
 import constants from '../shared/constants';
 
 import { validateStep1 } from '../shared/validations/signature';
@@ -43,8 +44,8 @@ class CreateOrEditSignatureWizard extends Component {
             ifCancelButton: false,
             currentStep: 0,
             signatureData: {
-                userId: 1,
-                type: '',
+                //   userId: 1,
+                //type: '',
                 status: "in_progress",
                 vuln_data: "vuln data for this signature is: ",
                 showRegularInStep2: false,
@@ -100,10 +101,10 @@ class CreateOrEditSignatureWizard extends Component {
         };
     }
 
-    componentDidMount = async () => {
-        const [attacks] = await Promise.all([constants.getAttacks()]);
-        this.setState({ attacks: attacks });
-    }
+    // componentDidMount = async () => {
+    //     const [attacks] = await Promise.all([constants.getAttacks()]);
+    //     this.setState({ attacks: attacks });
+    // }
 
     onBlur = ({ target: { name, value } }) => {
         const errors = validateStep1({ [name]: value });
@@ -169,15 +170,15 @@ class CreateOrEditSignatureWizard extends Component {
         }
 
         const createSignatureInput = {
-            userId: 1,
+            // userId: 1,
             attackId: 4,
             type: this.state.type,
             creation_time: now[1],
             creation_date: now[0],
             status: this.state.signatureData.status,
-            in_qa_internal_status_manual: "init",
-            in_qa_internal_status_performance: "init",
-            in_qa_internal_status_automation: "init",
+            // in_qa_internal_status_manual: "init",
+            // in_qa_internal_status_performance: "init",
+            // in_qa_internal_status_automation: "init",
             vuln_data: vuln_data,
             keep_order: this.state.signatureData.keep_order,
             start_break: this.state.signatureData.start_break,
@@ -209,7 +210,7 @@ class CreateOrEditSignatureWizard extends Component {
     createSignatureButtonClick = () => {
         try {
             const createSignatureInput = this.mapStateToApiInput();
-            const respone = axios.post('http://localhost:3001/signature', createSignatureInput)
+            const respone = createSignature('http://localhost:3001/signature', createSignatureInput)
             this.setState({ isCreateSignature: true })
             console.log(createSignatureInput);
 
@@ -221,20 +222,26 @@ class CreateOrEditSignatureWizard extends Component {
         }
     }
 
-    async componentDidMount() {
-        const sigId = this.props.match.params.id;
-        if (sigId) {
-            const { data: retrievedSignature } = await axios.get(`http://localhost:3001/signature/${sigId}`);
-            const mappedSignature = this.mapApiResultToState(retrievedSignature[0]);
-            this.setState({ signatureData: mappedSignature });
+    componentDidMount = async () => {
+        console.log('inside the compnent');
+        try {
+            const sigId = this.props.match.params.id;
+            if (sigId) {
+                const retrievedSignature = await getSignature(sigId);
+                const mappedSignature = this.mapApiResultToState(retrievedSignature[0]);
+                this.setState({ signatureData: mappedSignature });
+            }
+            console.log(this.state.signatureData);
+        } catch (error) {
+            throw error;
         }
     }
 
     mapApiResultToState = (retrievedSignature) => {
-        const mappedSignature = {
-            id: retrievedSignature.id,
-            user_id: retrievedSignature.user_id,
-            pattern_id: retrievedSignature.pattern_id,
+        const mappedSignature ={ 
+            // id: retrievedSignature.id,
+            //user_id: retrievedSignature.user_id,
+            // pattern_id: retrievedSignature.pattern_id,
             type: retrievedSignature.type,
             status: retrievedSignature.status,
             vuln_data: retrievedSignature.vuln_data,
@@ -249,8 +256,8 @@ class CreateOrEditSignatureWizard extends Component {
             scan_body: retrievedSignature.scan_body,
             scan_parameters: retrievedSignature.scan_parameters,
             scan_file_name: retrievedSignature.scan_file_name,
-            //severity: retrievedSignature.severity,
-            severity: valueBySeverity[retrievedSignature.severity],
+            severity: retrievedSignature.severity,
+            //severity: valueBySeverity[retrievedSignature.severity],
             description: retrievedSignature.description,
             test_data: retrievedSignature.test_data,
             files: retrievedSignature.files,
@@ -269,7 +276,7 @@ class CreateOrEditSignatureWizard extends Component {
     createWithDefaultsButtonClick = async () => {
         try {
             const createSignatureInput = this.mapStateToApiInput();
-            const response = await axios.post('http://localhost:3001/signature', createSignatureInput);
+            const response = await createSignatureWithDefaults('http://localhost:3000/signature', createSignatureInput);
             this.setState({ isCreateSignature: true });
         } catch (error) {
             this.setState({
@@ -306,7 +313,21 @@ class CreateOrEditSignatureWizard extends Component {
     }
 
     updateSignatureButton = () => {
-        alert('update button clicked');
+        // alert('Update button clicked');
+        try {
+            const createSignatureInput = this.mapApiResultToState(this.state.signatureData);
+            // console.log(createSignature);
+            console.log(createSignatureInput);
+            updateSignature(`http://localhost:3000/signature/${this.props.match.params.id}`, createSignatureInput)
+            this.setState({ isCreateSignature: true })
+            console.log(createSignatureInput);
+
+        } catch (error) {
+            this.setState({
+                isErrorSignature: true,
+                errors: error.message
+            });
+        }
     }
 
     render() {
@@ -316,7 +337,8 @@ class CreateOrEditSignatureWizard extends Component {
             <CreateOrEditSignatureStep3Validate signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} toggleshowRegularInStep2={this.toggleshowRegularInStep2} isCancelResarcherDashboard={this.isCancelResarcherDashboard} updateSignatureButton={this.updateSignatureButton} />,
             <CreateOrEditSignatureStep4ExternalReferences signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} isCancelResarcherDashboard={this.isCancelResarcherDashboard} updateSignatureButton={this.updateSignatureButton} />,
             <CreateOrEditSignatureStep5Attributes signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} isCancelResarcherDashboard={this.isCancelResarcherDashboard} updateSignatureButton={this.updateSignatureButton} />,
-            <CreateOrEditSignatureStep6History signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} isCancelResarcherDashboard={this.isCancelResarcherDashboard} updateSignatureButton={this.updateSignatureButton} />
+            <CreateOrEditSignatureStep6History signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} isCancelResarcherDashboard={this.isCancelResarcherDashboard} updateSignatureButton={this.updateSignatureButton} />,
+            <CreateOrEditSignatureStep7Analytics signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} />
         ];
 
         if (this.state.isCreateSignature) {
