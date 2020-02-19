@@ -44,18 +44,12 @@ export default class Audit extends React.Component {
             hasPrev: false
         });
         else {
-            const audit = [];
-            result.history.forEach(element => {
-                let username = element.username;
-                if (element.history_users_actions.length > 0) {
-                    element.history_users_actions.map(data => audit.push({
-                        username: username,
-                        action_name: data.action_name,
-                        description: data.description,
-                        lastupdated: data.date + "   " + data.time
-                    }))
-                }
-            });
+            const audit = result.history.map(data => ({
+                username: data.user.username,
+                action_name: data.action_name,
+                description: data.description,
+                lastupdated: data.date + "   " + data.time
+            }))
             this.setState({
                 audit: audit,
                 hasNext: result.hasNext,
@@ -64,6 +58,10 @@ export default class Audit extends React.Component {
                 searchClicked: true
             });
         }
+        this.setState({
+            event: "all"
+        });
+
     }
     onChangeHandler = (event, toChange) => {
         const target = event.target.value;
@@ -196,7 +194,7 @@ export default class Audit extends React.Component {
                             </div>
                         </div>
                         {this.state.noResult &&
-                            <div className="row float-center"><h5>There are no results that match your search</h5></div>}
+                            <div className="row float-center mt-5"><h5>There are no results that match your search</h5></div>}
 
                         {(this.state.searchClicked && !this.state.noResult) &&
                             <>
