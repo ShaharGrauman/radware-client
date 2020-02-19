@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from 'axios'
+import {updateQaDashboard, getQaDashboard} from '../../../api/controllers/reports';
 
 import { Dropdown, ButtonGroup, Button } from 'react-bootstrap';
 import { Container, Col, Row } from 'react-bootstrap';
@@ -48,7 +48,7 @@ export default class QADashboard extends React.Component {
 
     async componentDidMount() {
         try {
-            const { data } = await axios.get('http://localhost:3001/Qa/dashboard');
+            const { data } = await getQaDashboard();
             this.data = data.sort((a, b) => a.patternID - b.patternID);
             console.log(this.data)
             this.setState({ dataToShow: data.slice(0, this.size), page: 1 })
@@ -71,7 +71,7 @@ export default class QADashboard extends React.Component {
         })
 
         try {
-            const { data: msg } = await axios.put('http://localhost:3001/Qa/dashboard', JSON.stringify(urlBody), { headers: { "Content-Type": "application/json" } });
+            const msg = await updateQaDashboard(JSON.stringify(urlBody));
             this.setState({ updateSelectedButton: msg })
             setTimeout(() =>
                 this.setState({ updateSelectedButton: 'Update Selected' })
@@ -172,7 +172,9 @@ export default class QADashboard extends React.Component {
                                         const newPage = this.state.page - 1
                                         this.setState({ dataToShow: this.data.slice((newPage - 1) * this.size, newPage * this.size) })
                                         this.setState({ page: newPage });
-                                    }}>
+                                    }}
+                                    style={{cursor:'pointer' }}
+                                    >
                                         <FontAwesomeIcon
                                             icon={faArrowLeft}
                                         ></FontAwesomeIcon>{" "}
@@ -192,7 +194,11 @@ export default class QADashboard extends React.Component {
                                         this.setState({ dataToShow: this.data.slice((newPage - 1) * this.size, newPage * this.size) })
 
                                         this.setState({ page: newPage });
-                                    }}>
+                                    }}
+                                    style={{cursor:'pointer' }}
+                                    
+
+                                    >
                                         Next{" "}
                                         <FontAwesomeIcon
                                             icon={faArrowRight}
@@ -250,7 +256,7 @@ export default class QADashboard extends React.Component {
                                         },
                                         popupAlert: true
                                     })
-                                }}>ALL PASSED</Button>
+                                }}>All passed</Button>
                                 <Dropdown.Toggle split variant="secondary ml-1" id="dropdown-split-basic" />
                                 <Dropdown.Menu>
                                     {this.role.map((role, index) =>
@@ -282,7 +288,7 @@ export default class QADashboard extends React.Component {
                                         },
                                         popupAlert: true
                                     })
-                                }}>ALL FAILED</Button>
+                                }}>All failed</Button>
                                 <Dropdown.Toggle split variant="secondary ml-1" id="dropdown-split-basic" size="sm" />
                                 <Dropdown.Menu>
                                     {this.role.map((role, index) =>

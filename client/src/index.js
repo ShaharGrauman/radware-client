@@ -19,6 +19,7 @@ import ResetPassword from './components/admin/ResetPassword';
 import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
 import ResearcherDashboard from './components/reports/SearchSignature/ResearcherDashboard';
 import Export from './components/reports/SearchSignature/Export';
+import AttacksOrSeverityChart from './components/reports/AttacksOrSeverityChart/AttacksOrSeverityChart';
 import ApplicationBar from './components/shared/ApplicationBar';
 
 class App extends React.Component {
@@ -77,7 +78,10 @@ class App extends React.Component {
                     </Route>
                     <Route path="/CveIdReport">
                         <CveIdReport />
-                    </Route>
+                    </Route> 
+                    <Route path="/chart/:type">
+                        <AttacksOrSeverityChart />
+                    </Route> 
                     <Route path="/resetPassword">
                         <ResetPassword />
                     </Route>
