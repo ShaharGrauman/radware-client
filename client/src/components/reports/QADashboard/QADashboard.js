@@ -172,7 +172,9 @@ export default class QADashboard extends React.Component {
                                         const newPage = this.state.page - 1
                                         this.setState({ dataToShow: this.data.slice((newPage - 1) * this.size, newPage * this.size) })
                                         this.setState({ page: newPage });
-                                    }}>
+                                    }}
+                                    style={{cursor:'pointer' }}
+                                    >
                                         <FontAwesomeIcon
                                             icon={faArrowLeft}
                                         ></FontAwesomeIcon>{" "}
@@ -192,7 +194,11 @@ export default class QADashboard extends React.Component {
                                         this.setState({ dataToShow: this.data.slice((newPage - 1) * this.size, newPage * this.size) })
 
                                         this.setState({ page: newPage });
-                                    }}>
+                                    }}
+                                    style={{cursor:'pointer' }}
+                                    
+
+                                    >
                                         Next{" "}
                                         <FontAwesomeIcon
                                             icon={faArrowRight}
@@ -250,7 +256,7 @@ export default class QADashboard extends React.Component {
                                         },
                                         popupAlert: true
                                     })
-                                }}>ALL PASSED</Button>
+                                }}>All passed</Button>
                                 <Dropdown.Toggle split variant="secondary ml-1" id="dropdown-split-basic" />
                                 <Dropdown.Menu>
                                     {this.role.map((role, index) =>
@@ -282,7 +288,7 @@ export default class QADashboard extends React.Component {
                                         },
                                         popupAlert: true
                                     })
-                                }}>ALL FAILED</Button>
+                                }}>All failed</Button>
                                 <Dropdown.Toggle split variant="secondary ml-1" id="dropdown-split-basic" size="sm" />
                                 <Dropdown.Menu>
                                     {this.role.map((role, index) =>

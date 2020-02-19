@@ -24,12 +24,22 @@ constructor(props) {
     }
     this.onSearchText='';
     this.CveIdReportData=[
-        {key:'2000-001' , number:10},
+        {key:'2000-001' , number:3},
         {key:'2000-002' , number:7},
-        {key:'2000-003' , number:17},
-        {key:'1990-004' , number:15}
+        {key:'2000-003' , number:2},
+        {key:'1990-004' , number:4}
     ];
-    this.signatures=[{id: 1, patternId: 123451, description: "this is FAKE signature", status:'in QA'},
+
+    // this.CveIdReportData=[
+    //     {year:'2020' , serial:'0001' , quantity:3},
+    //     {year:'2020' , serial:'0002' , quantity:7},
+    //     {year:'2020' , serial:'0003' , quantity:11},
+    //     {year:'2020' , serial:'0004' , quantity:6}
+    // ]
+
+
+    this.signatures=[
+    {id: 1, patternId: 123451, description: "this is FAKE signature", status:'in QA'},
     {id: 2, patternId: 123452, description: "this is FAKE signature", status:'in QA'},
     {id: 3, patternId: 123453, description: "this is FAKE signature", status:'in QA'},
     {id: 4, patternId: 123454, description: "ergerge", status:'in QA'},
