@@ -84,7 +84,7 @@ const postNewUser = async (user) => {
 
 const postResetPassword = async (username) => {
     try {
-        const { data } = await fetcher.post('/login/resetPassword', username)
+        const { data } = await fetcher.post('/login/resetPassword', {username})
         console.log('data', data)
         return data;
     } catch (error) {
