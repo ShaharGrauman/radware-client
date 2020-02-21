@@ -14,7 +14,7 @@ export default class CreateOrEditSignatureStep2Volnarability extends React.Compo
             matchNotFound: false,
             fields: {
                 txtExtendedText: field({ name: 'txtExtendedText', value: '', isRequired: true, minLength: 3 }),
-                txtSimpleText: field({ name: 'txtSimpleText', value: '', isRequired: true, minLength: 4 }),
+                txtSimpleText: field({ name: 'txtSimpleText', value: this.props.signatureData.vuln_data, isRequired: true, minLength: 4 }),
                 txtTestText: field({ name: 'txtTestText', value: '', isRequired: true, minLength: 3 }),
                 txtAddParameter: field({ name: 'txtAddParameter', value: '', isRequired: true, pattern: '^[a-zA-Z0-9.!#$%&*+/?^_`{|}~-]+=[A-Z0-9.!#$%&*+/?^_`{|}~-]*$' }),
             },
@@ -24,11 +24,9 @@ export default class CreateOrEditSignatureStep2Volnarability extends React.Compo
             toggleShowExtendedText: false
         }
         this.extendedTextHeaders = ['Description', 'Order', 'Actions'];
-
     }
 
     onChange = ({ target: { name, value } }) => this.validate(name, value);
-
 
     validate = (fieldName, value) => {
 
@@ -58,9 +56,8 @@ export default class CreateOrEditSignatureStep2Volnarability extends React.Compo
             fields[validateField.name] = validateField;
         }
 
-        this.setState({
-            fields
-        });
+        this.setState({ fields });
+
         return Object.keys(this.state.fields)
             .every(field => {
                 if (this.state.fields[field].name === 'txtExtendedText' && this.state.toggleShowSimpleText || this.state.toggleShowExtendedText) return true;
@@ -88,7 +85,6 @@ export default class CreateOrEditSignatureStep2Volnarability extends React.Compo
 
     ifVulnIsValidate = () => {
         this.setState({ isAdd: true });
-        // if (vuln_data && this.state.error.length == 0 && this.state.isAdd) {
         const vuln_data = document.querySelector('#txtAddDataExtra').value;
         if (this.state.error.length == 0) {
             this.setState({ increment_index: this.state.increment_index + 1 });
