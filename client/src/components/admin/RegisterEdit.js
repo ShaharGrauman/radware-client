@@ -4,7 +4,7 @@ import Table from './RolesDashboard';
 import MyTable from '../shared/MyTable';
 import Joi from 'joi-browser'
 import Input from './input';
-import { Redirect } from 'react-router-dom'
+import { Redirect, Link } from 'react-router-dom'
 import axios from 'axios';
 import { putUser } from '../../api/controllers/admin';
 import { getRolesNew } from '../../api/controllers/admin';
@@ -20,12 +20,10 @@ export default class RegisterEdit extends React.Component {
             orgRoles: [],
             roles: [],
             userdata: [],
-            // user:this.props.user
-            specificRoleId: []
+            userEditedOK: false
         };
         this.handleChange = this.handleChange.bind(this);
-        this.updateData = []
-
+        this.updateData = [];
     }
 
 
@@ -87,7 +85,7 @@ export default class RegisterEdit extends React.Component {
                 name: this.props.user.name,
                 username: this.props.user.username,
                 phone: this.props.user.phone
-            }, 
+            },
         });
         console.log(selectedRoles);
         console.log({ roles });
@@ -151,7 +149,7 @@ export default class RegisterEdit extends React.Component {
                 name: nextProps.user.name,
                 username: nextProps.user.username,
                 phone: nextProps.user.phone
-            }, 
+            },
             roles: nextProps.user.roles
         });
     }
@@ -177,12 +175,13 @@ export default class RegisterEdit extends React.Component {
         };
 
 
-        const userUpdated = await putUser(id.id, user);
         try {
+            const userUpdated = await putUser(id.id, user);
+            this.setState({ userEditedOK: true });
             console.log("the user: ", user);
             console.log("the userUpdated: ", userUpdated);
         } catch (error) {
-            console.log(userUpdated);
+            alert(error);
         }
 
         // axios.put(`http://localhost:3001/users/${id.id}`, user)
@@ -226,10 +225,19 @@ export default class RegisterEdit extends React.Component {
     render() {
         const { account, errors } = this.state;
 
+        if (this.state.userEditedOK) {
+            return (
+                <div class="jumbotron jumbotron-fluid">
+                    <div class="container">
+                        <h1 class="display-4">User Updated</h1>
+                        <p class="lead">Successfully</p>
+                        <Link to='/users'>Go back to Users page</Link>
+                    </div>
+                </div>
+            )
+        }
         return (
             <>
-
-
                 {this.state.cancelClicked && <Redirect to='/users' />}
                 <form className="ml-3" onSubmit={this.handleSumbit}>
 

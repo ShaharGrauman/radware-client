@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 
 import { getSignature, createSignatureWithDefaults, updateSignature, createSignature } from '../../api/controllers/signature';
 import { withRouter } from 'react-router-dom';
-// import { Redirect } from 'react-router-dom';
 
 import ControlSteps from '../shared/ControlSteps';
 import WizardFooterButtons from '../shared/WizardFooterButtons';
@@ -17,7 +16,6 @@ import CreateOrEditSignatureStep4ExternalReferences from './CreateOrEditSignatur
 import CreateOrEditSignatureStep5Attributes from './CreateOrEditSignatureStep5Attributes';
 import CreateOrEditSignatureStep6History from './History';
 import CreateOrEditSignatureStep7Analytics from './SignatureLifeCycleAnalytics';
-import constants from '../shared/constants';
 
 import { validateStep1 } from '../shared/validations/signature';
 const stepsIndexesContainingCreateWithDefaultsButton = [2, 3];
@@ -44,10 +42,8 @@ class CreateOrEditSignatureWizard extends Component {
             ifCancelButton: false,
             currentStep: 0,
             signatureData: {
-                //   userId: 1,
-                //type: '',
-                status: "in_progress",
-                vuln_data: "vuln data for this signature is: ",
+                status: '',
+                vuln_data: '',
                 showRegularInStep2: false,
                 keep_order: false,
                 start_break: null,
@@ -63,40 +59,17 @@ class CreateOrEditSignatureWizard extends Component {
                 description: '',
                 test_data: '',
                 attackName: null,
-                limit: "",
+                limit: '',
                 files: [
                     { signatureId: 1, file: "Simple File" },
                     { signatureId: 1, file: "Simple File" }
                 ],
-                attack: {
-                    attack_id: 66979,
-                    name: "rgaergergerg"
-                },
-                parameters: [
-                    { id: '1', parameter: "this is sample PARAMETERS!", signatureId: 1 },
-                    { id: '2', parameter: "this is sample PARAMETERS!", signatureId: 1 },
-                    { id: '3', parameter: "this is sample PARAMETERS!", signatureId: 1 }
-                ],
-                external_references: [
-                    { id: '1', type: "cveid", reference: "http://www.security.com/bid/214", signatureId: 1 },
-                    { id: '2', type: "bugtraqid", reference: "http://www.BOOS.com/55", signatureId: 1 },
-                    { id: '3', type: "bugtraqid", reference: "http://www.cve.com/bid/24", signatureId: 1 },
-                    { id: '4', type: "cveid", reference: "http://www.security.com/", signatureId: 1 }
-                ],
-                vuln_data_extras: [
-                    { id: '1', description: "this is sample desc", signatureId: 1 },
-                    { id: '2', description: "this is sample desc", signatureId: 1 }
-                ],
-                web_servers: [
-                    { id: '1', web: 'Web Server 1' },
-                    { id: '2', web: 'Web Server 2' }
-                ],
-                signature_status_histories: [
-                    { status: "in_progress", time: "17:12:12", date: "2020-01-15", signatureId: 1, userId: 1 },
-                    { status: "in_progress", time: "17:12:19", date: "2020-01-15", signatureId: 1, userId: 1 },
-                    { status: "in_progress", time: "17:12:28", date: "2020-01-15", signatureId: 1, userId: 1 },
-                    { status: "in_progress", time: "17:12:33", date: "2020-01-15", signatureId: 1, userId: 1 }
-                ]
+                attack_id: 0,
+                parameters: [],
+                external_references: [],
+                vuln_data_extras: [],
+                web_servers: [],
+                signature_status_histories: []
             }
         };
 
@@ -105,12 +78,7 @@ class CreateOrEditSignatureWizard extends Component {
         this.step3ref = React.createRef();
         this.step4ref = React.createRef();
     }
-
-    // componentDidMount = async () => {
-    //     const [attacks] = await Promise.all([constants.getAttacks()]);
-    //     this.setState({ attacks: attacks });
-    // }
-
+    
     onBlur = ({ target: { name, value } }) => {
         const errors = validateStep1({ [name]: value });
         this.setState({
@@ -153,7 +121,7 @@ class CreateOrEditSignatureWizard extends Component {
         }
     }
 
-    setIsValidStep = (isValidStep) => {
+    setIsValidStep = isValidStep => {
         console.log('in set is valid step ', this.state.isValidStep);
         // this.props.checkValid();
         this.setState({ isValidStep: isValidStep });
@@ -227,15 +195,17 @@ class CreateOrEditSignatureWizard extends Component {
             parameters: this.state.signatureData.parameters,
             external_references: this.state.signatureData.external_references,
             vuln_data_extras: this.state.signatureData.vuln_data_extras,
-            web_servers: this.state.signatureData.web_servers
+            web_servers: this.state.signatureData.web_servers,
+            signature_status_histories:this.state.signature_status_histories
         };
+      
         return createSignatureInput;
     }
 
     createSignatureButtonClick = async () => {
         try {
             const createSignatureInput = this.mapStateToApiInput();
-            const respone = await createSignature(createSignatureInput)
+            await createSignature(createSignatureInput)
             this.setState({ isCreateSignature: true })
 
         } catch (error) {
@@ -247,8 +217,6 @@ class CreateOrEditSignatureWizard extends Component {
     }
 
     componentDidMount = async () => {
-        const [attacks] = await Promise.all([constants.getAttacks()]);
-        this.setState({ attacks: attacks });
         try {
             const sigId = this.props.match.params.id;
             if (sigId) {
@@ -289,10 +257,11 @@ class CreateOrEditSignatureWizard extends Component {
                 id: this.getRandomId(100000),
                 name: retrievedSignature.attackName
             },
-            parameters: retrievedSignature.parameters,
-            external_references: retrievedSignature.external_references,
-            vuln_data_extras: retrievedSignature.vuln_data_extras,
-            web_servers: retrievedSignature.web_servers
+            parameters: retrievedSignature.parameters || [],
+            external_references: retrievedSignature.external_references || [],
+            vuln_data_extras: retrievedSignature.vuln_data_extras || [],
+            web_servers: retrievedSignature.web_servers || [],
+            signature_status_histories:retrievedSignature.signature_status_histories || [],
         }
         mappedSignature.simpleOrExtendedText = mappedSignature.type === 'vuln' ? 'SimpleText' : 'ExtendedText';
         mappedSignature.txtSimpleText = mappedSignature.vuln_data;
@@ -303,7 +272,7 @@ class CreateOrEditSignatureWizard extends Component {
         if (await this.step2ref.current.isAllValid()) {
             try {
                 const createSignatureInput = this.mapStateToApiInput();
-                const response = await createSignatureWithDefaults(createSignatureInput);
+                await createSignatureWithDefaults(createSignatureInput);
                 this.setState({ isCreateSignature: true });
             } catch (error) {
                 this.setState({
@@ -312,7 +281,6 @@ class CreateOrEditSignatureWizard extends Component {
                 })
             }
         }
-
     }
 
     toggleshowRegularInStep2 = () => {
