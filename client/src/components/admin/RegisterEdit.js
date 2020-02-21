@@ -15,14 +15,14 @@ export default class RegisterEdit extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            account: { name:"", username: "", phone: "", status: "active", password: "" },
+            account: { name: "", username: "", phone: "", status: "active", password: "" },
             errors: {},
             orgRoles: [],
             roles: [],
-            userdata:[],
+            userdata: [],
             // user:this.props.user
-            specificRoleId:[]
-        };  
+            specificRoleId: []
+        };
         this.handleChange = this.handleChange.bind(this);
         this.updateData = []
 
@@ -30,9 +30,9 @@ export default class RegisterEdit extends React.Component {
 
 
     tableHeaders = [
-    { key: "select", value: "Select Roles", toSort: false, sortOrder: true },
-    { key: "selected", value: "Selected Roles", toSort: false, sortOrder: true }
-    ];  
+        { key: "select", value: "Select Roles", toSort: false, sortOrder: true },
+        { key: "selected", value: "Selected Roles", toSort: false, sortOrder: true }
+    ];
 
 
     renderRedirect = () => {
@@ -47,42 +47,52 @@ export default class RegisterEdit extends React.Component {
         username: Joi.string().required().email().label("Email"),
         password: Joi.string().min(6).max(20).required().label("password"),
     }
-    isChecked =(event , id) =>{
+    isChecked = (event, id) => {
         for (let index = 0; index < this.state.roles.length; index++) {
-            if(this.state.roles[index].id === id){
+            if (this.state.roles[index].id === id) {
                 console.log("hii")
                 console.log(event.target.checked)
             }
+        }
     }
-}
-  
+
     async componentDidMount() {
-        const  data  = await getRolesNew();
-        const {roles:userRoles}= this.props.user;
-        console.log(this.props.user);
-        console.log({userRoles});
-    
-        const tempData = [];
+        const data = await getRolesNew();
+        const { roles: userRoles } = this.props.user;
+        userRoles.forEach(userRole => this.updateData.push(userRole.id));
+        console.log("this.updateData ", this.updateData);
+        // arr = arr.push(userRoles.map(userRole => console.log("user Role id: ", userRole.id)));
+        //this.setState(this.state.updateData= userRoles.id)
+        // console.log(this.state.updateData)
+        const selectedRoles = [];
         for (var i = 0; i < data.length; i++) {
             let id = data[i].id;
             console.log(id);
-            tempData.push({
+            selectedRoles.push({
                 rolename: data[i].name,
                 // select: <input type="checkbox" name="myTextEditBox" onChange={event => this.handleChange(event, event.target.checked, id)}> </input>
             })
-            
+
         }
         console.log('tempData')
-        console.log(tempData)
-        this.setState({ selectedRoles: tempData })
+        console.log(selectedRoles)
         const roles = data.map(role => ({
             role: role.name,
             selected: <input id="checkbox" defaultChecked={userRoles.some(ur => ur.id == role.id)} type="checkbox" name="myTextEditBox" onChange={event => this.handleChange(event, event.target.checked, role.id)}></input>
-        } ));
-        this.setState({ roles });
-
+        }));
+        this.setState({
+            roles,
+            selectedRoles,
+            account: {
+                name: this.props.user.name,
+                username: this.props.user.username,
+                phone: this.props.user.phone
+            }, 
+        });
+        console.log(selectedRoles);
+        console.log({ roles });
     }
-    
+
     onRoleSelect = roleId => {
         if (this.state.roles.includes(roleId)) {
             console.log('here')
@@ -98,7 +108,7 @@ export default class RegisterEdit extends React.Component {
             });
         }
     }
-        
+
 
     rolesData = [
         { rolename: "Researcher", selected: <input type="checkbox" name="myTextEditBox" value="checked" /> },
@@ -134,43 +144,50 @@ export default class RegisterEdit extends React.Component {
 
     }
 
-    componentWillReceiveProps (nextProps){
-        this.setState({account:{
-            name:nextProps.user.name,
-            username:nextProps.user.username,
-            phone:nextProps.user.phone        
-        },            roles:nextProps.user.roles
-    })
-        }
+    componentWillReceiveProps(nextProps) {
+        console.log('nextProps', nextProps);
+        this.setState({
+            account: {
+                name: nextProps.user.name,
+                username: nextProps.user.username,
+                phone: nextProps.user.phone
+            }, 
+            roles: nextProps.user.roles
+        });
+    }
 
     handleSumbit = async e => {
-        console.log('user: ', this.props.user);
-
         console.log('handle');
+        console.log(this.updateData);
         // console.log('roles: ', this.state.roles);
         e.preventDefault();
         const errors = this.validate();//method return object looks like error 
         this.setState({ errors: errors || {} });//we render the object errors  in the setstate 
         // if (errors) return;
-      const id = this.props.id
-
+        const id = this.props.id
+        console.log("updsteData: ", this.updateData);
         const user = {
-             name: this.state.account.name,
+            name: this.state.account.name,
             // status:this.state.account.status,
             username: this.state.account.username,
             phone: this.state.account.phone,
             // password: this.state.account.password,
-             roles: this.state.updateData
+            roles: this.updateData
 
         };
 
-        console.log("the user: ", user);
-        console.log("the id.id: ", id.id);
-        await putUser(id.id , user);
+
+        const userUpdated = await putUser(id.id, user);
+        try {
+            console.log("the user: ", user);
+            console.log("the userUpdated: ", userUpdated);
+        } catch (error) {
+            console.log(userUpdated);
+        }
 
         // axios.put(`http://localhost:3001/users/${id.id}`, user)
         //     .then(response => {
-                
+
         //         console.log(response)
         //         console.log(response.data);
         //     })
@@ -201,18 +218,18 @@ export default class RegisterEdit extends React.Component {
         this.setState({ account, errors });
         console.log(this.state.account)
     };
-    
- 
- 
+
+
+
 
 
     render() {
-        const { account, errors} = this.state;
+        const { account, errors } = this.state;
 
         return (
             <>
 
- 
+
                 {this.state.cancelClicked && <Redirect to='/users' />}
                 <form className="ml-3" onSubmit={this.handleSumbit}>
 
@@ -229,11 +246,11 @@ export default class RegisterEdit extends React.Component {
                                 onChange={this.handleeChange}
                                 error={errors.name}
                             />
-               
+
 
                         </div>
 
-                    
+
 
                         <div className="form-group ml-2">
                             <label htmlFor="Rphone">Phone :</label>
@@ -253,18 +270,19 @@ export default class RegisterEdit extends React.Component {
                         <div className="form-group ml-2">
                             <label htmlFor="Remail">Email address :</label>
                             <Input className="form-control"
+                                disabled="true"
                                 type="email"
                                 className="form-control"
                                 id="username"
                                 name="username"
                                 placeholder="name@example.com"
                                 value={this.state.account.username}
-                                onChange={this.handleeChange}
+                                // onChange={this.handleeChange}
                                 error={errors.username}
                             />
                             <small className="form-text text-muted">This will be used as username.</small>
                         </div>
-{/* 
+                        {/* 
                         <div className="form-group ml-2">
                             <label htmlFor="PassReg">Password :</label>
                             <Input
@@ -296,7 +314,7 @@ export default class RegisterEdit extends React.Component {
 
                     </fieldset>
 
-                    <button  className="btn btn-secondary btn-block" >Save</button>
+                    <button className="btn btn-secondary btn-block" >Save</button>
                     <button type="button" onClick={() => this.renderRedirect("users")} className="btn btn-secondary  btn-block">Cancel</button>
 
                 </form>

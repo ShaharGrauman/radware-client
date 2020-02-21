@@ -21,6 +21,7 @@ import ResearcherDashboard from './components/reports/SearchSignature/Researcher
 import Export from './components/reports/SearchSignature/Export';
 import AttacksOrSeverityChart from './components/reports/AttacksOrSeverityChart/AttacksOrSeverityChart';
 import ApplicationBar from './components/shared/ApplicationBar';
+import EditRole from './components/admin/EditRole';
 
 class App extends React.Component {
     render() {
@@ -30,6 +31,9 @@ class App extends React.Component {
                 <Switch>
                     <Route path="/edit_user/:id">
                         <EditUserDashbaord />
+                    </Route>
+                    <Route path="/editrole/:id">
+                        <EditRole />
                     </Route>
                     <Route path="/newuser">
                         <NewUserDashbaord />
