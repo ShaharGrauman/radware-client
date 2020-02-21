@@ -3,6 +3,7 @@ import fetcher from '../fetcher';
 const updateQaDashboard = async (signatureIds) => {
     try {
         const { data } = await fetcher.put('/Qa/dashboard', signatureIds)
+        console.log(signatureIds)
         return data;
     } catch (error) {
         throw error.message;
@@ -16,8 +17,64 @@ const getQaDashboard = async () => {
         throw error.message;
     }
 }
+const searchSignature = async (url) => {
+    try {
+        console.log('saeed',url)
+        const { data } = await fetcher.get(url)
+        
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
+const getExportSignatures = async (url) => {
+    try {
+        const { data } = await fetcher.get(url)
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
+const exportSignaturesTofile = async (exportType,data2) => {
+    try {
+        const url=`/signature/export/${exportType}`;
+        console.log(url)
+        const { data }  = exportType.includes('exportTo') ?
+                await fetcher.get(url)
+                :
+                await fetcher.post(url,data2)
 
+        const response=data
+        var fileURL = window.URL.createObjectURL(new Blob([response]));
+        var fileLink = document.createElement('a');
+     
+        fileLink.href = fileURL;
+        console.log(exportType.slice(0,4))
+        fileLink.setAttribute('download', `file.${exportType.slice(0,4)=='text'?'txt':'xml'}`);
+        document.body.appendChild(fileLink);
+      
+        fileLink.click();
+
+        return data;
+    } catch (error) {
+
+        throw error.message;
+    }
+}
+const exportAllSignaturesTofile = async (url) => {
+    try {
+        console.log(url)
+        const { data } = await fetcher.get(url)
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
 export {
     updateQaDashboard,
-    getQaDashboard
+    getQaDashboard,
+    searchSignature,
+    getExportSignatures,
+    exportSignaturesTofile,
+    exportAllSignaturesTofile
 };

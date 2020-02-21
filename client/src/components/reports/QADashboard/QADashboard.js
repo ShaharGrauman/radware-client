@@ -48,13 +48,13 @@ export default class QADashboard extends React.Component {
 
     async componentDidMount() {
         try {
-            const { data } = await getQaDashboard();
+            const  data  = await getQaDashboard();
             this.data = data.sort((a, b) => a.patternID - b.patternID);
             console.log(this.data)
             this.setState({ dataToShow: data.slice(0, this.size), page: 1 })
             // console.log(this.state.data)
         } catch (error) {
-            window.alert('Error');
+            // window.alert('Error');
         }
     }
 
@@ -105,7 +105,10 @@ export default class QADashboard extends React.Component {
             <div onKeyPress={e => {
                 e.key == 'Enter' && onAccept()
             }}>
-                <Modal show={this.state.popupAlert} onHide={handleClose} >
+                <Modal show={this.state.popupAlert} onHide={handleClose}
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+                >
                     <Modal.Body>
                         {this.state.clickedButton.msg}
                     </Modal.Body>
