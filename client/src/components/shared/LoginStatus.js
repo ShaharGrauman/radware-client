@@ -16,7 +16,7 @@ export default class LoginStatus extends Component {
                         !this.props.loginDetails.username && <span>
                             Welcome, Guest
                             <br />
-                            <a href="login">Login</a>
+                            Please Login
                         </span>
                     }
                 </div>
