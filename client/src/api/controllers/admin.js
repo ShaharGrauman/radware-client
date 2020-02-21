@@ -136,6 +136,14 @@ const putRole = async (id, user) => {
         throw error.message;
     }
 }
+const getConstant = async () => {
+    try {
+        const { data } = await fetcher.get(`/constant`);
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
 export {
     getUsers,
     login,
@@ -151,6 +159,7 @@ export {
     deleteUser,
     getRoleWithId,
     getAudit,
-    putRole
+    putRole,
+    getConstant
 
 };
