@@ -5,6 +5,8 @@ import {Link} from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink, faWindowClose, faEdit, faCalculator, faTrash } from '@fortawesome/free-solid-svg-icons';
 
+import { setUser } from '../../api/controllers/auth';
+
 export default class LogIn extends React.Component {
   constructor(props) {
     super(props)
@@ -44,19 +46,20 @@ export default class LogIn extends React.Component {
   }
   onSubmit = async e => { 
     e.preventDefault();
+    const user = await login(this.state.username, this.state.password);
     try {
-      const user = await login(this.state.username, this.state.password);
-      
       let role= user.roles[0].name;
       console.log(user);
       console.log(role);
       this.setState({ role: user.roles[0].name });
       this.setState({ errorMsg: '' });
-      localStorage.setItem('loginDetails', JSON.stringify(user));
+      
+      setUser(user);
+
       window.location.reload();
     } catch (error) {
       this.setState({
-        errorMsg: 'Invalid email or password'
+        errorMsg: user
       });
     }
   }

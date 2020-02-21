@@ -64,7 +64,26 @@ const exportSignaturesTofile = async (exportType,data2) => {
 const exportAllSignaturesTofile = async (url) => {
     try {
         console.log(url)
-        const { data } = await fetcher.get(url)
+        const { data } = await fetcher.get(url);
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
+
+const getSignatures = async () => {
+    try {
+        const { data } = await fetcher.get('/signature/researcher')
+        console.log(data);
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
+
+const getResearcher = async (requestURL) => {
+    try {
+        const { data } = await fetcher.get(requestURL)
         return data;
     } catch (error) {
         throw error.message;
@@ -76,5 +95,7 @@ export {
     searchSignature,
     getExportSignatures,
     exportSignaturesTofile,
-    exportAllSignaturesTofile
+    exportAllSignaturesTofile,
+    getResearcher,
+    getSignatures
 };
