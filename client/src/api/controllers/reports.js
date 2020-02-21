@@ -27,6 +27,16 @@ const searchSignature = async (url) => {
         throw error.message;
     }
 }
+const copySignature = async (id) => {
+    try {
+        console.log(`/signature/copy/${id}`)
+        const newID= await fetcher.post(`/signature/copy/${id}`)
+        console.log('newID',newID)
+        return newID;
+    } catch (error) {
+        throw error.message;
+    }
+}
 const getExportSignatures = async (url) => {
     try {
         const { data } = await fetcher.get(url)
@@ -93,6 +103,7 @@ export {
     updateQaDashboard,
     getQaDashboard,
     searchSignature,
+    copySignature,
     getExportSignatures,
     exportSignaturesTofile,
     exportAllSignaturesTofile,
