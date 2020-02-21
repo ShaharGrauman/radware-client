@@ -123,7 +123,8 @@ export default class ResetPassword extends React.Component {
         newPassword2: '',
         temppassword: '',
         updated:false,
-        reset:false
+        reset:false,
+        passwordconfirm:false
       }
     }
 
@@ -172,7 +173,7 @@ export default class ResetPassword extends React.Component {
         this.setState({updated:true})
         
     } else {
-      alert('New password are not equals');
+     this.setState({passwordconfirm:true})
     }
   }
 
@@ -245,6 +246,11 @@ export default class ResetPassword extends React.Component {
                 {this.state.updated && (
                 <div class="alert alert-success" role="alert">Password Changed Successfully</div>
                   )}
+                   {this.state.passwordconfirm && (
+                <div class="alert alert-danger" role="alert"> must match the previous entry</div>
+                  )}
+
+                  
                 <button type="submit" class="btn btn-block btn-secondary" onClick={this.updatePassword}>Save</button>
           
               </form>
