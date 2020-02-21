@@ -9,13 +9,13 @@ class ControlSteps extends Component {
             return (
                 <div>
                     <Steps current={this.props.currentStep} onChange={val => { this.props.setCurrentStep(val) }} >
-                        <Step title="Step 1" subTitle="Details" description="Description for Details" />
-                        <Step title="Step 2" subTitle="Volnarability" description="Description for Volnarability" />
-                        <Step title="Step 3" subTitle="Validate" description="Description for Validate" />
-                        <Step title="Step 4" subTitle="External References" description="Description for External References" />
-                        <Step title="Step 5" subTitle="Attributes" description="Description for Attributes" />
-                        <Step title="Step 6" subTitle="History" description="Signature History" />
-                        <Step title="Step 7" subTitle="Analysis" description="Signature analysis" />
+                        <Step title="Details" />
+                        <Step title="Volnarability" />
+                        <Step title="Validate" />
+                        <Step title="External References" />
+                        <Step title="Attributes" />
+                        <Step title="History" />
+                        <Step title="Analysis" />
                     </Steps>
                 </div>
             );
@@ -24,11 +24,11 @@ class ControlSteps extends Component {
         return (
             <div>
                 <Steps current={this.props.currentStep} onChange={val => { this.props.setCurrentStep(val) }} >
-                    <Step title="Step 1" subTitle="Details" description="Description for Details" />
-                    <Step title="Step 2" subTitle="Volnarability" description="Description for Volnarability" />
-                    <Step title="Step 3" subTitle="Validate" description="Description for Validate" />
-                    <Step title="Step 4" subTitle="External References" description="Description for External References" />
-                    <Step title="Step 5" subTitle="Attributes" description="Description for Attributes" />
+                    <Step title="Details" />
+                    <Step title="Volnarability" />
+                    <Step title="Validate" />
+                    <Step title="External References" />
+                    <Step title="Attributes" />
                 </Steps>
             </div>
         );

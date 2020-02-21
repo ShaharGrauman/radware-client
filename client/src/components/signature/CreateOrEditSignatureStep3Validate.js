@@ -10,6 +10,7 @@ export default class CreateOrEditSignatureStep3Validate extends React.Component 
         this.state = {
             get: 'GET <URI> HTTP Host: \n10.205.156.51 - default IP , but need to be configurable. Connection: close',
             post: 'POST <URI>  HTTP/1.1\nHost: 10.205.156.51\nReferer: attackscript.perl\nContent-Type: application/x-www-form-urlencoded\nCache-Control: no-cache Accept-Encoding: identity\nConnection: close\nContent-Length: <Length>\n',
+            postWithFile :'POST WITH FILE Description',        
             fields: {
                 texPostOrGet: field({ name: 'texPostOrGet', value: '', isRequired: true }),
             }
@@ -24,7 +25,9 @@ export default class CreateOrEditSignatureStep3Validate extends React.Component 
     usePostClick = () => {
         this.props.signatureData.test_data = document.querySelector('#txtTextAreaUseMethods').value = this.state.post;
     }
-
+    usePostWithFileClick = () => {
+        this.props.signatureData.test_data = document.querySelector('#txtTextAreaUseMethods').value = this.state.postWithFile;
+    }
     validate = (fieldName, value) => {
         value = this.state.fields.value = this.props.signatureData.test_data
         console.log(value)
@@ -129,7 +132,7 @@ export default class CreateOrEditSignatureStep3Validate extends React.Component 
                                 <button type="button" class="btn btn-outline-secondary btn-block" onClick={this.usePostClick}>Use Post</button>
                             </div>
                             <div className="col-md-4">
-                                <button type="button" class="btn btn-outline-secondary btn-block">Use Post With File</button>
+                                <button type="button" class="btn btn-outline-secondary btn-block" onClick={this.usePostWithFileClick}>Use Post With File</button>
                             </div>
                         </div>
                         <div class="mb-3">

@@ -15,7 +15,6 @@ export default class CreateOrEditSignatureStep2Volnarability extends React.Compo
             fields: {
                 txtExtendedText: field({ name: 'txtExtendedText', value: '', isRequired: true, minLength: 3 }),
                 txtSimpleText: field({ name: 'txtSimpleText', value: this.props.signatureData.vuln_data, isRequired: true, minLength: 4 }),
-                txtTestText: field({ name: 'txtTestText', value: '', isRequired: true, minLength: 3 }),
                 txtAddParameter: field({ name: 'txtAddParameter', value: '', isRequired: true, pattern: '^[a-zA-Z0-9.!#$%&*+/?^_`{|}~-]+=[A-Z0-9.!#$%&*+/?^_`{|}~-]*$' }),
             },
             isAdd: false,
@@ -61,7 +60,7 @@ export default class CreateOrEditSignatureStep2Volnarability extends React.Compo
         return Object.keys(this.state.fields)
             .every(field => {
                 if (this.state.fields[field].name === 'txtExtendedText' && this.state.toggleShowSimpleText || this.state.toggleShowExtendedText) return true;
-                else if (this.state.fields[field].name === 'txtSimpleText' || this.state.fields[field].name === 'txtTestText' && this.state.toggleShowExtendedText) return true;
+                else if (this.state.fields[field].name === 'txtSimpleText' && this.state.toggleShowExtendedText) return true;
                 return !this.state.fields[field].isPristine && this.state.fields[field].errors.length == 0;
             }) && (!this.state.toggleShowExtendedText || this.state.vulnDataExtrasValid);
     }
@@ -152,25 +151,16 @@ export default class CreateOrEditSignatureStep2Volnarability extends React.Compo
                                         type="text"
                                         className="form-control"
                                         name="txtTestText"
-                                        defaultValue={this.state.fields.txtTestText.value}
-                                        onBlur={this.onChange}
+                                        //defaultValue={this.state.fields.txtTestText.value}
                                         onChange={this.props.onChangeHandler}
                                         id="testText"
                                         placeholder="Add text">
                                     </textarea>
-                                    {this.state.fields.txtTestText.errors.map((error, index) => (
-                                        <small key={index} className="form-text text-danger">{error}</small>))}  <div className="mt-2 mb-2">
+                                     <div className="mt-2 mb-2">
                                         <button className="btn btn-block btn-secondary" onClick={this.checkReg}>Test</button>
                                     </div>
                                 </div> : null
                         }
-                        {
-                            this.state.matchFound ?
-                                <div class="alert alert-success" role="alert">
-                                    Match Found
-                                    </div> : null
-                        }
-
                     </div>
                     <div className="col-md-6">
                         <input type="radio" name="simpleOrExtendedText" id="rbExtendedText" value="ExtendedText" checked={this.props.signatureData.simpleOrExtendedText === 'ExtendedText'} onBlur={this.onBlur} onClick={this.simpleOrExtendedTextClick} />
@@ -180,7 +170,6 @@ export default class CreateOrEditSignatureStep2Volnarability extends React.Compo
                             <label className="custom-control-label" for="toggle">Keep order</label>
                         </div>
                         {
-
                             this.state.toggleShowExtendedText ?
                                 <div>
                                     <div className="input-group sm-3 mb-2 mt-2">
