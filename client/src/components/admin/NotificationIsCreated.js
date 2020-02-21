@@ -26,12 +26,12 @@ export default class NotificationIsCreated extends React.Component {
         return (
             <div>
                 <div class="alert alert-success text-center">
-                <i><FontAwesomeIcon icon={faCheckCircle}></FontAwesomeIcon></i>
+                    <i><FontAwesomeIcon icon={faCheckCircle}></FontAwesomeIcon></i>
                     <strong className="ml-2">{`${this.props.page}`} created successfully</strong>
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-        <button type="button" class="btn btn-outline-primary btn-block" onClick={this.isclickNew}>Create New {`${this.props.page}`}</button>
+                        <button type="button" class="btn btn-outline-primary btn-block" onClick={this.isclickNew}>Create New {`${this.props.page}`}</button>
                     </div>
                     <div class="col-md-12">
                         <button type="button" class="btn btn-outline-secondary btn-block" onClick={this.isclickAdmin}>Admin dashboard</button>
@@ -39,7 +39,7 @@ export default class NotificationIsCreated extends React.Component {
                 </div>
                 <div>
                 </div>
-                {this.state.isNewClicked    && <Redirect to='/newuser' />}
+                {this.state.isNewClicked && <Redirect to='/newuser' />}
                 {this.state.isAdmminClicked && <Redirect to='/users' />}
             </div>
         )
