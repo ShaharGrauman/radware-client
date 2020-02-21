@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import axios from 'axios'
+// import axios from 'axios'
 import { Link } from 'react-router-dom';
-// import { withRouter } from 'react-router-dom';
+
+import {searchSignature} from '../../../api/controllers/reports';
+
 
 import { UncontrolledCollapse, Button, CardBody, Card } from 'reactstrap';
 import { InputGroup, InputGroupText, InputGroupAddon, Input } from 'reactstrap';
@@ -94,8 +96,9 @@ class SearchSignature extends Component {
     console.log(requestURL)
     
     try{
-      const {data} = await axios.get(requestURL,{withCredentials: true});
-      // console.log('data is:',data)
+      // const {data} = awai t axios.get(requestURL,{withCredentials: true});
+      const data = await searchSignature(requestURL);
+      console.log('data is:',data)
       let newData=data.map(sig=>(
         {
           Id: sig.id,
@@ -104,7 +107,6 @@ class SearchSignature extends Component {
           Status:sig.status
         }
       ));
-      // console.log('new data is:',data,newData)
       if(newData.length==0){
         newData=[{patternID: "NO RESULTS FOUND !", description: "NO RESULTS FOUND !", status:'NO RESULTS FOUND !' }]
         this.setState({tableData:newData, errorMsg: '',role:data.role});

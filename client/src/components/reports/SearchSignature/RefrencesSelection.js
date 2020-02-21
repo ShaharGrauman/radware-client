@@ -23,7 +23,7 @@ export default class RefrencesSelection extends SwitchableComponent {
         <span className="row">
           <span className="col-sm-12 col-md-8 col-lg-6">
             <select className="custom-select" id="cveid" onChange={this.onChange} disabled={this.state.disabled}>
-              <option defaultValue>CveId</option>
+              <option defaultValue>Select</option>
               {
                constants.reference.map(reference=>
                  <option value={reference.id}>{reference.name}</option>
