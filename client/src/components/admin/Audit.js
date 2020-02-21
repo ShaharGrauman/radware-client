@@ -3,7 +3,7 @@ import MyTable from '../shared/MyTable';
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Dropdown from 'react-bootstrap/Dropdown'
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
-import { getAudit } from '../../api/controllers/admin';
+import { getAudit, getConstant } from '../../api/controllers/admin';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 export default class Audit extends React.Component {
@@ -12,6 +12,7 @@ export default class Audit extends React.Component {
         super(props);
         this.state = {
             audit: [],
+            actions: [],
             event: '',
             users_names: '',
             orderby: '',
@@ -33,8 +34,16 @@ export default class Audit extends React.Component {
     { key: "lastupdated", value: "Last Updated", toSort: false }
     ];
 
-    actions = ["edit", "add", "export", "report", "delete"];
+    // actions = ["edit", "add", "export", "report", "delete"];
 
+    async componentDidMount() {
+        const constant = await getConstant();
+        const actions = constant.actionName;
+        this.setState({
+            actions: actions
+        })
+
+    }
     submitHandler = async e => {
         const result = await getAudit(this.state.event, this.state.users_names, this.state.orderby, this.state.page, this.state.size, this.state.startdate, this.state.enddate, this.state.starttime, this.state.endtime);
         if (result.history.length < 1) this.setState({
@@ -176,7 +185,7 @@ export default class Audit extends React.Component {
                                                 key={variant}
                                                 onSelect={this.handleSelect}>
                                                 <Dropdown.Item eventKey="all">All </Dropdown.Item>
-                                                {this.actions.map(action => (      
+                                                {this.state.actions.map(action => (      
                                                     <Dropdown.Item eventKey={action}> {action.charAt(0).toUpperCase() + action.slice(1)}</Dropdown.Item>
                                                 ))}
                                             </DropdownButton>
