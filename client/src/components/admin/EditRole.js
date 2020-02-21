@@ -141,6 +141,7 @@ class EditRole extends React.Component {
                                         onChange={this.handleeChange} 
                                         defaultValue={this.state.account.rolename}
                                         error={errors.name}
+                                        readOnly = {true}
                                         />
                                         <div> {this.state.errors.rolename && <div className="alert alert-danger">{this.state.errors.rolename}</div>}</div>
                                     </div>

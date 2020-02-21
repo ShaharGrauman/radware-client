@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { NavLink } from 'react-router-dom';
+import { Redirect, NavLink } from 'react-router-dom';
 import {getGuestUser, getUser, logout} from '../../api/controllers/auth';
 
 import AppBar from '@material-ui/core/AppBar';
@@ -65,6 +65,7 @@ export default class ApplicationBar extends Component {
                             )
                         }
                         <LoginStatus loginDetails={this.state.loginDetails} logout={this.logout} />
+                        {!this.state.loginDetails.userId && <Redirect to="/login" />}
                     </Tabs>
                 </AppBar>
             </div >
