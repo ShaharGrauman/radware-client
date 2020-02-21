@@ -17,7 +17,28 @@ const getQaDashboard = async () => {
     }
 }
 
+const getSignatures = async () => {
+    try {
+        const { data } = await fetcher.get('/signature/researcher')
+        console.log(data);
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
+
+const getResearcher = async (requestURL) => {
+    try {
+        const { data } = await fetcher.get(requestURL)
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
+
 export {
     updateQaDashboard,
-    getQaDashboard
+    getQaDashboard,
+    getResearcher,
+    getSignatures
 };
