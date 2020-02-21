@@ -48,7 +48,7 @@ const getAttacks = async () => {
 const getStatuses = async () => {
     try {
         const { data } = await fetcher.get(`/constant`);
-        return data[1][1];
+        return data.status;
     } catch (error) {
         throw error.message;
     }

@@ -2,7 +2,6 @@ import React from 'react';
 
 import Severity from './Severity';
 import validator, { field } from '../shared/validations/validator';
-// import constants from '../shared/constants';
 import { getAttacks, getStatuses } from '../../api/controllers/signature';
 
 export default class CreateOrEditSignatureStep1Details extends React.Component {
