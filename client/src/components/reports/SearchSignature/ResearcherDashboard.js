@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Dropdown } from 'react-bootstrap';
 import {Badge} from 'react-bootstrap'; 
 import { Redirect } from 'react-router-dom';
-
+import {getResearcher,getSignatures} from '../../../api/controllers/reports'
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -38,6 +38,7 @@ export default class ResearcherDashboard extends React.Component {
       all:true,
       currentButton:'all',
       clickedButton:'',
+      nextClicked: false,
       errorMsg:'',
       searchClicked: false,
       createOrEditSignatureClicked: false,
@@ -80,41 +81,37 @@ export default class ResearcherDashboard extends React.Component {
     }
 }
 
-  componentDidMount() {
-      try{
-        axios.get(`http://localhost:3000/signature/researcher`).then(res=>{
+  componentDidMount = async e => {
+    const res = await getSignatures();
+          // console.log(res.data);
           this.setState({hasNext:res.hasNext,hasPrev:res.hasPrev})
-          console.log(res.data);
-          if(res.data.signatureData.length == 0){
+          console.log(res.signatureData);
+          if(res.signatureData.length == 0){
             this.setState({data: [
               { patternID: '', description: '' }
              
             ]});         
           }else{
-            this.setState({signaturesCountByStatus:res.data.signaturesCountByStatus})
-            console.log(res.data.signaturesCountByStatus);
+            this.setState({signaturesCountByStatus:res.signaturesCountByStatus})
+            console.log(res.signaturesCountByStatus);
             console.log(this.state.signaturesCountByStatus[1].Count );
-            this.setState({data:res.data.signatureData});
+            this.setState({data:res.signatureData});
           }
-          
-          })
-        }catch(error){
-                this.setState({
-                  errorMsg: 'Error'
-                });
-            }
+         
   }
 
-  loadData(filter){
+  loadData = async(filter)=>{
     let requestURL;
     this.setState({currentButton:filter});
     console.log("current:"+this.state.currentButton);
-    if(this.state.currentButton == filter){//to return to all when double clicking
+    console.log("clicked:"+this.state.clickedButton);
+    console.log(this.state.nextClicked);
+    if(this.state.currentButton == filter && !this.state.nextClicked){//to return to all when double clicking
       this.setState({currentButton:"all"}); // to set currentButton to all when clicking twice at button
-      requestURL=`http://localhost:3000/signature/researcher`;
+      requestURL=`/signature/researcher`;
       this.setState({dataFilter:"All Signatures"}); 
     }else{
-      requestURL=`http://localhost:3000/signature/researcher?status=${filter}`;
+      requestURL=`/signature/researcher?status=${filter}`;
       Object.keys(this.urlDetails).forEach(key=>requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`))
       requestURL.slice(1)
     }
@@ -128,26 +125,18 @@ export default class ResearcherDashboard extends React.Component {
     //  this.setState({dataFilter:`All Signature`,[filter]:true})
     //  filter='';
     // }
-    try{
-    axios.get(requestURL).then(res=>{
+   
+    const res = await getResearcher(requestURL);
       this.setState({hasNext:res.hasNext,hasPrev:res.hasPrev})
-      console.log(res.data.signatureData);
-      if(res.data.signatureData.length == 0){
+      console.log(res.signatureData);
+      if(res.signatureData.length == 0){
         this.setState({data: [
           { patternID: '', description: '' }
          
         ]});         
       }else{
-        this.setState({data:res.data.signatureData});
+        this.setState({data:res.signatureData});
       }
-      
-      })
-    }catch(error){
-            this.setState({
-              errorMsg: 'Error'
-            });
-        }
-
   } 
   
   selectButton=(value)=>{
@@ -257,12 +246,14 @@ export default class ResearcherDashboard extends React.Component {
                     this.urlDetails.page--;
                     if(this.urlDetails.page == 1){
                       this.state.hasPrev = false;
+                      
                     }
+                    this.state.nextClicked = false;
                     this.loadData(this.state.currentButton);
                   }}>
                   <FontAwesomeIcon
                     icon={faArrowLeft}
-                  ></FontAwesomeIcon>{" "}
+                  ></FontAwesomeIcon>
                   Previous
                 </span>
                 : null  
@@ -273,6 +264,7 @@ export default class ResearcherDashboard extends React.Component {
               <div className="col-3 col-sm-2">
               {this.state.hasNext?
                 <span className="fas" onClick={()=>{
+                  this.state.nextClicked = true;
                   this.urlDetails.page++;
                   this.loadData(this.state.currentButton);
                   this.state.hasPrev = true;
@@ -280,7 +272,7 @@ export default class ResearcherDashboard extends React.Component {
                   Next
                   <FontAwesomeIcon
                     icon={faArrowRight}
-                    onClick={this.props.nextOnClick}
+                    // onClick={this.props.nextOnClick}
                   ></FontAwesomeIcon>
                 </span>          
             :null
@@ -332,11 +324,11 @@ export default class ResearcherDashboard extends React.Component {
                     </button>
                     <button
                       type="button"
-                      className={this.state.clickedButton==="inQa"&&this.state.currentButton=="inQa"?"outline- mt-3 btn btn-secondary btn-block  text-left":"outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
+                      className={this.state.clickedButton==="inQa"&&this.state.currentButton=="in_qa"?"outline- mt-3 btn btn-secondary btn-block  text-left":"outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
                       onClick={()=>
                         { 
                         this.selectButton("inQa");
-                        this.loadData("inQa");
+                        this.loadData("in_qa");
                         // this.setState({this.urlDetails.page:1});
                         }
                       }
