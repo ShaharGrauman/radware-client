@@ -5,7 +5,7 @@ import React from 'react';
  const Input=({ref,name,type,lable,value,error,onChange}) =>{
     return( 
         <div className="form-group" >
-<lable htmlFor={name}>{lable}</lable>
+<label htmlFor={name}>{lable}</label>
 <input
 size="145"
 defaultValue={value}

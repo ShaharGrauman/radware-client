@@ -11,15 +11,16 @@ class EditUserDashbaord extends React.Component {
         super(props);
         this.state = {
             data: props.data,
-            user: [],
+            user: null,
             id:[]
         }
     }
 
-    async componentWillMount() {
+    async componentDidMount() {
         const id = this.props.match.params;
         this.setState({id});
         const data = await getRolesEdit(id.id);
+        console.log('getRolesEdit', data);
         this.setState({ user: data });
     }
 
@@ -32,15 +33,17 @@ class EditUserDashbaord extends React.Component {
                             <h1>Edit User</h1>
                         </div>
                     </div>
-
-                    <div className="row">
-                        <div className="col-md-12">
-                            <RegisterEdit 
-                            id={this.state.id}
-                            user={this.state.user}
-                             />
+                    {
+                    this.state.user && 
+                        <div className="row">
+                            <div className="col-md-12">
+                                <RegisterEdit 
+                                id={this.state.id}
+                                user={this.state.user}
+                                />
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
             </>
         );

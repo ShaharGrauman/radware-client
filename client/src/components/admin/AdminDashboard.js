@@ -17,11 +17,12 @@ class AdminDashboard extends React.Component {
       newUserClicked: false
     }
   }
-  deleteUser = async() =>{
+  deleteUser = async(username) =>{
+    
     try{
+      console.log(username);
     alert("Are you sure?");
-    console.log(this.state.users)
-    await deleteUser('admin')
+    const usr = await deleteUser(username);
     }catch(error){
       console.log(error);
     }
@@ -48,13 +49,12 @@ class AdminDashboard extends React.Component {
 
   async componentDidMount() {
     const users = await getUsers();
-
     const usersWithRoles = users.map(user => ({
       ...user,
       roles: user.roles.map(role => role.description).join(', '),
       actions: [
         <button type="button" key={user.id + "edit"} title="Edit" className="btn btn-outline float-left "><Link to={`/edit_user/${user.id}`} ><FontAwesomeIcon className="fa-lg " icon={faEdit}> </FontAwesomeIcon></Link></button>,
-        <button type="button" key={user.id + "delete"} title="Delete" className="btn  btn-outline float-left" onClick ={()=> this.deleteUser()}><FontAwesomeIcon className="fa-lg " icon={faTrash}></FontAwesomeIcon></button>,
+        <button type="button" key={user.id + "delete"} title="Delete" className="btn  btn-outline float-left" onClick ={()=> this.deleteUser(user.username)}><FontAwesomeIcon className="fa-lg " icon={faTrash}></FontAwesomeIcon></button>,
       ]
     }));
 
