@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import {getSignature,createSignatureWithDefaults,updateSignature,createSignature} from '../../api/controllers/signature';
+import { getSignature, createSignatureWithDefaults, updateSignature, createSignature } from '../../api/controllers/signature';
 import { withRouter } from 'react-router-dom';
 // import { Redirect } from 'react-router-dom';
 
@@ -99,7 +99,7 @@ class CreateOrEditSignatureWizard extends Component {
                 ]
             }
         };
-        
+
         this.step1ref = React.createRef();
         this.step2ref = React.createRef();
         this.step3ref = React.createRef();
@@ -152,7 +152,7 @@ class CreateOrEditSignatureWizard extends Component {
                 break;
         }
     }
-    
+
     setIsValidStep = (isValidStep) => {
         console.log('in set is valid step ', this.state.isValidStep);
         // this.props.checkValid();
@@ -183,7 +183,7 @@ class CreateOrEditSignatureWizard extends Component {
         }
     }
 
-    mapSimpleOrExtendedText = () => {
+    mapStateToApiInput = () => {
         const now = new Date().toLocaleString("he-IL").split(', ');
 
         let vuln_data = '', type = '', signature = this.state.signatureData;
@@ -232,12 +232,11 @@ class CreateOrEditSignatureWizard extends Component {
         return createSignatureInput;
     }
 
-    createSignatureButtonClick = () => {
+    createSignatureButtonClick = async () => {
         try {
-            const createSignatureInput = this.mapSimpleOrExtendedText();
-            const respone = createSignature('http://localhost:3001/signature', createSignatureInput)
+            const createSignatureInput = this.mapStateToApiInput();
+            const respone = await createSignature(createSignatureInput)
             this.setState({ isCreateSignature: true })
-            console.log(createSignatureInput);
 
         } catch (error) {
             this.setState({
@@ -246,7 +245,7 @@ class CreateOrEditSignatureWizard extends Component {
             });
         }
     }
-    
+
     componentDidMount = async () => {
         const [attacks] = await Promise.all([constants.getAttacks()]);
         this.setState({ attacks: attacks });
@@ -257,14 +256,13 @@ class CreateOrEditSignatureWizard extends Component {
                 const mappedSignature = this.mapApiResultToState(retrievedSignature[0]);
                 this.setState({ signatureData: mappedSignature });
             }
-            console.log(this.state.signatureData);
         } catch (error) {
             throw error;
         }
     }
 
-    mapApiResultToState = (retrievedSignature) => {
-        const mappedSignature ={ 
+    mapApiResultToState = retrievedSignature => {
+        const mappedSignature = {
             // id: retrievedSignature.id,
             //user_id: retrievedSignature.user_id,
             // pattern_id: retrievedSignature.pattern_id,
@@ -275,16 +273,16 @@ class CreateOrEditSignatureWizard extends Component {
             keep_order: retrievedSignature.keep_order,
             start_break: retrievedSignature.start_break,
             end_break: retrievedSignature.end_break,
-            //left_index: retrievedSignature.left_index,
+            left_index: retrievedSignature.left_index,
             right_index: retrievedSignature.right_index,
             scan_uri: retrievedSignature.scan_uri,
             scan_header: retrievedSignature.scan_header,
             scan_body: retrievedSignature.scan_body,
             scan_parameters: retrievedSignature.scan_parameters,
             scan_file_name: retrievedSignature.scan_file_name,
-            severity: retrievedSignature.severity,
-            //severity: valueBySeverity[retrievedSignature.severity],
+            severity: valueBySeverity[retrievedSignature.severity],
             description: retrievedSignature.description,
+            limit: retrievedSignature.limit,
             test_data: retrievedSignature.test_data,
             files: retrievedSignature.files,
             attack: {
@@ -296,14 +294,16 @@ class CreateOrEditSignatureWizard extends Component {
             vuln_data_extras: retrievedSignature.vuln_data_extras,
             web_servers: retrievedSignature.web_servers
         }
+        mappedSignature.simpleOrExtendedText = mappedSignature.type === 'vuln' ? 'SimpleText' : 'ExtendedText';
+        mappedSignature.txtSimpleText = mappedSignature.vuln_data;
         return mappedSignature;
     }
 
     createWithDefaultsButtonClick = async () => {
-        if (await this.step2ref.current.isAllValid()){
+        if (await this.step2ref.current.isAllValid()) {
             try {
-                const createSignatureInput = this.mapSimpleOrExtendedText();
-                const response = await createSignatureWithDefaults('http://localhost:3000/signature', createSignatureInput);
+                const createSignatureInput = this.mapStateToApiInput();
+                const response = await createSignatureWithDefaults(createSignatureInput);
                 this.setState({ isCreateSignature: true });
             } catch (error) {
                 this.setState({
@@ -341,13 +341,13 @@ class CreateOrEditSignatureWizard extends Component {
         // {this.state.ifCancelButton && <Redirect to='/researcher-dashboard' />}
     }
 
-    updateSignatureButton = () => {
+    updateSignatureButton = async () => {
         try {
-            const createSignatureInput = this.mapApiResultToState(this.state.signatureData);
-            console.log(createSignatureInput);
-            updateSignature(`http://localhost:3000/signature/${this.props.match.params.id}`, createSignatureInput)
+            const createSignatureInput = this.mapStateToApiInput(this.state.signatureData);
+            await updateSignature(this.props.match.params.id, createSignatureInput);
             this.setState({ isCreateSignature: true });
         } catch (error) {
+            console.log(error.message);
             this.setState({
                 isErrorSignature: true,
                 errors: error.message

@@ -2,7 +2,7 @@ import React from 'react';
 
 export default class Status extends React.Component {
   render() {
-    const status = ['Choose...', 'in_progress', 'in_qa', 'in_test', 'published', 'Suspended', 'deleted'];
+    const status = ['in_progress', 'in_qa', 'in_test', 'published', 'Suspended', 'deleted'];
 
     return (
       <div className="col-lg-5 col-md-5 col-sm-10 col-xs-8">

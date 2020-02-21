@@ -128,6 +128,9 @@ export default class CreateOrEditSignatureStep3Validate extends React.Component 
                             <div className="col-md-4">
                                 <button type="button" class="btn btn-outline-secondary btn-block" onClick={this.usePostClick}>Use Post</button>
                             </div>
+                            <div className="col-md-4">
+                                <button type="button" class="btn btn-outline-secondary btn-block">Use Post With File</button>
+                            </div>
                         </div>
                         <div class="mb-3">
                             <br></br>
