@@ -33,6 +33,26 @@ const getRolesEdit = async (id) => {
         throw error.message;
     }
 }
+
+const getRoleWithId = async (id) => {
+    try {
+        const { data } = await fetcher.get(`/role/${id}`);
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
+
+const putUser = async (id, user) => {
+    try {
+        console.log("putUser: " ,id)
+        const { data } = await fetcher.put(`/users/${id}`, user)
+                return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
+
 const getAudit = async (event, users_names, orderby, page, size, startdate, enddate, starttime, endtime) => {
     try {
 
@@ -42,14 +62,8 @@ const getAudit = async (event, users_names, orderby, page, size, startdate, endd
         throw error.message;
     }
 }
-const putUser = async (id) => {
-    try {
-        const { data } = await fetcher.put(`/users/${id}`)
-        return data;
-    } catch (error) {
-        throw error.message;
-    }
-}
+
+
 const login = async (username, password) => {
     try{
         const { data } = await fetcher.post('/login',  {username, password});
@@ -75,6 +89,33 @@ const postNewUser = async (user) => {
         throw error.message;
     }
 }
+
+const postResetPassword = async (username) => {
+    try {
+        const { data } = await fetcher.post('/login/resetPassword', {username})
+        console.log('data', data)
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
+const deleteUser = async (username) => {
+    try {
+        console.log("username in admin: ", username);
+        const { data } = await fetcher.put('/users/delete_user', {username})
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
+const putUpdatePassword = async (username, tempPwd, newPwd) => {
+    try {
+        const { data } = await fetcher.put('/login/resetPassword', {username,tempPwd,newPwd})
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
 const postNewRole = async (role) => {
     try {
         const { data } = await fetcher.post('/role/new_role', role)
@@ -82,8 +123,19 @@ const postNewRole = async (role) => {
     } catch (error) {
         throw error.message;
     }
+    
 }
-
+const putRole = async (id,user) => {
+    try {
+        console.log("in admin -- the id is :  ", id);
+        console.log("and the user is : ", user);
+        const { data } = await fetcher.put(`/role/${id}`,user)
+        console.log(user);
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
 export {
     getUsers,
     login,
@@ -94,5 +146,11 @@ export {
     postNewRole,
     getRolesEdit,
     putUser,
-    getAudit
+    postResetPassword,
+    putUpdatePassword,
+    deleteUser,
+    getRoleWithId,
+    getAudit,
+    putRole
+
 };
