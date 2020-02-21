@@ -2,7 +2,7 @@ import fetcher from '../fetcher';
 
 const createSignature = async sigdata => {
     try {
-        const { data } = await fetcher.get(`/signature/`, sigdata);
+        const { data } = await fetcher.post(`/signature/`, sigdata);
         return data;
     } catch (error) {
         throw error.message;
