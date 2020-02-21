@@ -6,7 +6,6 @@ import Table from '../../shared/Table';
 
 import {getExportSignatures, exportSignaturesTofile,exportAllSignaturesTofile} from '../../../api/controllers/reports';
 
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -35,10 +34,8 @@ constructor(props) {
         isAllChecked:false,
         checkedSig:[]
     };
-    this.serverData=[];
-    // this.checkedSig=[]
+    this.serverData={signatureData:[]};
 
-    //<input class="form-check-input-xl" type="checkbox" value="" />
     this.exportDetails={
       to:'',
       type:'',
@@ -136,7 +133,7 @@ loadData =async () =>{
   
     const data = await getExportSignatures(requestURL);
     this.serverData=data;
-    console.log('data',data)
+    console.log('data SHACAR',data)
     // this.setState({hasNext:data.hasNext})
     let newData=data.signatureData.map(sig=>(
 
@@ -218,19 +215,21 @@ export=async ()=>{
 }
 
 render() {
-  this.state.tableData.map(sig=>{
-    
+  this.state.tableData.forEach(sig=>{
+    const t=this.serverData.signatureData.find(sig2=>{
+      return sig2.pattern_id==sig.patternID
+    })
     this.state.checkedSig.includes(`${sig.id}`)?
         sig['select']=<div className="Centered fa-lg" value={sig.id} onClick={()=>this.onCheckBoxClick(sig.id)}><FontAwesomeIcon icon={faCheckSquare}/></div>
         :
         sig['select']=<div className="Centered fa-lg" value={sig.id} onClick={()=>this.onCheckBoxClick(sig.id)}><FontAwesomeIcon icon={faSquare}/></div>
       
-    return sig
+    // return sig
     })
     
 return (
     <>
-      <div className="container ml-0 mt-2 font-italic">
+      <div className="container-fluid ml-0 mt-2 font-italic">
 
       <div className="row mb-3">
         <div className="col">

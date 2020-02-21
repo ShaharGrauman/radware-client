@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 // import axios from 'axios'
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 
-import {searchSignature} from '../../../api/controllers/reports';
+import {searchSignature,copySignature} from '../../../api/controllers/reports';
 
 
 import { UncontrolledCollapse, Button, CardBody, Card } from 'reactstrap';
@@ -57,22 +57,37 @@ class SearchSignature extends Component {
     this.stam=[];
   }
 
-  addingButtonsToTable() {
+  copySignature = async (id) => {
+    console.log(id)
+    const {data} =await copySignature(id);
+    this.props.history.push(`/createOrEditSignature/${data.id}`)
+  }
+
+  addingButtonsToTable=()=> {
     const tableData=this.state.tableData;
-    console.log(tableData);
     if(tableData.length!=0){
     tableData.map(signatur=>{
+      const id=signatur.Id
       signatur['']=
       <div>
-        <Link to={`/createOrEditSignature/${signatur.Id}`}>
+        <Link to={`/createOrEditSignature/${id}`}>
         {/* <Link to={`/Export/QA`}> */}
           <FontAwesomeIcon 
             className="fa-lg float-left" 
             icon={faEdit}  
             style={{ color: 'blue',cursor:'pointer' }}
             ></FontAwesomeIcon>
-        </Link>
-          <FontAwesomeIcon className="fa-lg float-right" icon={faCopy} style={{ color: 'red',cursor:'pointer' }}></FontAwesomeIcon>
+        </Link> 
+          <FontAwesomeIcon 
+            onClick={()=>{
+              console.log('signatur',id)
+              this.copySignature(id)
+            }}
+            className="fa-lg float-right" 
+            icon={faCopy} 
+            style={{ color: 'red',cursor:'pointer' }}>
+          </FontAwesomeIcon>
+
       </div>
     })
     tableData.forEach(sig=>{
@@ -92,7 +107,7 @@ class SearchSignature extends Component {
       requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`)
       }
       })
-      requestURL='http://localhost:3000/signature/search?'.concat(requestURL.slice(1))
+      requestURL='/signature/search?'.concat(requestURL.slice(1))
     console.log(requestURL)
     
     try{
@@ -305,4 +320,4 @@ class SearchSignature extends Component {
   }
 }
 
-export default SearchSignature;
+export default withRouter(SearchSignature);
