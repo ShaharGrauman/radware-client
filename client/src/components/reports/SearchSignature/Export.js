@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import {BrowserRouter, Route} from "react-router-dom";
 import {withRouter} from "react-router-dom"
 import Table from '../../shared/Table';
+import  ReportsTable from '../ReportsTable'
 
 import {getExportSignatures, exportSignaturesTofile,exportAllSignaturesTofile} from '../../../api/controllers/reports';
 
@@ -12,8 +13,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRight,
   faArrowLeft,
-  faCheck,
-  faTimes,
   faEdit,
   faCheckSquare,
   faSquare
@@ -48,10 +47,6 @@ constructor(props) {
         exportto:'QA'
       }
       this.exportType='';
-      this.trueIcon=<FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
-      this.falseIcon=<FontAwesomeIcon icon={faTimes}></FontAwesomeIcon>
-      // this.square=<div className="Centered"><FontAwesomeIcon icon={faSquare}/></div>
-      // this.checkSquare=<FontAwesomeIcon icon={faCheckSquare}></FontAwesomeIcon>
 }
 
 componentWillMount =()=>{
@@ -71,55 +66,16 @@ componentWillMount =()=>{
   this.loadData();
 }
 
-// addingChechBoxToTable=(props)=> {
-//   const tableData=this.state.tableData;
-//   console.log(tableData);
-//   if(tableData.length!=0){
-//   tableData.map(signatur=>{
-//     signatur['select']=
-//     <div>
-
-//       {
-//         this.state.checkedSig.includes(`${signatur.id}`)?
-//         // this.state.stam==1?
-//           <input class="form-check-input-xl" type="checkbox" value={signatur.id} onChange={this.onCheckBoxClick} key={signatur.id} defaultChecked />
-//         :
-//           <input class="form-check-input-xl" type="checkbox" value={signatur.id} onChange={this.onCheckBoxClick} key={signatur.id} />
-//       }
-//     </div>
-//   })
-//   tableData.forEach(sig=>{
-//     delete sig.id
-//     })
-//   this.setState({tableData:tableData})
-// }
-// }
 onCheckBoxClick = id =>{
-  console.log(id)
-  // let checkedSig=this.state.checkedSig;
-  // const index = checkedSig.indexOf(`${e.target.getAttribute("value")}`);
-  // // console.log(e.target.getAttribute("value"))
-  // console.log(e)
-  // // console.log('index',index)
-  // index==-1?
-  // checkedSig.push(e.target.getAttribute("value"))
-  //   :
-  // checkedSig.splice(index,1)
 
-  // this.setState({checkedSig:checkedSig})
-  // console.log(this.state.checkedSig)
   let checkedSig=this.state.checkedSig;
   const index = checkedSig.indexOf(`${id}`);
-  // console.log(e.target.getAttribute("value"))
-  // console.log('index',index)
   index==-1?
   checkedSig.push(`${id}`)
     :
   checkedSig.splice(index,1)
 
   this.setState({checkedSig:checkedSig})
-  console.log(this.state.checkedSig)
-
 }
 
 loadData =async () =>{
@@ -133,41 +89,21 @@ loadData =async () =>{
   
     const data = await getExportSignatures(requestURL);
     this.serverData=data;
-    console.log('data SHACAR',data)
     // this.setState({hasNext:data.hasNext})
     let newData=data.signatureData.map(sig=>(
-
       {      
-        id:sig.id,  
-        patternID: sig.pattern_id,
-        Description: sig.description,
-        Status:sig.status,
+        ...sig,
         TestData: sig.test_data?this.trueIcon:this.falseIco,
-
         Edit:<Link to={`/createOrEditSignature/${sig.id}`}>
-        <FontAwesomeIcon 
-          className="fa-lg float-left" 
-          icon={faEdit}  
-          style={{ color: 'blue',cursor:'pointer' }}
-          ></FontAwesomeIcon>
-      </Link>
-      // ,
-      // select: 
-      //   this.state.checkedSig.includes(`${sig.id}`)?
-      //   <div className="Centered fa-lg" value={sig.id} onClick={()=>this.onCheckBoxClick(sig.id)}>
-      //     <FontAwesomeIcon className={sig.id} value={sig.id} onClick={this.onCheckBoxClick} icon={faCheckSquare}>{sig.id}</FontAwesomeIcon>
-      //   </div>
-      //   :
-      //   <div className="Centered fa-lg" value={sig.id} onClick={()=>this.onCheckBoxClick(sig.id)}><FontAwesomeIcon className={sig.id} value={sig.id} onClick={this.onCheckBoxClick} icon={faSquare}/>{sig.id}</div>
-
-        
-      // select: 
-      //   this.state.checkedSig.includes(`${sig.id}`)?
-      //     <input class="form-check-input-xl" type="checkbox" id={sig.id} value={sig.id} onChange={this.onCheckBoxClick} key={sig.id} defaultChecked />
-      //   :
-      //     <input class="form-check-input" type="checkbox"  id={sig.id} value={sig.id} onChange={this.onCheckBoxClick} key={sig.id} />
-        }
+              <FontAwesomeIcon 
+                className="fa-lg float-left" 
+                icon={faEdit}  
+                style={{ color: 'blue',cursor:'pointer' }}
+                ></FontAwesomeIcon>
+              </Link>
+    }
     ));
+    console.log('newdata',newData)
     // this.setState({hasNext:data.hasNext})
     if(newData.length==0){
       newData=[{patternID: "NO RESULTS FOUND !", description: "NO RESULTS FOUND !", status:'NO RESULTS FOUND !', select:'' }]
@@ -176,7 +112,6 @@ loadData =async () =>{
     }else{
     this.exportDetails.lastExport=data.date;
     this.setState({tableData:newData});
-    // this.addingChechBoxToTable();
     }
   
 
@@ -216,16 +151,32 @@ export=async ()=>{
 
 render() {
   this.state.tableData.forEach(sig=>{
-    const t=this.serverData.signatureData.find(sig2=>{
-      return sig2.pattern_id==sig.patternID
-    })
+    
     this.state.checkedSig.includes(`${sig.id}`)?
         sig['select']=<div className="Centered fa-lg" value={sig.id} onClick={()=>this.onCheckBoxClick(sig.id)}><FontAwesomeIcon icon={faCheckSquare}/></div>
         :
         sig['select']=<div className="Centered fa-lg" value={sig.id} onClick={()=>this.onCheckBoxClick(sig.id)}><FontAwesomeIcon icon={faSquare}/></div>
       
-    // return sig
     })
+
+    console.log(this.state.tableData)
+    const testData={
+      tableStyle:{ //for the <table>
+        style:{ borderWidth: "3px",width:'100%' },
+        className:'table table-striped table-hover table-bordered border-dark'
+      },
+      
+      tableHedaer:[
+        {value:'pattern_id' , valueToShow:'PatterID' , style:{width: "10%"}, sort:true},
+        {value:'description' , valueToShow:'description' , style:{width: "40%"} , sort:true},
+        {value:'status' , valueToShow:'statussss' , style:{width: "15%"} , sort:false},
+        {value:'TestData' , valueToShow:'TestData' , style:{width: "10%"} , sort:false},
+        {value:'Edit' , valueToShow:'Edit' , style:{width: "10%"} , sort:false},
+        {value:'select' , valueToShow:'Select' , style:{width: "10%"} , sort:false},
+      ],
+      tableData:this.state.tableData
+
+    }
     
 return (
     <>
@@ -236,7 +187,6 @@ return (
           <h2>Export </h2>
         </div>
       </div>
-
 
       <div className="row mb-3">
         <div className="col-6 ">
@@ -250,7 +200,9 @@ return (
 
       <div className="row mb-3  ">
         <div className="col-12">
-          <Table data={this.state.tableData} key='5'/>
+          {/* <Table data={this.state.tableData} key='5'/> */}
+          <ReportsTable data={testData } sortOn={(key)=>console.log('sort is clicked by:',key)}/>
+
 
       <div className="row mb-3">
         <div className="col-3 "></div>
@@ -365,31 +317,8 @@ return (
 
 
       </div>
-      {/* <div className="row mb-3 ">
-      
-      <div className="col-6 p-0 Centered">
-        <button className="btn btn-secondary" onClick={()=>{
-          this.setState({checkedSig:[]})
-        }} >Rest all</button>
-      </div>
-      <div className="col-6 p-0 Centered">
-        <button className="btn btn-secondary" onClick={()=>{
-          const newCheckedSig =this.state.checkedSig;
-          this.serverData.signatureData.forEach(sig=>
-            !this.state.checkedSig.includes(`${sig.id}`)?
-            newCheckedSig.push(`${sig.id}`)
-            :null)
-          this.setState({checkedSig:newCheckedSig})
-          console.log('select all:',this.state.checkedSig)
-        }} >Select all on this page</button>
-      </div>
-
-    </div> */}
       <div>
-
     </div>
-          
-
       </div>
     </>
 )}
