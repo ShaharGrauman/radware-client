@@ -166,7 +166,7 @@ render() {
         className:'table table-striped table-hover table-bordered border-dark'
       },
       
-      tableHedaer:[
+      tableHeader:[
         {value:'pattern_id' , valueToShow:'PatterID' , style:{width: "10%"}, sort:true},
         {value:'description' , valueToShow:'description' , style:{width: "40%"} , sort:true},
         {value:'status' , valueToShow:'statussss' , style:{width: "15%"} , sort:false},

@@ -17,13 +17,13 @@ export default class ReportsTable extends React.Component {
             style:{},
             className:''
         },
-        tableHedaer:[],//array of objects to show in hedaer [{value:patern_id , valueToShow:PatterID , style{} , sort:true}]
+        tableHeader:[],//array of objects to show in hedaer [{value:patern_id , valueToShow:PatterID , style{} , sort:true}]
         pagination:20, //local pagination
         tableData:{}
     }
 
   }
-  TableHedaer=(header,isSort,headerValue)=> {
+  tableHeader=(header,isSort,headerValue)=> {
   return (
     <th scope="col"
     onClick={()=> this.props.sortOn(headerValue)}
@@ -58,13 +58,13 @@ return (
     >
         <thead>
           <tr>
-            {this.props.data.hasOwnProperty('tableHedaer')?
-             this.props.data.tableHedaer.map(header=>
-                this.TableHedaer(header.valueToShow,header.sort,header.value)
+            {this.props.data.hasOwnProperty('tableHeader')?
+             this.props.data.tableHeader.map(header=>
+                this.tableHeader(header.valueToShow,header.sort,header.value)
                 )
             :
             Object.keys(this.props.data.tableData.length !== 0 && this.props.data.tableData[0]).map(key => (
-                this.TableHedaer(key,true,key)
+                this.tableHeader(key,true,key)
             ))
             }
         
@@ -73,8 +73,8 @@ return (
         <tbody>
           {this.props.data.tableData.map(entries => (
             <tr style={{}} >
-            {this.props.data.hasOwnProperty('tableHedaer')?
-              this.props.data.tableHedaer.map(header=>
+            {this.props.data.hasOwnProperty('tableHeader')?
+              this.props.data.tableHeader.map(header=>
                 <td style={header.style} >{entries[header.value]}</td>
             )
             :
