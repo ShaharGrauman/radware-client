@@ -2,7 +2,7 @@ import fetcher from '../fetcher';
 
 const createSignature = async sigdata => {
     try {
-        const { data } = await fetcher.get(`/signature/`, sigdata);
+        const { data } = await fetcher.post(`/signature/`, sigdata);
         return data;
     } catch (error) {
         throw error.message;
@@ -48,7 +48,7 @@ const getAttacks = async () => {
 const getStatuses = async () => {
     try {
         const { data } = await fetcher.get(`/constant`);
-        return data[1][1];
+        return data.status;
     } catch (error) {
         throw error.message;
     }

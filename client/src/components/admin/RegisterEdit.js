@@ -277,7 +277,7 @@ export default class RegisterEdit extends React.Component {
                         <legend className="scheduler-border">User info</legend>
                         <div className="form-group ml-2">
                             <label htmlFor="Remail">Email address :</label>
-                            <Input className="form-control"
+                            <input className="form-control"
                                 disabled="true"
                                 type="email"
                                 className="form-control"
@@ -287,6 +287,7 @@ export default class RegisterEdit extends React.Component {
                                 value={this.state.account.username}
                                 // onChange={this.handleeChange}
                                 error={errors.username}
+                                readOnly = {true}
                             />
                             <small className="form-text text-muted">This will be used as username.</small>
                         </div>

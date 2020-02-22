@@ -1,11 +1,9 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import {login} from '../../api/controllers/admin';
-import {Link} from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLink, faWindowClose, faEdit, faCalculator, faTrash } from '@fortawesome/free-solid-svg-icons';
 
-import { setUser } from '../../api/controllers/auth';
+import { setUser, getUser } from '../../api/controllers/auth';
+import homepages from './homepages';
 
 export default class LogIn extends React.Component {
   constructor(props) {
@@ -64,6 +62,10 @@ export default class LogIn extends React.Component {
     }
   }
   
+  setUser = user => {
+    
+  }
+
   // componentDidMount() {
   //   axios.get(`http://localhost:3000/login`, (req, res) => res.json()
   //   ).then(res => {
@@ -80,9 +82,10 @@ export default class LogIn extends React.Component {
 
   
   render() {
+    if(getUser()) return <Redirect to="/" />
 
     if (this.state.role !== '') {
-      return <Redirect to='/' />
+      return homepages(this.state.role);
     }
     return (
       <>

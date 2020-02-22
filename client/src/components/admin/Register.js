@@ -19,7 +19,8 @@ export default class Register extends React.Component {
             errors: {},
             orgRoles: [],
             roles: [],
-            selectedRoles: []
+            selectedRoles: [],
+            checkBoxError: false
         };
         this.handleChange = this.handleChange.bind(this);
         this.updateData = []
@@ -42,32 +43,10 @@ export default class Register extends React.Component {
         username: Joi.string().required().email().label("Email"),
         // password: Joi.string().required().min(5).alphanum().label("Password"),
         password: Joi.string().min(6).max(20).required().label("password")
-
+        
+     
     }
 
-    // async componentDidMount() {
-    //     const { data } = await axios.get(`http://localhost:3001/users/roles`);
-    //     const tempData = [];
-
-    //     for (var i = 0; i < data.length; i++) {
-    //         let id = data[i].id;
-    //         // console.log(id);
-    //         tempData.push({
-    //             rolename: data[i].name,
-    //             select: <input type="checkbox" name="myTextEditBox" onChange={event => this.handleChange(event, event.target.checked, id)}> </input>
-    //         })
-
-    //     }
-    //     console.log('tempData')
-    //     console.log(tempData)
-    //     this.setState({ selectedRoles: tempData })
-    //     const roles = data.map(role => ({
-    //         role: role.name,
-    //         selected: <input type="checkbox" name="myTextEditBox" onChange={event => this.handleChange(event, event.target.checked, role.id)}></input>
-    //     }));
-
-    //     this.setState({ roles });
-    // }
     async componentDidMount() {
         const data = await getRolesNew();
         const tempData = [];
@@ -90,6 +69,25 @@ export default class Register extends React.Component {
         this.setState({ roles });
     }
 
+
+     valthischeckBox = ()=> {
+    var checkboxs=document.getElementsByName("myTextEditBox");
+   
+    for(var i=0,l=checkboxs.length;i<l;i++)
+    {
+        if(checkboxs[i].checked)
+        {   this.setState({checkBoxError:false})
+            return true;
+            
+            break;
+        }
+    }
+    this.setState({checkBoxError:true})
+    return false; 
+   
+}
+
+
     onRoleSelect = roleId => {
         if (this.state.roles.includes(roleId)) {
             this.setState({
@@ -103,44 +101,6 @@ export default class Register extends React.Component {
             });
         }
     }
-
-    // componentDidMount() {
-    //     this.setState({
-    //         select: [
-    //             { id: "1", rolename: "Researcher", selected: false },
-    //             { id: "2", rolename: "Support", selected: false },
-    //             { id: "3", rolename: "Manual QA", selected: false },
-    //             { id: "4", rolename: "Performance QA", selected: false },
-    //             { id: "5", rolename: "Automation QA", selected: false }
-
-    //         ]
-    //     });
-    // }
-
-    // roleChecked(roleId) {
-    //     const selectedRole = this.state.select.find(role => role.id == roleId);
-    //     selectedRole.selected = !selectedRole.selected;
-    //     console.log(selectedRole);
-    //     this.setState({ selectedRoles: [selectedRole.id] })
-    //     console.log(this.state.selectedRoles);
-    //     this.setState({
-    //         select: [
-    //             ...this.state.select
-    //             ,
-    //             selectedRole
-    //         ]
-    //     })
-    //     // console.log(this.state.select)
-    // }
-
-    // rolesData = [
-    //     { id: "1", rolename: "Researcher", selected: <input type="checkbox" onChange={() => this.roleChecked(1)} /> },
-    //     { id: "2", rolename: "Support", selected: <input type="checkbox" onChange={() => this.roleChecked(2)} /> },
-    //     { id: "3", rolename: "Manual QA", selected: <input type="checkbox" onChange={() => this.roleChecked(3)} /> },
-    //     { id: "4", rolename: "Performance QA", selected: <input type="checkbox" onChange={() => this.roleChecked(4)} /> },
-    //     { id: "5", rolename: "Automation QA", selected: <input type="checkbox" onChange={() => this.roleChecked(5)} /> }
-
-    // ];
 
     validate = () => {
         const options = { abortEarly: false }
@@ -173,10 +133,12 @@ export default class Register extends React.Component {
     handleSumbit = async e => {
         try {
             e.preventDefault();
-            const errors = this.validate();            //method return object looks like error 
+            const errors = this.validate();
+              //method return object looks like error 
             this.setState({ errors: errors || {} });   //we render the object errors  in the setstate 
             // if (!errors) return null;
             console.log('account : ', this.state.account)
+            if (this.valthischeckBox())  {  
             let user = {
                 name: this.state.account.name,
                 username: this.state.account.username,
@@ -198,7 +160,8 @@ export default class Register extends React.Component {
             // this.setState({ ifUserCreated: true });
             const newUser = await postNewUser(user);
             this.setState({ ifUserCreated: true });
-        } catch (error) {
+        } }
+        catch (error) {
             alert(error);
         }
     }
@@ -316,6 +279,12 @@ render() {
                         data={this.state.roles}
                         sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
                         className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</MyTable>
+                         {
+                  this.state.checkBoxError && <div class="alert alert-danger" role="alert">
+                   Must choose at least two roles 
+
+                    </div>
+                }
                 </fieldset>
                 <button className="btn btn-secondary btn-block" >Save</button>
                 <button type="button" onClick={() => this.renderRedirect("users")} className="btn btn-secondary  btn-block">Cancel</button>

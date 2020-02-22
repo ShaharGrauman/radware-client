@@ -50,11 +50,12 @@ class App extends React.Component {
                     <Route path="/audit">
                         <Audit />
                     </Route>
+                    
                     <Route path="/researcher">
                         <Audit />
                     </Route>
                     <Route path="/support">
-                        <NewRole />
+                        <SearchSignature />
                     </Route>
                     <Route path="/users">
                         <AdminDashbaord />
