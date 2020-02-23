@@ -172,7 +172,7 @@ render() {
         {value:'status' , valueToShow:'statussss' , style:{width: "15%"} , sort:false},
         {value:'TestData' , valueToShow:'TestData' , style:{width: "10%"} , sort:false},
         {value:'Edit' , valueToShow:'Edit' , style:{width: "10%"} , sort:false},
-        {value:'select' , valueToShow:'Select' , style:{width: "10%"} , sort:false},
+        {value:'select' , valueToShow:'Select' , style:{width: "10%",paddingRight: "0px",paddingLeft: '0px'} , sort:false},
       ],
       tableData:this.state.tableData
 

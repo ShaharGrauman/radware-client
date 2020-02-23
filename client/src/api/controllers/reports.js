@@ -99,6 +99,14 @@ const getResearcher = async (requestURL) => {
         throw error.message;
     }
 }
+const cveidSearch = async (requestURL) => {
+    try {
+        const { data } = await fetcher.get(requestURL)
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
 export {
     updateQaDashboard,
     getQaDashboard,
@@ -108,5 +116,6 @@ export {
     exportSignaturesTofile,
     exportAllSignaturesTofile,
     getResearcher,
-    getSignatures
+    getSignatures,
+    cveidSearch
 };
