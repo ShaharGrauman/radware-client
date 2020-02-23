@@ -7,6 +7,9 @@ import {ButtonToolbar, OverlayTrigger, Tooltip} from 'react-bootstrap';
 
 import CveIdReportTable from '../CveIdReport/CveIdReportTable'
 
+import  ReportsTable from '../ReportsTable'
+import {cveidSearch} from '../../../api/controllers/reports';
+
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
 
@@ -23,11 +26,17 @@ constructor(props) {
         TableData:[]
     }
     this.onSearchText='';
+    // this.CveIdReportData=[
+    //     {key:'2000-001' , number:3},
+    //     {key:'2000-002' , number:7},
+    //     {key:'2000-003' , number:2},
+    //     {key:'1990-004' , number:4}
+    // ];
     this.CveIdReportData=[
-        {key:'2000-001' , number:3},
-        {key:'2000-002' , number:7},
-        {key:'2000-003' , number:2},
-        {key:'1990-004' , number:4}
+        {cveid:'2000-001' , quantity:3},
+        // {cveid:'2000-002' , quantity:7},
+        // {cveid:'2000-003' , quantity:2},
+        // {cveid:'1990-004' , quantity:4}
     ];
 
     // this.CveIdReportData=[
@@ -59,6 +68,42 @@ constructor(props) {
     {id: 30, patternId: 3030, description: "this is FAKE signature", status:'in test'},
     {id: 33, patternId: 36352, description: "this is FAKE signature", status:'in test'},
     {id: 45, patternId: 9875, description: "this is FAKE signature", status:'in test'},]
+
+
+    this.dataToTest={
+      tableStyle:{ //for the <table>
+        style:{ borderWidth: "3px",width:'100%' },
+        className:'table table-striped table-hover table-bordered border-dark'
+      },
+      
+      tableHedaer:[
+        {value:'pattern_id' , valueToShow:'PatterID' , style:{width: "100px"}, sort:true},
+        {value:'description' , valueToShow:'description' , style:{} , sort:true},
+        {value:'status' , valueToShow:'statussss' , style:{} , sort:true},
+      ],
+      tableData:[
+        {id: 1, pattern_id: 123451, description: "this is FAKE signature", status:'in QA'},
+        {id: 2, pattern_id: 123452, description: "this is FAKE signature", status:'in QA'},
+        {id: 3, pattern_id: 123453, description: "this is FAKE signature", status:'in QA'},
+        {id: 4, pattern_id: 123454, description: "ergerge", status:'in QA'},
+        {id: 5, pattern_id: 123455, description: "this is FAKE signature", status:'in QA'},
+        {id: 6, pattern_id: 123456, description: "this is FAKE signature", status:'in QA'},
+        {id: 7, pattern_id: 123457, description: "this is FAKE signature", status:'in QA'},
+        {id: 8, pattern_id: 123458, description: "this is FAKE signature", status:'in progress'},
+        {id: 9, pattern_id: 123459, description: "this is FAKE signature", status:'in progress'},
+        {id: 10, pattern_id: 1234510, description: "this is FAKE signature", status:'in progress'},
+        {id: 11, pattern_id: 1234511, description: "this is FAKE signature", status:'in progress'},
+        {id: 12, pattern_id: 1234512, description: "this is FAKE signature", status:'in progress'},
+        {id: 13, pattern_id: 1234513, description: "this is FAKE signature", status:'in test'},
+        {id: 14, pattern_id: 1234514, description: "this is FAKE signature", status:'in test'},
+        {id: 15, pattern_id: 1234515, description: "this is FAKE signature", status:'in test'},
+        {id: 28, pattern_id: 2828, description: "this is FAKE signature", status:'in test'},
+        {id: 29, pattern_id: 2929, description: "this is FAKE signature", status:'in test'},
+        {id: 30, pattern_id: 303022, description: "this is FAKE signature22", status:'in test22'},
+        {id: 33, pattern_id: 36352, description: "this is FAKE signature", status:'in test'},
+        {id: 45, pattern_id: 9875, description: "this is FAKE signature", status:'in test'},
+      ],
+  }
 }
 
 openCveId= key =>{
@@ -66,13 +111,13 @@ openCveId= key =>{
     const data=this.state.TableData;
     console.log('befor: ',data)
     // if(!data.includes(key)){
-    data.map(cveid=>
-        cveid.key==key?
-            !cveid.hasOwnProperty('signatures')?
-            cveid['signatures']=this.signatures.slice(0,cveid.number):
-            delete cveid.signatures
+    data.map(cveidData=>
+      cveidData.cveid==key?
+            !cveidData.hasOwnProperty('signatures')?
+            cveidData['signatures']=this.signatures.slice(0,cveidData.quantity):
+            delete cveidData.signatures
             :
-            cveid
+            cveidData
     )
 
     this.setState({TableData:data})
@@ -84,19 +129,37 @@ componentWillMount = () =>{
     this.setState({TableData:this.CveIdReportData});
 
 }
-onSearch =() =>{
-    console.log('onSearchText',this.onSearchText)
-    // includes
-    // const filteredData=this.CveIdReportData.find(cveid=>cveid.key==this.onSearchText)
-    const filteredData=this.CveIdReportData.filter(cveid=>cveid.key.includes(this.onSearchText))
-    console.log(filteredData)
-    if(filteredData==undefined){
-        this.setState({TableData:[]})
+onSearch =async () =>{
+    // console.log('onSearchText',this.onSearchText)
+    // // includes
+    // // const filteredData=this.CveIdReportData.find(cveid=>cveid.key==this.onSearchText)
+    // const filteredData=this.CveIdReportData.filter(cveid=>cveid.key.includes(this.onSearchText))
+    // console.log(filteredData)
+    // if(filteredData==undefined){
+    //     this.setState({TableData:[]})
 
-    }else{
+    // }else{
 
-        this.setState({TableData:filteredData})
+    //     this.setState({TableData:filteredData})
+    // }
+
+
+    try{
+       
+      console.log('this.onSearchText',this.onSearchText)
+      
+        const response= await cveidSearch(`signature/cveid?year=${this.onSearchText}`)
+         console.log(response)
+      }catch(error){
+  
+      this.setState({
+        errorMsg: 'ERROR'
+      });
     }
+
+
+
+
 }
 
 
@@ -117,8 +180,10 @@ render() {
             className="form-control form-rounded"
             placeholder="Search"
             onChange  ={e=>{
+      console.log('this.onSearchText',this.onSearchText)
+              
                 this.onSearchText=e.target.value;
-                this.onSearch();
+                // this.onSearch();
             }}
           />
         <ButtonToolbar>

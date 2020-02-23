@@ -20,7 +20,7 @@ constructor(props) {
         openOrClose:this.openIcon
     }
     this.totalSignatures=0;
-    this.props.data.forEach(cveId=>this.totalSignatures=this.totalSignatures+cveId.number)
+    this.props.data.forEach(cveIdData=>this.totalSignatures=this.totalSignatures+cveIdData.quantity)
     this.openCveId=this.props.openCveId;
     
 }
@@ -52,17 +52,17 @@ return (
             </tr>
         </thead>
         <tbody>
-            {this.props.data.map(cveId=>(
+            {this.props.data.map(cveIdData=>(
             <>
-            <tr  onClick={()=>this.openCveId(cveId.key)}>
+            <tr  onClick={()=>this.openCveId(cveIdData.cveid)}>
                 <th scope="row" className="Centered" style={{cursor:'pointer'}} >
-                    <FontAwesomeIcon icon={cveId.hasOwnProperty('signatures')?faWindowMinimize:faPlus}/>
+                    <FontAwesomeIcon icon={cveIdData.hasOwnProperty('signatures')?faWindowMinimize:faPlus}/>
                 </th>
-                {Object.values(cveId).slice(0,2).map(item=>
+                {Object.values(cveIdData).slice(0,2).map(item=>
                 <td colspan="2" className="Centered" style={{cursor:'pointer'}}>{item}</td>
                     )}
             </tr>
-            {cveId.hasOwnProperty('signatures')?
+            {cveIdData.hasOwnProperty('signatures')?
             <>
             <tr className='table-active'>
                 <th scope="row" className="Centered" style={{fontWeight: 'bold'}}>CveId</th>
@@ -72,9 +72,9 @@ return (
                 <td className="Centered" style={{fontWeight: 'bold'}}>Edit</td>
             </tr>
             
-            {cveId['signatures'].map(sig=>
+            {cveIdData['signatures'].map(sig=>
                 <tr>
-               <th scope="row" className="Centered">{cveId.key}</th>
+               <th scope="row" className="Centered">{cveIdData.cveid}</th>
                {Object.values(sig).slice(1).map(item=>
                     <td className="Centered ">{item}</td>
                     )}
