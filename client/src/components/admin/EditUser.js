@@ -1,10 +1,19 @@
+
+
 import React from 'react';
+import Table from './RolesDashboard';
 import AdminTable from '../shared/AdminTable';
 import Joi from 'joi-browser'
-import Input from './InputValidation';
+import Input from './input';
 import { Redirect, Link } from 'react-router-dom'
+import axios from 'axios';
 import { putUser } from '../../api/controllers/admin';
 import { getRolesList } from '../../api/controllers/admin';
+import Input from './InputValidation';
+
+
+
+
 
 
 export default class EditUser extends React.Component {
@@ -17,7 +26,9 @@ export default class EditUser extends React.Component {
             orgRoles: [],
             roles: [],
             userdata: [],
-            userEditedOK: false
+            userEditedOK: false,
+            checkBoxError: false
+
         };
         this.handleChange = this.handleChange.bind(this);
         this.updateData = [];
@@ -40,54 +51,70 @@ export default class EditUser extends React.Component {
         name: Joi.string().required().label("Name"),
         phone: Joi.string().trim().regex(/[0-9]/).max(10).min(10).label('Phone Number'),
         username: Joi.string().required().email().label("Email"),
-        password: Joi.string().min(6).max(20).required().label("password"),
+
+      //  password: Joi.string().min(6).max(20).required().label("password"),
     }
-    // isChecked = (event, id) => {
-    //     for (let index = 0; index < this.state.roles.length; index++) {
-    //         if (this.state.roles[index].id === id) {
-    //             console.log("hii")
-    //             console.log(event.target.checked)
-    //         }
-    //     }
-    // }
+    isChecked = (event, id) => {
+        for (let index = 0; index < this.state.roles.length; index++) {
+            if (this.state.roles[index].id === id) {
+                console.log("hii")
+                console.log(event.target.checked)
+            }
+        }
+    }
 
     async componentDidMount() {
-        const data = await getRolesList();
+        const data = await getRolesNew();
         const { roles: userRoles } = this.props.user;
         userRoles.forEach(userRole => this.updateData.push(userRole.id));
-        // const selectedRoles = [];
-        // for (var i = 0; i < data.length; i++) {
-        //     let id = data[i].id;
-        //     selectedRoles.push({
-        //         rolename: data[i].name,
-        //         // select: <input type="checkbox" name="myTextEditBox" onChange={event => this.handleChange(event, event.target.checked, id)}> </input>
-        //     })
+        console.log("this.updateData ", this.updateData);
+        // arr = arr.push(userRoles.map(userRole => console.log("user Role id: ", userRole.id)));
+        //this.setState(this.state.updateData= userRoles.id)
+        // console.log(this.state.updateData)
+        const selectedRoles = [];
+        for (var i = 0; i < data.length; i++) {
+            let id = data[i].id;
+            console.log(id);
+            selectedRoles.push({
+                rolename: data[i].name,
+                // select: <input type="checkbox" name="myTextEditBox" onChange={event => this.handleChange(event, event.target.checked, id)}> </input>
+            })
 
-        // }
+        }
+        console.log('tempData')
+        console.log(selectedRoles)
+
         const roles = data.map(role => ({
             role: role.name,
             selected: <input id="checkbox" defaultChecked={userRoles.some(ur => ur.id == role.id)} type="checkbox" name="myTextEditBox" onChange={event => this.handleChange(event, event.target.checked, role.id)}></input>
         }));
         this.setState({
             roles,
-            // selectedRoles,
+            selectedRoles,
+
             account: {
                 name: this.props.user.name,
                 username: this.props.user.username,
                 phone: this.props.user.phone
             },
         });
+        console.log(selectedRoles);
+        console.log({ roles });
 
     }
 
     onRoleSelect = roleId => {
         if (this.state.roles.includes(roleId)) {
+            console.log('here')
+
             this.setState({
                 roles: [
                     ...this.state.roles.filter(pid => pid != roleId)
                 ]
             })
         } else {
+            console.log('not here')
+
             this.setState({
                 roles: [...this.state.roles, roleId]
             });
@@ -95,14 +122,16 @@ export default class EditUser extends React.Component {
     }
 
 
-    // rolesData = [
-    //     { rolename: "Researcher", selected: <input type="checkbox" name="myTextEditBox" value="checked" /> },
-    //     { rolename: "Support", selected: <input type="checkbox" name="myTextEditBox" value="checked" /> },
-    //     { rolename: "Manual QA", selected: <input type="checkbox" name="myTextEditBox" value="checked" /> },
-    //     { rolename: "Performance QA", selected: <input type="checkbox" name="myTextEditBox" value="checked" /> },
-    //     { rolename: "Automation QA", selected: <input type="checkbox" name="myTextEditBox" value="checked" /> }
+    rolesData = [
+        { rolename: "Researcher", selected: <input type="checkbox" name="myTextEditBox" value="checked" /> },
+        { rolename: "Support", selected: <input type="checkbox" name="myTextEditBox" value="checked" /> },
+        { rolename: "Manual QA", selected: <input type="checkbox" name="myTextEditBox" value="checked" /> },
+        { rolename: "Performance QA", selected: <input type="checkbox" name="myTextEditBox" value="checked" /> },
+        { rolename: "Automation QA", selected: <input type="checkbox" name="myTextEditBox" value="checked" /> }
 
-    // ];
+    ];
+
+
 
     validate = () => {
         const options = { abortEarly: false }
@@ -126,6 +155,9 @@ export default class EditUser extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+
+        console.log('nextProps', nextProps);
+
         this.setState({
             account: {
                 name: nextProps.user.name,
@@ -136,38 +168,114 @@ export default class EditUser extends React.Component {
         });
     }
 
+
+    valthischeckBox = ()=> {
+        var checkboxs=document.getElementsByName("myTextEditBox");
+       
+        for(var i=0,l=checkboxs.length;i<l;i++)
+        {
+            if(checkboxs[i].checked)
+            {   this.setState({checkBoxError:false})
+                return true;
+                
+                break;
+            }
+        }
+        this.setState({checkBoxError:true})
+        return false; 
+       
+    }
+
     handleSumbit = async e => {
-        try {
+        console.log('handle');
+        console.log(this.updateData);
+        // console.log('roles: ', this.state.roles);
         e.preventDefault();
-        const errors = this.validate();
-        this.setState({ errors: errors || {} });
-        // if (errors) return;
+        const errors = this.validate();//method return object looks like error 
+        this.setState({ errors: errors || {} });//we render the object errors  in the setstate 
+     console.log(this.state.errors);
         const id = this.props.id
+        console.log("updsteData: ", this.updateData);
+ 
+      
+       
         const user = {
             name: this.state.account.name,
+          ///  status:this.state.account.status,
             username: this.state.account.username,
             phone: this.state.account.phone,
+            // password: this.state.account.password,
             roles: this.updateData
+        
         };
-
+    
+     if(errors) return
+        if(this.valthischeckBox()){
+    
+        try {
             const userUpdated = await putUser(id.id, user);
+        
             this.setState({ userEditedOK: true });
-        } catch (error) {
+        
+        
+            console.log("the user: ", user);
+        
+            console.log("the userUpdated: ", userUpdated);
+        
+         }  catch (error) {
             alert(error);
-            console.log(error.msg);
-        }
-    };
+        }}
 
+
+      
+    };
     handleChange = (event, value, id) => {
         if (value === true) {
             this.updateData.push(id);
+            console.log('aaaa');
+            console.log(this.updateData);
         } else {
             var index = this.updateData.indexOf(id);
             this.updateData.splice(index, 1);
+            console.log(this.updateData)
         }
     }
 
-    handleInputChange = ({ currentTarget: input }) => {
+    handleeChange = ({ currentTarget: input }) => {
+// =======
+//     handleSumbit = async e => {
+//         try {
+//         e.preventDefault();
+//         const errors = this.validate();
+//         this.setState({ errors: errors || {} });
+//         // if (errors) return;
+//         const id = this.props.id
+//         const user = {
+//             name: this.state.account.name,
+//             username: this.state.account.username,
+//             phone: this.state.account.phone,
+//             roles: this.updateData
+//         };
+
+//             const userUpdated = await putUser(id.id, user);
+//             this.setState({ userEditedOK: true });
+//         } catch (error) {
+//             alert(error);
+//             console.log(error.msg);
+//         }
+//     };
+
+//     handleChange = (event, value, id) => {
+//         if (value === true) {
+//             this.updateData.push(id);
+//         } else {
+//             var index = this.updateData.indexOf(id);
+//             this.updateData.splice(index, 1);
+//         }
+//     }
+
+//     handleInputChange = ({ currentTarget: input }) => {
+// >>>>>>> master
         const errors = { ...this.state.errors };
         const errorMessage = this.validateProperty(input);
         if (errorMessage) errors[input.name] = errorMessage;
@@ -176,7 +284,10 @@ export default class EditUser extends React.Component {
         const account = { ...this.state.account };
         account[input.name] = input.value;
         this.setState({ account, errors });
+        console.log(this.state.account)
     };
+
+
 
     render() {
         const { account, errors } = this.state;
@@ -196,52 +307,141 @@ export default class EditUser extends React.Component {
             <>
                 {this.state.cancelClicked && <Redirect to='/users' />}
                 <form className="ml-3" onSubmit={this.handleSumbit}>
-                    <legend className="scheduler-border">Personal info</legend>
-                    <div className="form-group mt-2 ml-2">
-                        <label htmlFor="firstname"> Name : </label>
-                        <Input className="form-control"
-                            type="text"
-                            id="name"
-                            name="name"
-                            value={this.state.account.name}
-                            onChange={this.handleInputChange}
-                            error={errors.name}
-                        />
-                    </div>
 
-                    <div className="form-group ml-2">
-                        <label htmlFor="Rphone">Phone :</label>
-                        <Input className="form-control"
-                            type="text"
-                            id="phone"
-                            name="phone"
-                            value={this.state.account.phone}
-                            onChange={this.handleInputChange}
-                            error={errors.phone} />
-                    </div>
-                    <legend className="scheduler-border">User info</legend>
-                    <div className="form-group ml-2">
-                        <label htmlFor="Remail">Email address :</label>
-                        <input className="form-control"
-                            disabled="true"
-                            type="email"
-                            className="form-control"
-                            id="username"
-                            name="username"
-                            placeholder="name@example.com"
-                            value={this.state.account.username}
-                            error={errors.username}
-                            readOnly={true}
-                        />
-                        <small className="form-text text-muted">This will be used as username.</small>
-                    </div>
-                    <p className="ml-2">Select role :</p>
 
-                    <AdminTable
-                        header={this.tableHeaders}
-                        data={this.state.roles}
-                        sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
-                        className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</AdminTable>
+                    <fieldset className="scheduler-border">
+                        <legend className="scheduler-border">Personal info</legend>
+                        <div className="form-group mt-2 ml-2">
+                            <label htmlFor="firstname"> Name : </label>
+                            <Input className="form-control"
+                                type="text"
+                                id="name"
+                                name="name"
+                                value={this.state.account.name}
+                                onChange={this.handleeChange}
+                                error={errors.name}
+                            />
+
+
+                        </div>
+
+
+
+                        <div className="form-group ml-2">
+                            <label htmlFor="Rphone">Phone :</label>
+                            <Input className="form-control"
+                                type="text"
+                                id="phone"
+                                name="phone"
+                                value={this.state.account.phone}
+                                onChange={this.handleeChange}
+                                error={errors.phone} />
+                        </div>
+                    </fieldset>
+
+
+                    <fieldset className="scheduler-border">
+                        <legend className="scheduler-border">User info</legend>
+                        <div className="form-group ml-2">
+                            <label htmlFor="Remail">Email address :</label>
+                            <input className="form-control"
+                                disabled="true"
+                                type="email"
+                                className="form-control"
+                                id="username"
+                                name="username"
+                                placeholder="name@example.com"
+                                value={this.state.account.username}
+                                // onChange={this.handleeChange}
+                                error={errors.username}
+                                readOnly = {true}
+                            />
+                            <small className="form-text text-muted">This will be used as username.</small>
+                        </div>
+                        {/* 
+                        <div className="form-group ml-2">
+                            <label htmlFor="PassReg">Password :</label>
+                            <Input
+
+                                type="password"
+                                name="password"
+                                id="password"
+                                className="form-control"
+                                value={this.props.user.password}
+                                onChange={this.handleChange}
+                                disabled
+                                error={errors.password}
+                                ref="password"
+                            />
+                            <small id="passwordHelp" className="form-text text-muted">Must be 6 at least 6 letters.</small>
+                        </div> */}
+
+
+                        <p className="ml-2">Select role :</p>
+
+
+                        <MyTable
+                            header={this.tableHeaders}
+                            // data={this.rolesData}
+                            data={this.state.roles}
+                            sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
+                            className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</MyTable>
+         {
+                  this.state.checkBoxError && <div class="alert alert-danger" role="alert">
+                   Must choose at least one role 
+
+                    </div>
+                }
+
+                    </fieldset>
+// =======
+//                     <legend className="scheduler-border">Personal info</legend>
+//                     <div className="form-group mt-2 ml-2">
+//                         <label htmlFor="firstname"> Name : </label>
+//                         <Input className="form-control"
+//                             type="text"
+//                             id="name"
+//                             name="name"
+//                             value={this.state.account.name}
+//                             onChange={this.handleInputChange}
+//                             error={errors.name}
+//                         />
+//                     </div>
+
+//                     <div className="form-group ml-2">
+//                         <label htmlFor="Rphone">Phone :</label>
+//                         <Input className="form-control"
+//                             type="text"
+//                             id="phone"
+//                             name="phone"
+//                             value={this.state.account.phone}
+//                             onChange={this.handleInputChange}
+//                             error={errors.phone} />
+//                     </div>
+//                     <legend className="scheduler-border">User info</legend>
+//                     <div className="form-group ml-2">
+//                         <label htmlFor="Remail">Email address :</label>
+//                         <input className="form-control"
+//                             disabled="true"
+//                             type="email"
+//                             className="form-control"
+//                             id="username"
+//                             name="username"
+//                             placeholder="name@example.com"
+//                             value={this.state.account.username}
+//                             error={errors.username}
+//                             readOnly={true}
+//                         />
+//                         <small className="form-text text-muted">This will be used as username.</small>
+//                     </div>
+//                     <p className="ml-2">Select role :</p>
+
+//                     <AdminTable
+//                         header={this.tableHeaders}
+//                         data={this.state.roles}
+//                         sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
+//                         className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</AdminTable>
+// >>>>>>> master
 
                     <button className="btn btn-secondary btn-block" >Save</button>
                     <button type="button" onClick={() => this.renderRedirect("users")} className="btn btn-secondary  btn-block">Cancel</button>

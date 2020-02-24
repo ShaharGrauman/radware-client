@@ -121,20 +121,30 @@ export default class Register extends React.Component {
         try {
             e.preventDefault();
             const errors = this.validate();
-            this.setState({ errors: errors || {} });
-            if (this.valthischeckBox()) {
-                let user = {
-                    name: this.state.account.name,
-                    username: this.state.account.username,
-                    phone: this.state.account.phone,
-                    password: this.state.account.password,
-                    roles: this.updateData
-                };
-                if (errors) return;
-                const newUser = await postNewUser(user);
-                this.setState({ ifUserCreated: true });
-            }
-        }
+              //method return object looks like error 
+            this.setState({ errors: errors || {} });   //we render the object errors  in the setstate 
+            // if (!errors) return null;
+            console.log('account : ', this.state.account)
+            if (this.valthischeckBox())  {  
+            let user = {
+                name: this.state.account.name,
+                username: this.state.account.username,
+                phone: this.state.account.phone,
+                password: this.state.account.password,
+                roles: this.updateData
+            };
+           
+            console.log('updateData', this.updateData);
+            console.log('error : ', errors);
+            if (errors) return;
+            console.log(this.state.ifUserCreated);
+            // const user = await login(this.state.username, this.state.password);
+
+            // this.setState({ ifUserCreated: true });
+            const newUser = await postNewUser(user);
+            this.setState({ ifUserCreated: true });
+        } }
+
         catch (error) {
             alert(error);
         }
@@ -152,13 +162,29 @@ export default class Register extends React.Component {
         this.setState({ account, errors });
     };
 
-    handleChange = (event, value, id) => {
-        if (value === true) {
-            this.updateData.push(id);
-        } else {
-            var index = this.updateData.indexOf(id);
-            this.updateData.splice(index, 1);
-        }
+
+handleeChange = ({ currentTarget: input }) => {
+    const errors = { ...this.state.errors };
+    const errorMessage = this.validateProperty(input);
+    if (errorMessage) errors[input.name] = errorMessage;
+    else delete errors[input.name];
+    const account = { ...this.state.account };
+    account[input.name] = input.value;
+    this.setState({ account, errors });
+    console.log(this.state.account)
+
+};
+
+handleChange = (event, value, id) => {
+    if (value === true) {
+        this.updateData.push(id);
+        // console.log('aaaa');
+        // console.log(this.updateData);
+    } else {
+        var index = this.updateData.indexOf(id);
+        this.updateData.splice(index, 1);
+        console.log(this.updateData)
+
     }
 
     render() {
@@ -243,12 +269,42 @@ export default class Register extends React.Component {
                                 Must choose at least two roles
              
                     </div>
-                        }
-                    </fieldset>
-                    <button className="btn btn-secondary btn-block" >Save</button>
-                    <button type="button" onClick={() => this.renderRedirect("users")} className="btn btn-secondary  btn-block">Cancel</button>
-                </form>
-            </>
-        );
-    }
+
+                    <div className="form-group ml-2">
+                        <label htmlFor="PassReg">Password :</label>
+                        <Input
+
+                            type="password"
+                            name="password"
+                            id="password"
+                            className="form-control"
+                            value={account.password}
+                            onChange={this.handleeChange}
+                            error={errors.password}
+                            ref="password"
+                        />
+                    </div>
+
+                    <p className="ml-2">Select role :</p>
+                    <MyTable
+                        onSelect={this.onRoleSelect}
+                        header={this.tableHeaders}
+                        // data={this.rolesData}
+                        data={this.state.roles}
+                        sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
+                        className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</MyTable>
+                         {
+                  this.state.checkBoxError && <div class="alert alert-danger" role="alert">
+                   Must choose at least one role 
+
+                    </div>
+                }
+                </fieldset>
+                <button className="btn btn-secondary btn-block" >Save</button>
+                <button type="button" onClick={() => this.renderRedirect("users")} className="btn btn-secondary  btn-block">Cancel</button>
+            </form>
+        </>
+    );
+}
+
 }

@@ -15,9 +15,11 @@ class EditRole extends React.Component {
             account: { rolename: '', description: '', permissions: [] },
             cancelClicked: false,
             errors: {},
-            id: [],
-            role: [],
-            perId: [],
+
+            id:[],
+            role:[],
+            perId:[],
+
             isEditRole: true
         };
     }
@@ -133,11 +135,13 @@ class EditRole extends React.Component {
                                     </div>
                                     <p className="ml-2">Select Permission :</p>
                                     {this.state.account.permissions.length &&
-                                        <PermissionsTable
-                                            onSelect={this.onPermissionSelect}
-                                            role={this.state.role}
-                                            isEdit={this.state.isEditRole}
-                                        />
+
+                                    <PermissionsTable
+                                     onSelect={this.onPermissionSelect}
+                                     role={this.state.role}
+                                     isEdit = {this.state.isEditRole}
+                                      />
+
                                     }
                                 </fieldset>
                                 <button type="button" onClick={this.registerClick} className="btn btn-secondary btn-block" >Save</button>
