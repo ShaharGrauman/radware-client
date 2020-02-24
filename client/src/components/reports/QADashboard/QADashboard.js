@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import {updateQaDashboard, getQaDashboard} from '../../../api/controllers/reports';
+import {getUser} from '../../../api/controllers/auth';
 
 import { Dropdown, ButtonGroup, Button } from 'react-bootstrap';
 import { Container, Col, Row } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap';
+
 
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -39,22 +41,48 @@ export default class QADashboard extends React.Component {
         };
         this.data = [];
         this.size = 15;
-        this.role = ['manual', 'performance', 'automation']
+        this.role = []
         // this.role=['manual','performance','automation']  
 
         this.ConfirmAlert = this.ConfirmAlert.bind(this);
 
     }
 
-    async componentDidMount() {
+    getAllPermssions(roles) {
+        const permissionArrays = roles.map(role => role.permissions);
+
+        const permissions = [];
+
+        permissionArrays.forEach(array => {
+            permissions.push(...array);
+        })
+        const filterPermissions=[];
+        permissions.forEach(permission =>{
+            switch(permission.name){
+                case 'Update QA performance internal status':
+                    filterPermissions.push('Performance')
+                    break;
+                case 'Update QA automation internal status':
+                    filterPermissions.push('Automation')
+                    break;
+                case 'Update QA manual internal status':
+                    filterPermissions.push('Manual')
+                    break;
+            }}
+            )
+            return filterPermissions;
+    }
+
+    async componentDidMount() { 
+        this.role=this.getAllPermssions(JSON.parse(getUser()).roles);
+       
         try {
-            const { data } = await getQaDashboard();
+            const  data  = await getQaDashboard();
             this.data = data.sort((a, b) => a.patternID - b.patternID);
             console.log(this.data)
             this.setState({ dataToShow: data.slice(0, this.size), page: 1 })
             // console.log(this.state.data)
         } catch (error) {
-            window.alert('Error');
         }
     }
 
@@ -105,7 +133,10 @@ export default class QADashboard extends React.Component {
             <div onKeyPress={e => {
                 e.key == 'Enter' && onAccept()
             }}>
-                <Modal show={this.state.popupAlert} onHide={handleClose} >
+                <Modal show={this.state.popupAlert} onHide={handleClose}
+                aria-labelledby="contained-modal-title-vcenter"
+                centered
+                >
                     <Modal.Body>
                         {this.state.clickedButton.msg}
                     </Modal.Body>

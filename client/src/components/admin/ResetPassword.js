@@ -121,7 +121,10 @@ export default class ResetPassword extends React.Component {
         loginRedirect: false,
         newPassword1: '',
         newPassword2: '',
-        temppassword: ''
+        temppassword: '',
+        updated:false,
+        reset:false,
+        passwordconfirm:false
       }
     }
 
@@ -150,10 +153,12 @@ export default class ResetPassword extends React.Component {
     console.log("res: ", this.state.resetDetails.username)
     const password = await postResetPassword(this.state.resetDetails.username);
     // const password = axios.post('http://localhost:3000/login/resetPassword', { username: this.state.resetDetails.username });
+  this.setState({reset:true})
   }
 
   updatePassword = async e => {
     e.preventDefault();
+  
     if (this.state.resetDetails.newPassword1 === this.state.resetDetails.newPassword2) {
       // axios.put('http://localhost:3000/login/resetPassword', {
       //   username: this.state.resetDetails.username,
@@ -164,8 +169,11 @@ export default class ResetPassword extends React.Component {
         this.state.resetDetails.username , 
         this.state.resetDetails.temppassword,
         this.state.resetDetails.newPassword1)
+         
+        this.setState({updated:true})
+        
     } else {
-      alert('New password are not equals');
+     this.setState({passwordconfirm:true})
     }
   }
 
@@ -176,8 +184,9 @@ export default class ResetPassword extends React.Component {
         <div class="row">
           <div class="col"></div>
           <div class="col">
+            
             <div class="alert bg-light text-dark" role="alert">
-              <h1>Reset Password</h1>
+              <h1>Reset Password </h1>
               <form onSubmit={this.onSubmit}>
                 <div class="form-group">
                   <label htmlFor="username">Username</label>
@@ -194,6 +203,7 @@ export default class ResetPassword extends React.Component {
                 </div>
 
                 <button type="submit" class="btn btn-block btn-secondary" onClick={this.resetPassword}>Send</button>
+               {this.state.reset && ( <small class="text-danger"> your reset password has been sent to your mail </small>)}
                 <div class="form-group">
                   <label htmlFor="password">Temporary Password</label>
                   <input
@@ -229,12 +239,20 @@ export default class ResetPassword extends React.Component {
                     placeholder="Confirm Password"
                     onChange={this.onChangeHandler}
                   />
+                 
+                
                 </div>
-                <button type="submit" class="btn btn-block btn-secondary" onClick={this.updatePassword}>Save</button>
-                <button type="submit" class="btn btn-block btn-secondary"
-                  onClick={() => this.loginRedirect("login")}
-                >Back to Login</button>
 
+                {this.state.updated && (
+                <div class="alert alert-success" role="alert">Password Changed Successfully</div>
+                  )}
+                   {this.state.passwordconfirm && (
+                <div class="alert alert-danger" role="alert"> must match the previous entry</div>
+                  )}
+
+                  
+                <button type="submit" class="btn btn-block btn-secondary" onClick={this.updatePassword}>Save</button>
+          
               </form>
             </div>
           </div>

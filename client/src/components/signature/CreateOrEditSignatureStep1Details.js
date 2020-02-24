@@ -1,15 +1,18 @@
 import React from 'react';
 
-import Status from './Status';
 import Severity from './Severity';
 import validator, { field } from '../shared/validations/validator';
+import { getAttacks, getStatuses } from '../../api/controllers/signature';
 
 export default class CreateOrEditSignatureStep1Details extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       description: field({ name: 'description', value: '', isRequired: true, minLength: 3 }),
-      attack: field({ name: 'attack', value: '', isRequired: true }),
+      attack_id: field({ name: 'attack_id', value: this.props.signatureData.attack_id, isRequired: true }),
+      status: field({ name: 'status', value: this.props.signatureData.status, isRequired: true }),
+      attacks: [],
+      statuses: []
     };
   }
 
@@ -21,6 +24,7 @@ export default class CreateOrEditSignatureStep1Details extends React.Component {
     this.setState({
       [fieldName]: {
         ...this.state[fieldName],
+        value,
         isPristine: false,
         errors
       }
@@ -28,59 +32,18 @@ export default class CreateOrEditSignatureStep1Details extends React.Component {
   }
 
   isAllValid = () => {
+    const keys = Object.keys(this.state).filter(field => 'name' in this.state[field]);
+    keys.forEach(field => this.validate(field, this.state[field].value));
+    return keys.every(field => !this.state[field].isPristine && this.state[field].errors.length === 0);
+  }
 
-    Object.keys(this.state).forEach(field => this.validate(field, this.state[field].value));
-    return Object.keys(this.state).every(field => !this.state[field].isPristine && this.state[field].errors.length == 0);
+  componentDidMount = async () => {
+    const attacks = await getAttacks();
+    const statuses = await getStatuses();
+    this.setState({ attacks, statuses });
   }
 
   render() {
-    const attacks = ['URL Access Violation',
-      'Brute Force',
-      'LDAP Injection',
-      'Cross Site Scripting',
-      'SSI Injection',
-      'Path Traversal',
-      'Hot Link',
-      'Folder Access Violation',
-      'Security Misconfiguration',
-      'Invalid Client Certificate Attributes',
-      'Server Information Leakage',
-      'HTTP Request Header Size Violation',
-      'Revoked Client Certificate Request',
-      'Access from Unauthorized source IP',
-      'HTTP Method Violation',
-      'Credit Card Number Leakage',
-      'Social Security Number Leakage',
-      'Other Pattern Leakage',
-      'Cookie Poisoning',
-      'Session Fixation',
-      'Server Misconfiguration',
-      'File Upload Violation',
-      'Evasion',
-      'Web Services Abuse',
-      'Non-Valid XML Structure',
-      'Null Byte Injection',
-      'Remote File Inclusion',
-      'XPath Injection',
-      'High Resource Utilization',
-      'Buffer Overflow',
-      'Abuse of Functionality',
-      'Application Misconfiguration',
-      'Mail Command Injection',
-      'Fingerprinting',
-      'Input Validation Violation',
-      'Application Information Leakage',
-      'Web Worms',
-      'Directory Indexing',
-      'Predictable Resource Location',
-      'Unauthorized Access Attempt',
-      'Session Flow Violation',
-      'Cross Site Request Forgery',
-      'Unauthorized access attempt',
-      'Wrong Username Password Authentication',
-      'Authentication Event',
-      'Israeli ID Leakage'];
-
     return (
       <div>
         <div id="container-fluid row">
@@ -95,19 +58,27 @@ export default class CreateOrEditSignatureStep1Details extends React.Component {
               <small>The customer will identity the attack by this name</small>
               <div id="btns">
                 <div className="input-group-append">
-                  <select className="form-control" name="attack" value={this.props.signatureStatus} onChange={this.props.onChangeHandler} onBlur={this.onChange}>
-                    <option selected disabled>Attack...</option>
-                    {attacks.map((s, index) => <option key={index}>{s}</option>)}
+                  <select className="form-control" name="attack_id" value={this.props.signatureData.attack_id} onChange={this.props.onChangeHandler} onBlur={this.onChange}>
+                    <option value="">Select Attack...</option>
+                    {this.state.attacks.map(attack => <option key={attack.id} value={attack.id}>{attack.name}</option>)}
                   </select>
                 </div>
-                {
-                  this.state.attack.errors.map((error, index) => (
-                    <small className="form-text text-danger" key={index}>{error}</small>
-                  ))
-                }
+                {this.state.attack_id.errors.map((error, index) => (
+                  <small className="form-text text-danger" key={index}>{error}</small>
+                ))}
               </div>
             </div>
-            <Status status={this.props.signatureData.status} onChangeHandler={this.props.onChangeHandler} />
+            <div className="col-lg-5 col-md-5 col-sm-10 col-xs-8">
+              <h5>Status:</h5>
+              <small>Choose the status</small>
+              <select name="status" className="form-control" value={this.props.signatureData.status} onChange={this.props.onChangeHandler} onBlur={this.onChange}>
+                <option value="">Select Status...</option>
+                {this.state.statuses.map((status, index) => <option key={index} value={status}>{status}</option>)}
+              </select>
+              {this.state.status.errors.map((error, index) => (
+                <small className="form-text text-danger" key={index}>{error}</small>
+              ))}
+            </div>
           </div>
           <div className="row ml-2 justify-content-around">
             <Severity severity={this.props.signatureData.severity} onChangeHandler={this.props.onChangeHandler} />
@@ -117,7 +88,7 @@ export default class CreateOrEditSignatureStep1Details extends React.Component {
             <div className="col-lg-11 ml-4 col-md-11 col-sm-10 col-xs-8" style={{ marginTop: 40 }}>
               <h5>Description:</h5>
               <div className="form-group shadow-textarea">
-                <textarea rows="20"
+                <textarea
                   name="description"
                   defaultValue={this.props.signatureData.description}
                   onChange={this.props.onChangeHandler}

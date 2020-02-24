@@ -3,7 +3,7 @@ import MyTable from '../shared/MyTable';
 import DropdownButton from 'react-bootstrap/DropdownButton'
 import Dropdown from 'react-bootstrap/Dropdown'
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
-import { getAudit } from '../../api/controllers/admin';
+import { getAudit, getConstant } from '../../api/controllers/admin';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 export default class Audit extends React.Component {
@@ -12,6 +12,7 @@ export default class Audit extends React.Component {
         super(props);
         this.state = {
             audit: [],
+            actions: [],
             event: '',
             users_names: '',
             orderby: '',
@@ -33,10 +34,17 @@ export default class Audit extends React.Component {
     { key: "lastupdated", value: "Last Updated", toSort: false }
     ];
 
-    actions = ["edit", "add", "export", "report", "delete"];
+    async componentDidMount() {
+        const constant = await getConstant();
+        const actions = constant.actionName;
+        this.setState({
+            actions: actions,searchClicked: false
+        })
 
+    }
     submitHandler = async e => {
-        const result = await getAudit(this.state.event, this.state.users_names, this.state.orderby, this.state.page, this.state.size, this.state.startdate, this.state.enddate, this.state.starttime, this.state.endtime);
+        this.setState({page:1})
+        const result = await getAudit(this.state.event, this.state.users_names, this.state.orderby, 1, this.state.size, this.state.startdate, this.state.enddate, this.state.starttime, this.state.endtime);
         if (result.history.length < 1) this.setState({
             noResult: true,
             audit: [],
@@ -58,10 +66,29 @@ export default class Audit extends React.Component {
                 searchClicked: true
             });
         }
-        this.setState({
-            event: "all"
+    }
+    submitPagingHandler = async e => {
+        const result = await getAudit(this.state.event, this.state.users_names, this.state.orderby, this.state.page, this.state.size, this.state.startdate, this.state.enddate, this.state.starttime, this.state.endtime);
+        if (result.history.length < 1) this.setState({
+            noResult: true,
+            audit: [],
+            hasNext: false,
+            hasPrev: false
         });
-
+            const audit = result.history.map(data => ({
+                username: data.user.username,
+                action_name: data.action_name,
+                description: data.description,
+                lastupdated: data.date + "   " + data.time
+            }))
+            this.setState({
+                audit: audit,
+                hasNext: result.hasNext,
+                hasPrev: result.hasPrev,
+                noResult: false,
+                searchClicked: true
+            });
+        
     }
     onChangeHandler = (event, toChange) => {
         const target = event.target.value;
@@ -77,8 +104,8 @@ export default class Audit extends React.Component {
         }
     }
 
-    handleSelect = target => {
-        this.setState({ event: target });
+    handleSelect = event => {
+        this.setState({ event: event.target.value });
     }
 
     render() {
@@ -111,7 +138,7 @@ export default class Audit extends React.Component {
                                     </div>
                                     <input className="form-control"
                                         type="time"
-                                        defaultValue="00:00:00"
+                                        defaultValue=""
                                         id="time-local-input"
                                         onChange={event => this.onChangeHandler(event, "starttime")}>
                                     </input>
@@ -141,7 +168,7 @@ export default class Audit extends React.Component {
                                     </div>
                                     <input className="form-control"
                                         type="time"
-                                        defaultValue="23:59:59"
+                                        defaultValue=""
                                         id="time-local-input"
                                         onChange={event => this.onChangeHandler(event, "endtime")}>
                                     </input>
@@ -150,8 +177,8 @@ export default class Audit extends React.Component {
                         </div>
 
                         <div className="row mt-4">
-                            <div className="col-md-6">
-                                <div className="input-group">
+                            <div className="col-lg-6 col-sm-12">
+                                <div className="input-group mb-3">
                                     <div className="input-group-prepend">
                                         <span className="input-group-text" >Username</span>
                                     </div>
@@ -165,33 +192,35 @@ export default class Audit extends React.Component {
                                     />
                                 </div>
                             </div>
-                            <div className="col-lg-3 col-sm-6">
-                                <ButtonToolbar className="float-right" >
-                                    {['Secondary'].map(
-                                        variant => (
-                                            <DropdownButton
-                                                title="Select Activity"
-                                                variant={variant.toLowerCase()}
-                                                id={`dropdown-variants-${variant}`}
-                                                key={variant}
-                                                onSelect={this.handleSelect}>
-                                                <Dropdown.Item eventKey="all">All </Dropdown.Item>
-                                                {this.actions.map(action => (      
-                                                    <Dropdown.Item eventKey={action}> {action.charAt(0).toUpperCase() + action.slice(1)}</Dropdown.Item>
+
+                            <div className="col-lg-6 col-sm-12">
+                            <div className="input-group mb-3">
+                            <div className="input-group-prepend">
+                                        <span className="input-group-text" >Choose Action</span>
+                                    </div>
+                                <select className="custom-select" id="inputGroupSelect" onChange={this.handleSelect}>>
+                                    <option selected value="all">All</option>
+                                    {this.state.actions.map(action => (
+                                                    <option value={action}> {action.charAt(0).toUpperCase() + action.slice(1)}</option>
                                                 ))}
-                                            </DropdownButton>
-                                        ),
-                                    )}
-                                </ButtonToolbar>
+                                </select>
                             </div>
-                            <div className="col-lg-3 col-sm-6 ">
-                                <button
+                        </div>
+                     
+                        </div>
+
+                        <div className="row mt-4 float-center">
+                            <div className="col-lg-4"></div>
+                            <div className="col-lg-4">
+                            <button
                                     type="submit"
                                     className="btn btn-primary"
                                     onClick={this.submitHandler} style={{ width: "150px" }}>
                                     Search
-                                </button>
+                            </button>
+
                             </div>
+                            
                         </div>
                         {this.state.noResult &&
                             <div className="row float-center mt-5"><h5>There are no results that match your search</h5></div>}
@@ -210,13 +239,13 @@ export default class Audit extends React.Component {
                                     </div>
                                 </div>
                                 <div className="row">
-                                    <div className="col-2"></div>
-                                    <div className="col-4">
+                                    <div className="col-lg-2"></div>
+                                    <div className="col-lg-3 col-sm-5 float-right">
                                         {this.state.hasPrev &&
                                             <span className="fas" className="noselect ml-5"
-                                                onClick={() => {
-                                                    this.state.page--
-                                                    this.submitHandler();
+                                                onClick={event => {
+                                                    this.state.page--;
+                                                    this.submitPagingHandler(event);
                                                 }}>
                                                 <FontAwesomeIcon
                                                     icon={faArrowLeft}
@@ -225,11 +254,14 @@ export default class Audit extends React.Component {
                                     </span>
                                         }
                                     </div>
-                                    <div className="col-4">
+                                    <div className="col-lg-2 col-sm-2">
+                                    <span>-{this.state.page}-</span>
+                                    </div>
+                                    <div className="col-lg-3 col-sm-5 float-left">
                                         {this.state.hasNext &&
-                                            <span className="fas" onClick={() => {
+                                            <span className="fas" onClick={(event) => {
                                                 this.state.page++
-                                                this.submitHandler();
+                                                this.submitPagingHandler(event);
                                             }}>
                                                 Next{" "}
                                                 <FontAwesomeIcon

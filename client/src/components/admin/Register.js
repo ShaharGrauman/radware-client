@@ -6,7 +6,7 @@ import Joi from 'joi-browser'
 import Input from './input';
 import { Redirect } from 'react-router-dom'
 import axios from 'axios';
-import {getRolesNew, postNewUser} from '../../api/controllers/admin';
+import { getRolesNew, postNewUser } from '../../api/controllers/admin';
 import NotificationIsCreated from './NotificationIsCreated';
 
 export default class Register extends React.Component {
@@ -19,7 +19,8 @@ export default class Register extends React.Component {
             errors: {},
             orgRoles: [],
             roles: [],
-            selectedRoles: []
+            selectedRoles: [],
+            checkBoxError: false
         };
         this.handleChange = this.handleChange.bind(this);
         this.updateData = []
@@ -42,34 +43,12 @@ export default class Register extends React.Component {
         username: Joi.string().required().email().label("Email"),
         // password: Joi.string().required().min(5).alphanum().label("Password"),
         password: Joi.string().min(6).max(20).required().label("password")
-
+        
+     
     }
 
-    // async componentDidMount() {
-    //     const { data } = await axios.get(`http://localhost:3001/users/roles`);
-    //     const tempData = [];
-
-    //     for (var i = 0; i < data.length; i++) {
-    //         let id = data[i].id;
-    //         // console.log(id);
-    //         tempData.push({
-    //             rolename: data[i].name,
-    //             select: <input type="checkbox" name="myTextEditBox" onChange={event => this.handleChange(event, event.target.checked, id)}> </input>
-    //         })
-
-    //     }
-    //     console.log('tempData')
-    //     console.log(tempData)
-    //     this.setState({ selectedRoles: tempData })
-    //     const roles = data.map(role => ({
-    //         role: role.name,
-    //         selected: <input type="checkbox" name="myTextEditBox" onChange={event => this.handleChange(event, event.target.checked, role.id)}></input>
-    //     }));
-
-    //     this.setState({ roles });
-    // }
     async componentDidMount() {
-        const  data  = await getRolesNew();
+        const data = await getRolesNew();
         const tempData = [];
         console.log(data);
         for (var i = 0; i < data.length; i++) {
@@ -90,6 +69,25 @@ export default class Register extends React.Component {
         this.setState({ roles });
     }
 
+
+     valthischeckBox = ()=> {
+    var checkboxs=document.getElementsByName("myTextEditBox");
+   
+    for(var i=0,l=checkboxs.length;i<l;i++)
+    {
+        if(checkboxs[i].checked)
+        {   this.setState({checkBoxError:false})
+            return true;
+            
+            break;
+        }
+    }
+    this.setState({checkBoxError:true})
+    return false; 
+   
+}
+
+
     onRoleSelect = roleId => {
         if (this.state.roles.includes(roleId)) {
             this.setState({
@@ -103,44 +101,6 @@ export default class Register extends React.Component {
             });
         }
     }
-
-    // componentDidMount() {
-    //     this.setState({
-    //         select: [
-    //             { id: "1", rolename: "Researcher", selected: false },
-    //             { id: "2", rolename: "Support", selected: false },
-    //             { id: "3", rolename: "Manual QA", selected: false },
-    //             { id: "4", rolename: "Performance QA", selected: false },
-    //             { id: "5", rolename: "Automation QA", selected: false }
-
-    //         ]
-    //     });
-    // }
-
-    // roleChecked(roleId) {
-    //     const selectedRole = this.state.select.find(role => role.id == roleId);
-    //     selectedRole.selected = !selectedRole.selected;
-    //     console.log(selectedRole);
-    //     this.setState({ selectedRoles: [selectedRole.id] })
-    //     console.log(this.state.selectedRoles);
-    //     this.setState({
-    //         select: [
-    //             ...this.state.select
-    //             ,
-    //             selectedRole
-    //         ]
-    //     })
-    //     // console.log(this.state.select)
-    // }
-
-    // rolesData = [
-    //     { id: "1", rolename: "Researcher", selected: <input type="checkbox" onChange={() => this.roleChecked(1)} /> },
-    //     { id: "2", rolename: "Support", selected: <input type="checkbox" onChange={() => this.roleChecked(2)} /> },
-    //     { id: "3", rolename: "Manual QA", selected: <input type="checkbox" onChange={() => this.roleChecked(3)} /> },
-    //     { id: "4", rolename: "Performance QA", selected: <input type="checkbox" onChange={() => this.roleChecked(4)} /> },
-    //     { id: "5", rolename: "Automation QA", selected: <input type="checkbox" onChange={() => this.roleChecked(5)} /> }
-
-    // ];
 
     validate = () => {
         const options = { abortEarly: false }
@@ -161,170 +121,175 @@ export default class Register extends React.Component {
         return error ? error.details[0].message : null;
     }
 
-    componentWillReceiveProps (nextProps){
-        this.setState({account:{
-            name:nextProps.user.name,
-            username:nextProps.user.username,
-            phone:nextProps.user.phone
-        }})
-        }
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            account: {
+                name: nextProps.user.name,
+                username: nextProps.user.username,
+                phone: nextProps.user.phone
+            }
+        })
+    }
     handleSumbit = async e => {
-        try{
-        e.preventDefault();
-        const errors = this.validate();            //method return object looks like error 
-        this.setState({ errors: errors || {} });   //we render the object errors  in the setstate 
-        // if (!errors) return null;
-        console.log('account : ',this.state.account)
-        let user = {
-            name: this.state.account.name,
-            username: this.state.account.username,
-            phone: this.state.account.phone,
-            password: this.state.account.password,
-            roles: this.updateData
-        };
-        // const selectedRoles = this.state.roles.map(role => {
-        //     console.log(role.selected);
-        // })
-        // console.log(selectedRoles);
+        try {
+            e.preventDefault();
+            const errors = this.validate();
+              //method return object looks like error 
+            this.setState({ errors: errors || {} });   //we render the object errors  in the setstate 
+            // if (!errors) return null;
+            console.log('account : ', this.state.account)
+            if (this.valthischeckBox())  {  
+            let user = {
+                name: this.state.account.name,
+                username: this.state.account.username,
+                phone: this.state.account.phone,
+                password: this.state.account.password,
+                roles: this.updateData
+            };
+            // const selectedRoles = this.state.roles.map(role => {
+            //     console.log(role.selected);
+            // })
+            // console.log(selectedRoles);
 
-        console.log('updateData' , this.updateData);
-        console.log('error : ', errors);
-        if(errors) return;
-        console.log(this.state.ifUserCreated);
-        // const user = await login(this.state.username, this.state.password);
+            console.log('updateData', this.updateData);
+            console.log('error : ', errors);
+            if (errors) return;
+            console.log(this.state.ifUserCreated);
+            // const user = await login(this.state.username, this.state.password);
 
-        // this.setState({ ifUserCreated: true });
-        const newUser = await postNewUser(user);
-        if(typeof newUser !="number"){
-            alert(newUser)
-        }else
-        this.setState({ ifUserCreated: true });
-
-    
-    }
-    catch(error){
-        console.log(error);
-    }
-
-       
-        // axios.post('http://localhost:3001/users/new_user', user)
-        //     .then(response => {
-        //         this.setState({ ifUserCreated: true });
-        //         console.log(response)
-        //         console.log(response.data);
-        //     })
-        //     .catch(error => {
-        //         console.log(error)
-        //     })
-    };
-
-    handleeChange = ({ currentTarget: input }) => {
-        const errors = { ...this.state.errors };
-        const errorMessage = this.validateProperty(input);
-        if (errorMessage) errors[input.name] = errorMessage;
-        else delete errors[input.name];
-        const account = { ...this.state.account };
-        account[input.name] = input.value;
-        this.setState({ account, errors });
-        console.log(this.state.account)
-
-    };
-
-    handleChange = (event, value, id) => {
-        if (value === true) {
-            this.updateData.push(id);
-            // console.log('aaaa');
-            // console.log(this.updateData);
-        } else {
-            var index = this.updateData.indexOf(id);
-            this.updateData.splice(index, 1);
-            console.log(this.updateData)
+            // this.setState({ ifUserCreated: true });
+            const newUser = await postNewUser(user);
+            this.setState({ ifUserCreated: true });
+        } }
+        catch (error) {
+            alert(error);
         }
     }
 
-    render() {
-        const { account, errors } = this.state;
-        if (this.state.ifUserCreated) {
-            return (
-                <NotificationIsCreated page={'User'} />
-            )
-        }
+
+    // axios.post('http://localhost:3001/users/new_user', user)
+    //     .then(response => {
+    //         this.setState({ ifUserCreated: true });
+    //         console.log(response)
+    //         console.log(response.data);
+    //     })
+    //     .catch(error => {
+    //         console.log(error)
+    //     })
+
+handleeChange = ({ currentTarget: input }) => {
+    const errors = { ...this.state.errors };
+    const errorMessage = this.validateProperty(input);
+    if (errorMessage) errors[input.name] = errorMessage;
+    else delete errors[input.name];
+    const account = { ...this.state.account };
+    account[input.name] = input.value;
+    this.setState({ account, errors });
+    console.log(this.state.account)
+
+};
+
+handleChange = (event, value, id) => {
+    if (value === true) {
+        this.updateData.push(id);
+        // console.log('aaaa');
+        // console.log(this.updateData);
+    } else {
+        var index = this.updateData.indexOf(id);
+        this.updateData.splice(index, 1);
+        console.log(this.updateData)
+    }
+}
+
+render() {
+    const { account, errors } = this.state;
+    if (this.state.ifUserCreated) {
         return (
-            <>
-                {this.state.cancelClicked && <Redirect to='/users' />}
-                <form className="ml-3" onSubmit={this.handleSumbit}>
-                    <fieldset className="scheduler-border">
-                        <legend className="scheduler-border font-weight-light">Personal info</legend>
-                        <div className="form-group mt-2 ml-2">
-                            <label htmlFor="firstname"> Name : </label>
-                            <Input className="form-control"
-                                type="text"
-                                id="name"
-                                name="name"
-                                value={account.name}
-                                onChange={this.handleeChange}
-                                error={errors.name}
-                            />
-                        </div>
-
-                        <div className="form-group ml-2">
-                            <label htmlFor="Rphone">Phone :</label>
-                            <Input className="form-control"
-                                type="text"
-                                id="phone"
-                                name="phone"
-                                value={account.phone}
-                                onChange={this.handleeChange}
-                                error={errors.phone} />
-                        </div>
-                    </fieldset>
-
-
-                    <fieldset className="scheduler-border">
-                        <legend className="scheduler-border font-weight-light">User info</legend>
-                        <div className="form-group ml-2">
-                            <label htmlFor="Remail">Email address :</label>
-                            <Input className="form-control"
-                                type="email"
-                                className="form-control"
-                                id="username"
-                                name="username"
-                                placeholder="name@example.com"
-                                defaultValue={account.username}
-                                onChange={this.handleeChange}
-                                error={errors.username}
-                            />
-                            <small className="form-text text-muted">This will be used as username.</small>
-                        </div>
-
-                        <div className="form-group ml-2">
-                            <label htmlFor="PassReg">Password :</label>
-                            <Input
-
-                                type="password"
-                                name="password"
-                                id="password"
-                                className="form-control"
-                                value={account.password}
-                                onChange={this.handleeChange}
-                                error={errors.password}
-                                ref="password"
-                            />
-                        </div>
-
-                        <p className="ml-2">Select role :</p>
-                        <MyTable
-                            onSelect={this.onRoleSelect}
-                            header={this.tableHeaders}
-                            // data={this.rolesData}
-                            data={this.state.roles}
-                            sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
-                            className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</MyTable>
-                    </fieldset>
-                    <button className="btn btn-secondary btn-block" >Save</button>
-                    <button type="button" onClick={() => this.renderRedirect("users")} className="btn btn-secondary  btn-block">Cancel</button>
-                </form>
-            </>
-        );
+            <NotificationIsCreated page={'User'} />
+        )
     }
+    return (
+        <>
+            {this.state.cancelClicked && <Redirect to='/users' />}
+            <form className="ml-3" onSubmit={this.handleSumbit}>
+                <fieldset className="scheduler-border">
+                    <legend className="scheduler-border font-weight-light">Personal info</legend>
+                    <div className="form-group mt-2 ml-2">
+                        <label htmlFor="firstname"> Name : </label>
+                        <Input className="form-control"
+                            type="text"
+                            id="name"
+                            name="name"
+                            value={account.name}
+                            onChange={this.handleeChange}
+                            error={errors.name}
+                        />
+                    </div>
+
+                    <div className="form-group ml-2">
+                        <label htmlFor="Rphone">Phone :</label>
+                        <Input className="form-control"
+                            type="text"
+                            id="phone"
+                            name="phone"
+                            value={account.phone}
+                            onChange={this.handleeChange}
+                            error={errors.phone} />
+                    </div>
+                </fieldset>
+
+
+                <fieldset className="scheduler-border">
+                    <legend className="scheduler-border font-weight-light">User info</legend>
+                    <div className="form-group ml-2">
+                        <label htmlFor="Remail">Email address :</label>
+                        <Input className="form-control"
+                            type="email"
+                            className="form-control"
+                            id="username"
+                            name="username"
+                            placeholder="name@example.com"
+                            defaultValue={account.username}
+                            onChange={this.handleeChange}
+                            error={errors.username}
+                        />
+                        <small className="form-text text-muted">This will be used as username.</small>
+                    </div>
+
+                    <div className="form-group ml-2">
+                        <label htmlFor="PassReg">Password :</label>
+                        <Input
+
+                            type="password"
+                            name="password"
+                            id="password"
+                            className="form-control"
+                            value={account.password}
+                            onChange={this.handleeChange}
+                            error={errors.password}
+                            ref="password"
+                        />
+                    </div>
+
+                    <p className="ml-2">Select role :</p>
+                    <MyTable
+                        onSelect={this.onRoleSelect}
+                        header={this.tableHeaders}
+                        // data={this.rolesData}
+                        data={this.state.roles}
+                        sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
+                        className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</MyTable>
+                         {
+                  this.state.checkBoxError && <div class="alert alert-danger" role="alert">
+                   Must choose at least two roles 
+
+                    </div>
+                }
+                </fieldset>
+                <button className="btn btn-secondary btn-block" >Save</button>
+                <button type="button" onClick={() => this.renderRedirect("users")} className="btn btn-secondary  btn-block">Cancel</button>
+            </form>
+        </>
+    );
+}
 }
