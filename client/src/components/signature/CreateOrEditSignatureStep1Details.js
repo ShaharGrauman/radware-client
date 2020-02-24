@@ -8,11 +8,12 @@ export default class CreateOrEditSignatureStep1Details extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      description: field({ name: 'description', value: '', isRequired: true, minLength: 3 }),
+      description: field({ name: 'description', value: this.props.signatureData.description, isRequired: true, minLength: 3 }),
       attack_id: field({ name: 'attack_id', value: this.props.signatureData.attack_id, isRequired: true }),
       status: field({ name: 'status', value: this.props.signatureData.status, isRequired: true }),
       attacks: [],
-      statuses: []
+      statuses: [],
+      error: []
     };
   }
 
@@ -20,6 +21,7 @@ export default class CreateOrEditSignatureStep1Details extends React.Component {
 
   validate = (fieldName, value) => {
     const errors = validator(fieldName, value, this.state[fieldName].validations);
+    this.state.error = [...errors]
 
     this.setState({
       [fieldName]: {
@@ -41,6 +43,15 @@ export default class CreateOrEditSignatureStep1Details extends React.Component {
     const attacks = await getAttacks();
     const statuses = await getStatuses();
     this.setState({ attacks, statuses });
+  }
+
+  componentWillReceiveProps = (props, state) => {
+    const { signatureData } = props;
+    this.setState({
+      description: field({ name: 'description', value: signatureData.description, isRequired: true, minLength: 3 }),
+      attack_id: field({ name: 'attack_id', value: signatureData.attack_id, isRequired: true }),
+      status: field({ name: 'status', value: signatureData.status, isRequired: true })
+    });
   }
 
   render() {
