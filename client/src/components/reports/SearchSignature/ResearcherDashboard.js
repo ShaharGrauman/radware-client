@@ -21,24 +21,24 @@ export default class ResearcherDashboard extends React.Component {
   constructor(props){
     super(props);
     this.state={
-      hasNext:true,
+      hasNext:false,
       hasPrev:false,
       dataFilter:'All Singatures ',  
       data : [
         { patternID: '', description: ''},
         
-
       ] ,
       signaturesCountByStatus:[{Count:0},{Count:0},{Count:0},{Count:0},{Count:0}],
-      in_progress:true,
-      in_test:true,
-      inQa:true,
-      Published:true,
-      suspended:true,
-      all:true,
+      // in_progress:true,
+      // in_test:true,
+      // inQa:true,
+      // Published:true,
+      // suspended:true,
+      // all:true,
       currentButton:'all',
       clickedButton:'',
       nextClicked: false,
+      prevClicked: false,
       errorMsg:'',
       searchClicked: false,
       createOrEditSignatureClicked: false,
@@ -83,21 +83,17 @@ export default class ResearcherDashboard extends React.Component {
 
   componentDidMount = async e => {
     const res = await getSignatures();
-          // console.log(res.data);
           this.setState({hasNext:res.hasNext,hasPrev:res.hasPrev})
           console.log(res.signatureData);
           if(res.signatureData.length == 0){
             this.setState({data: [
               { patternID: '', description: '' }
-             
             ]});         
           }else{
             this.setState({signaturesCountByStatus:res.signaturesCountByStatus})
             console.log(res.signaturesCountByStatus);
-            console.log(this.state.signaturesCountByStatus[1].Count );
             this.setState({data:res.signatureData});
           }
-         
   }
 
   loadData = async(filter)=>{
@@ -106,7 +102,7 @@ export default class ResearcherDashboard extends React.Component {
     console.log("current:"+this.state.currentButton);
     console.log("clicked:"+this.state.clickedButton);
     console.log(this.state.nextClicked);
-    if(this.state.currentButton == filter && !this.state.nextClicked){//to return to all when double clicking
+    if(this.state.currentButton == filter){//to return to all when double clicking
       this.setState({currentButton:"all"}); // to set currentButton to all when clicking twice at button
       requestURL=`/signature/researcher`;
       this.setState({dataFilter:"All Signatures"}); 
@@ -244,10 +240,11 @@ export default class ResearcherDashboard extends React.Component {
                 {this.state.hasPrev?
                   <span className="fas" onClick={()=>{
                     this.urlDetails.page--;
-                    if(this.urlDetails.page == 1){
-                      this.state.hasPrev = false;
+                    this.state.prevClicked = true;
+                    // if(this.urlDetails.page == 1){
+                    //   this.state.hasPrev = false;
                       
-                    }
+                    // }
                     this.state.nextClicked = false;
                     this.loadData(this.state.currentButton);
                   }}>
@@ -265,6 +262,7 @@ export default class ResearcherDashboard extends React.Component {
               {this.state.hasNext?
                 <span className="fas" onClick={()=>{
                   this.state.nextClicked = true;
+                  this.state.prevClicked = false;
                   this.urlDetails.page++;
                   this.loadData(this.state.currentButton);
                   this.state.hasPrev = true;
@@ -298,10 +296,9 @@ export default class ResearcherDashboard extends React.Component {
                         ()=>{
                         this.selectButton("inProgress");
                         this.loadData("in_progress");
-                        // this.setState({this.urlDetails.page:1});
                         }
                       }
-                    
+                     
                     >
                       <i className="fas fa-star"></i> In progress 
                       <Badge pill variant="info" className=" ml-3"> {this.state.signaturesCountByStatus[1].Count} </Badge>
