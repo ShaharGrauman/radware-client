@@ -146,11 +146,7 @@ export default class Register extends React.Component {
                 password: this.state.account.password,
                 roles: this.updateData
             };
-            // const selectedRoles = this.state.roles.map(role => {
-            //     console.log(role.selected);
-            // })
-            // console.log(selectedRoles);
-
+           
             console.log('updateData', this.updateData);
             console.log('error : ', errors);
             if (errors) return;
@@ -167,15 +163,7 @@ export default class Register extends React.Component {
     }
 
 
-    // axios.post('http://localhost:3001/users/new_user', user)
-    //     .then(response => {
-    //         this.setState({ ifUserCreated: true });
-    //         console.log(response)
-    //         console.log(response.data);
-    //     })
-    //     .catch(error => {
-    //         console.log(error)
-    //     })
+  
 
 handleeChange = ({ currentTarget: input }) => {
     const errors = { ...this.state.errors };
@@ -281,7 +269,7 @@ render() {
                         className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</MyTable>
                          {
                   this.state.checkBoxError && <div class="alert alert-danger" role="alert">
-                   Must choose at least two roles 
+                   Must choose at least one role 
 
                     </div>
                 }

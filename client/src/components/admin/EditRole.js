@@ -17,7 +17,8 @@ class EditRole extends React.Component {
             errors: {},
             id:[],
             role:[],
-            perId:[]
+            perId:[],
+            isEditRole: true
         };
     }
 
@@ -78,20 +79,7 @@ class EditRole extends React.Component {
         this.setState(unsavedData);
         console.log("unsavedData ",this.state.unsavedData);
     }
-    /* Original */
-    // onPermissionSelect = permissionId => {
-    //     if (this.state.permissions.includes(permissionId)) {
-    //         this.setState({
-    //             permissions: [
-    //                 ...this.state.permissions.filter(pid => pid != permissionId)
-    //             ]
-    //         })
-    //     } else {
-    //         this.setState({
-    //             permissions: [...this.state.permissions, permissionId]
-    //         });
-    //     }
-    // }
+   
     onPermissionSelect = permissionId => {
         if (this.state.perId.includes(permissionId)) {
             this.setState({
@@ -158,12 +146,14 @@ class EditRole extends React.Component {
                                            />
                                         <div> {this.state.errors.description && <div className="alert alert-danger">{this.state.errors.description}</div>}</div>
                                     </div>
-
                                     <p className="ml-2">Select Permission :</p>
+                                    {this.state.account.permissions.length &&
                                     <PermissionsTable
                                      onSelect={this.onPermissionSelect}
                                      role={this.state.role}
+                                     isEdit = {this.state.isEditRole}
                                       />
+                                    }
                                 </fieldset>
                                 <button type="button"onClick={this.registerClick} className="btn btn-secondary btn-block" >Save</button>
                                 <button type="button" onClick={() => this.renderRedirect("users")} className="btn btn-secondary  btn-block">Cancel</button>

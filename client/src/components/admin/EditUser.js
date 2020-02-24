@@ -10,7 +10,7 @@ import { putUser } from '../../api/controllers/admin';
 import { getRolesNew } from '../../api/controllers/admin';
 
 
-export default class RegisterEdit extends React.Component {
+export default class EditUser extends React.Component {
 
     constructor(props) {
         super(props);
@@ -20,7 +20,8 @@ export default class RegisterEdit extends React.Component {
             orgRoles: [],
             roles: [],
             userdata: [],
-            userEditedOK: false
+            userEditedOK: false,
+            checkBoxError: false
         };
         this.handleChange = this.handleChange.bind(this);
         this.updateData = [];
@@ -43,7 +44,7 @@ export default class RegisterEdit extends React.Component {
         name: Joi.string().required().label("Name"),
         phone: Joi.string().trim().regex(/[0-9]/).max(10).min(10).label('Phone Number'),
         username: Joi.string().required().email().label("Email"),
-        password: Joi.string().min(6).max(20).required().label("password"),
+      //  password: Joi.string().min(6).max(20).required().label("password"),
     }
     isChecked = (event, id) => {
         for (let index = 0; index < this.state.roles.length; index++) {
@@ -154,6 +155,23 @@ export default class RegisterEdit extends React.Component {
         });
     }
 
+    valthischeckBox = ()=> {
+        var checkboxs=document.getElementsByName("myTextEditBox");
+       
+        for(var i=0,l=checkboxs.length;i<l;i++)
+        {
+            if(checkboxs[i].checked)
+            {   this.setState({checkBoxError:false})
+                return true;
+                
+                break;
+            }
+        }
+        this.setState({checkBoxError:true})
+        return false; 
+       
+    }
+
     handleSumbit = async e => {
         console.log('handle');
         console.log(this.updateData);
@@ -161,38 +179,41 @@ export default class RegisterEdit extends React.Component {
         e.preventDefault();
         const errors = this.validate();//method return object looks like error 
         this.setState({ errors: errors || {} });//we render the object errors  in the setstate 
-        // if (errors) return;
+     console.log(this.state.errors);
         const id = this.props.id
         console.log("updsteData: ", this.updateData);
+ 
+      
+       
         const user = {
             name: this.state.account.name,
-            // status:this.state.account.status,
+          ///  status:this.state.account.status,
             username: this.state.account.username,
             phone: this.state.account.phone,
             // password: this.state.account.password,
             roles: this.updateData
-
+        
         };
-
-
+    
+     if(errors) return
+        if(this.valthischeckBox()){
+    
         try {
             const userUpdated = await putUser(id.id, user);
+        
             this.setState({ userEditedOK: true });
+        
+        
             console.log("the user: ", user);
+        
             console.log("the userUpdated: ", userUpdated);
-        } catch (error) {
+        
+         }  catch (error) {
             alert(error);
-        }
+        }}
 
-        // axios.put(`http://localhost:3001/users/${id.id}`, user)
-        //     .then(response => {
 
-        //         console.log(response)
-        //         console.log(response.data);
-        //     })
-        //     .catch(error => {
-        //         console.log(error)
-        //     })
+      
     };
     handleChange = (event, value, id) => {
         if (value === true) {
@@ -319,7 +340,12 @@ export default class RegisterEdit extends React.Component {
                             data={this.state.roles}
                             sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
                             className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</MyTable>
+         {
+                  this.state.checkBoxError && <div class="alert alert-danger" role="alert">
+                   Must choose at least one role 
 
+                    </div>
+                }
 
                     </fieldset>
 
