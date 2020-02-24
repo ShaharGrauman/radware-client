@@ -53,6 +53,7 @@ export default class ResearcherDashboard extends React.Component {
       page: 1 ,
       size: 20,
     };
+    
   }
 
   renderRedirect = page => {
@@ -100,11 +101,11 @@ export default class ResearcherDashboard extends React.Component {
 
   loadData = async(filter)=>{
     let requestURL;
-    this.setState({currentButton:filter});
-    console.log("current:"+this.state.currentButton);
-    console.log("clicked:"+this.state.clickedButton);
+    // this.setState({currentButton:filter});
+    console.log("current:",this.state.currentButton);
+    console.log("clicked:",this.state.clickedButton);
     console.log(this.state.nextClicked);
-    if(this.state.currentButton == filter){//to return to all when double clicking
+    if(this.state.currentButton == filter&&!this.state.nextClicked){//to return to all w  hen double clicking
       this.setState({currentButton:"all"}); // to set currentButton to all when clicking twice at button
       requestURL=`/signature/researcher`;
       this.setState({dataFilter:"All Signatures"}); 
@@ -113,9 +114,8 @@ export default class ResearcherDashboard extends React.Component {
       Object.keys(this.urlDetails).forEach(key=>requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`))
       requestURL.slice(1)
     }
-   
     console.log(requestURL)
-    const isClicked=this.state[filter]
+    // const isClicked=this.state[filter]
     // if(isClicked&&filter!='all'){
     //   this.setState({dataFilter:`${filter} Signature`,[filter]:false})
     //   this.setState({dataFilter:`${filter} Signature`,[filter]:true})
@@ -125,6 +125,7 @@ export default class ResearcherDashboard extends React.Component {
     // }
    
     const res = await getResearcher(requestURL);
+    console.log('res',res)
       this.setState({hasNext:res.hasNext,hasPrev:res.hasPrev})
       console.log(res.signatureData);
       if(res.signatureData.length == 0){
@@ -135,6 +136,7 @@ export default class ResearcherDashboard extends React.Component {
       }else{
         this.setState({data:res.signatureData});
       }
+
   } 
   
   selectButton=(value)=>{
@@ -271,13 +273,16 @@ export default class ResearcherDashboard extends React.Component {
                 {this.state.hasPrev?
                   <span className="fas" onClick={()=>{
                     this.urlDetails.page--;
-                    this.state.prevClicked = true;
+                    this.state.nextClicked = true;
+                    
+                    // this.state.prevClicked = true;
                     // if(this.urlDetails.page == 1){
-                    //   this.state.hasPrev = false;
+                      //   this.state.hasPrev = false;
                       
-                    // }
-                    this.state.nextClicked = false;
-                    this.loadData(this.state.currentButton);
+                      // }
+                      // this.state.nextClicked = false;
+                      this.loadData(this.state.currentButton);
+                      this.state.nextClicked = false;
                   }}>
                   <FontAwesomeIcon
                     icon={faArrowLeft}
@@ -293,10 +298,11 @@ export default class ResearcherDashboard extends React.Component {
               {this.state.hasNext?
                 <span className="fas" onClick={()=>{
                   this.state.nextClicked = true;
-                  this.state.prevClicked = false;
                   this.urlDetails.page++;
                   this.loadData(this.state.currentButton);
                   this.state.hasPrev = true;
+                  this.state.nextClicked = false;
+
                 }}>
                   Next
                   <FontAwesomeIcon
@@ -326,6 +332,8 @@ export default class ResearcherDashboard extends React.Component {
                       onClick={
                         ()=>{
                         this.selectButton("inProgress");
+                        this.setState({currentButton:'in_progress'});
+
                         this.loadData("in_progress");
                         }
                       }
@@ -340,6 +348,7 @@ export default class ResearcherDashboard extends React.Component {
                       onClick={()=>
                           {
                             this.selectButton("inTest");
+                            this.setState({currentButton:"in_test"});
                             this.loadData("in_test");
                             
                             // this.setState({this.urlDetails.page:1});
@@ -356,6 +365,7 @@ export default class ResearcherDashboard extends React.Component {
                       onClick={()=>
                         { 
                         this.selectButton("inQa");
+                        this.setState({currentButton:"in_qa"});
                         this.loadData("in_qa");
                         // this.setState({this.urlDetails.page:1});
                         }
@@ -373,6 +383,7 @@ export default class ResearcherDashboard extends React.Component {
                       onClick={()=>
                         {
                           this.selectButton("Published");
+                          this.setState({currentButton:"Published"});
                           this.loadData("Published");
                           // this.setState({this.urlDetails.page:1});
                         }
@@ -388,6 +399,7 @@ export default class ResearcherDashboard extends React.Component {
                       onClick={()=>
                         {
                           this.selectButton("Suspended");
+                          this.setState({currentButton:"Suspended"});
                           this.loadData("Suspended");
                           // this.setState({this.urlDetails.page:1});
                         }
