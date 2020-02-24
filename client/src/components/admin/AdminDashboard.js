@@ -1,11 +1,11 @@
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Redirect, withRouter, useHistory, useLocation, matchPath } from 'react-router-dom'
-import { getUsers,deleteUser } from '../../api/controllers/admin';
+import { getUsers, deleteUser } from '../../api/controllers/admin';
 import { Link } from 'react-router-dom';
-import MyTable from '../shared/MyTable';
+import AdminTable from '../shared/AdminTable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faLink, faWindowClose, faEdit, faCalculator, faTrash, faAlignCenter, faUser, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash,faUserPlus } from '@fortawesome/free-solid-svg-icons';
 
 class AdminDashboard extends React.Component {
   constructor(props) {
@@ -17,16 +17,14 @@ class AdminDashboard extends React.Component {
       newUserClicked: false
     }
   }
-  deleteUser = async(username) =>{
-    
-    try{
-      console.log(username);
-    alert("Are you sure?");
-    const usr = await deleteUser(username);
-    }catch(error){
+  deleteUser = async (username) => {
+    try {
+      alert("Are you sure?");
+      const usr = await deleteUser(username);
+    } catch (error) {
       console.log(error);
     }
-    
+
   }
   renderRedirect = page => {
     if (page === "newuser") {
@@ -51,16 +49,16 @@ class AdminDashboard extends React.Component {
     const users = await getUsers();
     const usersWithRoles = users.map(user => ({
       ...user,
-      roles: user.roles.map(role => role.description).join(', '),
+      roles: user.roles.map(role => role.name).join(', '),
       actions: [
         <button type="button" key={user.id + "edit"} title="Edit" className="btn btn-outline float-left "><Link to={`/edit_user/${user.id}`} ><FontAwesomeIcon className="fa-lg " icon={faEdit}> </FontAwesomeIcon></Link></button>,
-        <button type="button" key={user.id + "delete"} title="Delete" className="btn  btn-outline float-left" onClick ={()=> this.deleteUser(user.username)}><FontAwesomeIcon className="fa-lg " icon={faTrash}></FontAwesomeIcon></button>,
+        <button type="button" key={user.id + "delete"} title="Delete" className="btn  btn-outline float-left" onClick={() => this.deleteUser(user.username)}><FontAwesomeIcon className="fa-lg " icon={faTrash}></FontAwesomeIcon></button>,
       ]
     }));
 
-    this.setState({ 
-      orgUsers: usersWithRoles, 
-      users: usersWithRoles 
+    this.setState({
+      orgUsers: usersWithRoles,
+      users: usersWithRoles
     });
   }
 
@@ -100,11 +98,11 @@ class AdminDashboard extends React.Component {
           <div className=" ml-3 mr-3">
             <div className="row">
               <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
-                <MyTable
+                <AdminTable
                   header={this.tableHeaders}
                   data={this.state.users}
                   sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
-                  className="col-lg-12 col-md-12 col-sm-12 col-xs-12" ></MyTable>
+                  className="col-lg-12 col-md-12 col-sm-12 col-xs-12" ></AdminTable>
               </div>
             </div></div>
         </div>

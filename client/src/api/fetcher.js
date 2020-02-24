@@ -14,7 +14,7 @@ const getCookieData = () => {
 }
 
 const fetcher = axios.create({
-    baseURL: 'http://localhost:3000',
+    baseURL: 'https://heroku-radware-server.herokuapp.com',
     withCredentials: true
 });
 
