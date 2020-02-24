@@ -2,7 +2,7 @@ import React from "react";
 import { Redirect } from "react-router-dom";
 import { login } from '../../api/controllers/admin';
 import { setUser, getUser } from '../../api/controllers/auth';
-import Homepages from './Homepages';
+import Homepages from './homepages';
 
 export default class LogIn extends React.Component {
   constructor(props) {
