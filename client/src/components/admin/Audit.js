@@ -42,9 +42,12 @@ export default class Audit extends React.Component {
         })
 
     }
-    submitHandler = async e => {
-        this.setState({ page: 1 })
-        const result = await getAudit(this.state.event, this.state.users_names, this.state.orderby, 1, this.state.size, this.state.startdate, this.state.enddate, this.state.starttime, this.state.endtime);
+
+    async submitHandler (e, page) {
+        const result = await getAudit(this.state.event, this.state.users_names, this.state.orderby, page, this.state.size, this.state.startdate, this.state.enddate, this.state.starttime, this.state.endtime);
+        console.log("Result is: ", result);
+
+
         if (result.history.length < 1) this.setState({
             noResult: true,
             audit: [],
@@ -67,29 +70,7 @@ export default class Audit extends React.Component {
             });
         }
     }
-    submitPagingHandler = async e => {
-        const result = await getAudit(this.state.event, this.state.users_names, this.state.orderby, this.state.page, this.state.size, this.state.startdate, this.state.enddate, this.state.starttime, this.state.endtime);
-        if (result.history.length < 1) this.setState({
-            noResult: true,
-            audit: [],
-            hasNext: false,
-            hasPrev: false
-        });
-        const audit = result.history.map(data => ({
-            username: data.user.username,
-            action_name: data.action_name,
-            description: data.description,
-            lastupdated: data.date + "   " + data.time
-        }))
-        this.setState({
-            audit: audit,
-            hasNext: result.hasNext,
-            hasPrev: result.hasPrev,
-            noResult: false,
-            searchClicked: true
-        });
 
-    }
     onChangeHandler = (event, toChange) => {
         const target = event.target.value;
         switch (toChange) {
@@ -97,7 +78,12 @@ export default class Audit extends React.Component {
                 let user_name = target.replace(/\s+/g, '');
                 this.setState({ users_names: user_name });
                 break;
-            case "startdate": this.setState({ startdate: target }); break;
+            case "startdate":   this.setState({ startdate: target });
+                                let myDate = new Date(target);
+                                // myDate = myDate.getDate() + 60*60*24*1000;
+                                // myDate.setDate(myDate.getDate + 60*60*24*1000);
+                                console.log("my Date is: ", myDate);
+                                break;
             case "enddate": this.setState({ enddate: target }); break;
             case "starttime": this.setState({ starttime: target }); break;
             case "endtime": this.setState({ endtime: target }); break;
@@ -215,7 +201,7 @@ export default class Audit extends React.Component {
                                 <button
                                     type="submit"
                                     className="btn btn-primary"
-                                    onClick={this.submitHandler} style={{ width: "150px" }}>
+                                    onClick={event => { this.submitHandler(event,1);this.setState({page:1});}} style={{ width: "150px" }}>
                                     Search
                             </button>
 
@@ -243,8 +229,8 @@ export default class Audit extends React.Component {
                                         {this.state.hasPrev &&
                                             <span className="fas" className="noselect ml-5"
                                                 onClick={event => {
-                                                    this.state.page--;
-                                                    this.submitPagingHandler(event);
+                                                    this.submitHandler(event,--this.state.page);
+                                                    this.setState({page: this.state.page--});
                                                 }}>
                                                 <FontAwesomeIcon
                                                     icon={faArrowLeft}
@@ -259,8 +245,8 @@ export default class Audit extends React.Component {
                                     <div className="col-lg-3 col-sm-5 float-left">
                                         {this.state.hasNext &&
                                             <span className="fas" onClick={(event) => {
-                                                this.state.page++
-                                                this.submitPagingHandler(event);
+                                                this.submitHandler(event,++this.state.page);
+                                                this.setState({page: this.state.page++});
                                             }}>
                                                 Next{" "}
                                                 <FontAwesomeIcon
