@@ -18,7 +18,7 @@ function TableHeader(props) {
   );
 }
 
-export default class Table extends React.Component {
+export default class AdminTable extends React.Component {
   constructor(props) {
     super(props);
 

@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
-import EditUserDashbaord from './components/admin/EditUserDashbaord';
+import EditUserDetails from './components/admin/EditUserDetails';
 import NewUserDashbaord from './components/admin/NewUserDashboard';
 import AdminDashbaord from './components/admin/AdminDashboard';
 import NewRole from './components/admin/NewRole';
@@ -30,7 +30,7 @@ class App extends React.Component {
                 <ApplicationBar />
                 <Switch>
                     <Route path="/edit_user/:id">
-                        <EditUserDashbaord />
+                        <EditUserDetails />
                     </Route>
                     <Route path="/editrole/:id">
                         <EditRole />

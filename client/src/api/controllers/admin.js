@@ -17,7 +17,8 @@ const getRoles = async () => {
         throw error.message;
     }
 }
-const getRolesNew = async () => {
+
+const getRolesList = async () => {
     try {
         const { data } = await fetcher.get(`/users/roles`);
         return data;
@@ -25,6 +26,7 @@ const getRolesNew = async () => {
         throw error.message;
     }
 }
+
 const getRolesEdit = async (id) => {
     try {
         const { data } = await fetcher.get(`/users/${id}`);
@@ -69,7 +71,8 @@ const login = async (username, password) => {
         const { data } = await fetcher.post('/login', { username, password });
         return data;
     } catch (error) {
-        throw error.message;
+        console.log(error)
+        throw error.msg
     }
 }
 const getpermissionNew = async () => {
@@ -148,7 +151,7 @@ export {
     getUsers,
     login,
     getRoles,
-    getRolesNew,
+    getRolesList,
     getpermissionNew,
     postNewUser,
     postNewRole,
