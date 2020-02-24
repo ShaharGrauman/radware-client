@@ -10,10 +10,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRight,
   faArrowLeft,
-  faSearch
+  faSearch,
+  faEdit
 } from "@fortawesome/free-solid-svg-icons";
 
 import Table from '../../shared/Table';
+import ReportsTable from '../ReportsTable';
 
 export default class ResearcherDashboard extends React.Component {
  state={currentButton:"all"}
@@ -154,6 +156,33 @@ export default class ResearcherDashboard extends React.Component {
   }
 
   render() {
+    let newData=this.state.data.map(sig=>(
+      {      
+        ...sig,
+        Edit:<Link to={`/createOrEditSignature/${sig.id}`}>
+              <FontAwesomeIcon 
+                className="fa-lg float-left" 
+                icon={faEdit}  
+                style={{ color: 'blue',cursor:'pointer' }}
+                ></FontAwesomeIcon>
+              </Link>
+    }
+    ));
+
+    const testData={
+      tableStyle:{ //for the <table>
+        style:{ borderWidth: "3px",width:'100%' },
+        className:'table table-striped table-hover table-bordered border-dark'
+      },
+      
+      tableHeader:[
+        {value:'pattern_id' , valueToShow:'PatterID' , style:{width: "10%"}, sort:true},
+        {value:'description' , valueToShow:'description' , style:{width: "40%"} , sort:true},
+        {value:'Edit' , valueToShow:'Edit' , style:{width: "10%"} , sort:false},
+      ],
+      tableData:newData
+
+    }
 
     return (
       <div className='mx-3'>
@@ -230,7 +259,9 @@ export default class ResearcherDashboard extends React.Component {
           <div className="row">
             <div className="col-7">
             <div className="row">
-              <Table data= {this.state.data}/>
+              <ReportsTable data={testData } />
+
+              {/* <Table data= {this.state.data}/> */}
             </div>
             <div className="row mx-auto">
           <div className="col">
@@ -317,7 +348,7 @@ export default class ResearcherDashboard extends React.Component {
                     
                     >
                       <i className="fas fa-star-half-alt"></i> In test
-                      <Badge pill variant="info" className=" ml-3"> {this.state.signaturesCountByStatus[3].Count} </Badge>
+                      <Badge pill variant="info" className=" ml-3"> {this.state.signaturesCountByStatus[2].Count} </Badge>
                     </button>
                     <button
                       type="button"
@@ -331,7 +362,7 @@ export default class ResearcherDashboard extends React.Component {
                       }
                                           >
                       <i className="fas fa-star-half"></i> In QA
-                      <Badge pill variant="info" className=" ml-3"> {this.state.signaturesCountByStatus[2].Count} </Badge>
+                      <Badge pill variant="info" className=" ml-3"> {this.state.signaturesCountByStatus[3].Count} </Badge>
                     </button>
                   </div>
                   <div className="col">
@@ -348,7 +379,7 @@ export default class ResearcherDashboard extends React.Component {
                       }
                     >
                       <i className="far fa-star"></i> Published
-                      <Badge pill variant="info" className=" ml-3"> {this.state.signaturesCountByStatus[0].Count} </Badge>
+                      <Badge pill variant="info" className=" ml-3"> {this.state.signaturesCountByStatus[4].Count} </Badge>
                     </button>
                     <button
 

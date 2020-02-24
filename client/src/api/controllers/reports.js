@@ -2,8 +2,9 @@ import fetcher from '../fetcher';
 
 const updateQaDashboard = async (signatureIds) => {
     try {
-        const { data } = await fetcher.put('/Qa/dashboard', signatureIds)
-        console.log(signatureIds)
+        console.log(JSON.parse( signatureIds))
+        const { data } = await fetcher.put('/Qa/dashboard', JSON.parse(signatureIds))
+        // console.log(signatureIds)
         return data;
     } catch (error) {
         throw error.message;
