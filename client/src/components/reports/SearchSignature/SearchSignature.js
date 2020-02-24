@@ -268,7 +268,7 @@ class SearchSignature extends Component {
         <div className="row mx-auto">
           <div className="col-sm-12 col-md-11 mx-sm-1 mx-md-3 mx-lg-5 py-4">
             <Table data={this.state.tableData} sortDataByKey={this.sortArrByKey} />
-            <div className="row">
+            {/* <div className="row">
               <div className="col-1 col-sm-1 col-md-2 col-lg-3 mx-sm-1 mx-md-2 mx-lg-0"></div>
               <div className="col-3 col-sm-3 col-md-2 ml-5 " >
                 {this.state.hasPrev?
@@ -312,7 +312,7 @@ class SearchSignature extends Component {
             }
 
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

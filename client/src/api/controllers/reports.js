@@ -2,7 +2,7 @@ import fetcher from '../fetcher';
 
 const updateQaDashboard = async (signatureIds) => {
     try {
-        console.log(JSON.parse( signatureIds))
+        console.log('signatureIds for ayas',JSON.parse( signatureIds))
         const { data } = await fetcher.put('/Qa/dashboard', JSON.parse(signatureIds))
         // console.log(signatureIds)
         return data;
