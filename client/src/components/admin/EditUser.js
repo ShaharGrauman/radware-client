@@ -4,7 +4,6 @@ import React from 'react';
 import Table from './RolesDashboard';
 import AdminTable from '../shared/AdminTable';
 import Joi from 'joi-browser'
-import Input from './input';
 import { Redirect, Link } from 'react-router-dom'
 import axios from 'axios';
 import { putUser } from '../../api/controllers/admin';
@@ -64,7 +63,7 @@ export default class EditUser extends React.Component {
     }
 
     async componentDidMount() {
-        const data = await getRolesNew();
+        const data = await getRolesList();
         const { roles: userRoles } = this.props.user;
         userRoles.forEach(userRole => this.updateData.push(userRole.id));
         console.log("this.updateData ", this.updateData);
@@ -380,12 +379,12 @@ export default class EditUser extends React.Component {
                         <p className="ml-2">Select role :</p>
 
 
-                        <MyTable
+                        <AdminTable
                             header={this.tableHeaders}
                             // data={this.rolesData}
                             data={this.state.roles}
                             sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
-                            className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</MyTable>
+                            className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</AdminTable>
          {
                   this.state.checkBoxError && <div class="alert alert-danger" role="alert">
                    Must choose at least one role 
@@ -394,54 +393,6 @@ export default class EditUser extends React.Component {
                 }
 
                     </fieldset>
-// =======
-//                     <legend className="scheduler-border">Personal info</legend>
-//                     <div className="form-group mt-2 ml-2">
-//                         <label htmlFor="firstname"> Name : </label>
-//                         <Input className="form-control"
-//                             type="text"
-//                             id="name"
-//                             name="name"
-//                             value={this.state.account.name}
-//                             onChange={this.handleInputChange}
-//                             error={errors.name}
-//                         />
-//                     </div>
-
-//                     <div className="form-group ml-2">
-//                         <label htmlFor="Rphone">Phone :</label>
-//                         <Input className="form-control"
-//                             type="text"
-//                             id="phone"
-//                             name="phone"
-//                             value={this.state.account.phone}
-//                             onChange={this.handleInputChange}
-//                             error={errors.phone} />
-//                     </div>
-//                     <legend className="scheduler-border">User info</legend>
-//                     <div className="form-group ml-2">
-//                         <label htmlFor="Remail">Email address :</label>
-//                         <input className="form-control"
-//                             disabled="true"
-//                             type="email"
-//                             className="form-control"
-//                             id="username"
-//                             name="username"
-//                             placeholder="name@example.com"
-//                             value={this.state.account.username}
-//                             error={errors.username}
-//                             readOnly={true}
-//                         />
-//                         <small className="form-text text-muted">This will be used as username.</small>
-//                     </div>
-//                     <p className="ml-2">Select role :</p>
-
-//                     <AdminTable
-//                         header={this.tableHeaders}
-//                         data={this.state.roles}
-//                         sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
-//                         className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</AdminTable>
-// >>>>>>> master
 
                     <button className="btn btn-secondary btn-block" >Save</button>
                     <button type="button" onClick={() => this.renderRedirect("users")} className="btn btn-secondary  btn-block">Cancel</button>
