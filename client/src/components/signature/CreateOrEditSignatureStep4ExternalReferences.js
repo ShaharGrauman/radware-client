@@ -16,7 +16,7 @@ export default class CreateOrEditSignatureStep4ExternalReferences extends React.
       increment_index: 0,
       fields: {
         references: field({ name: 'references', value: '', isRequired: true, pattern: '^[0][5][0|2|3|4|5|9]{1}[-]{0,1}[0-9]{7}$' }),
-        webServer: field({ name: 'webServer', value: '', isRequired: true }),
+        webServer: field({ name: 'webServer', value: '', isRequired: false })
       }
     };
     this.webServerHeader = ['Web Server', 'Actions'];
@@ -62,9 +62,27 @@ export default class CreateOrEditSignatureStep4ExternalReferences extends React.
     }
   }
 
-  isAllValid = () => {
+  isAllValid = async () => {
+    const fields = {};
+
+    for await (const validateField of Object.keys(this.state.fields).map(field => this.validate(field, this.state.fields[field].value))) {
+      fields[validateField.name] = validateField;
+    }
+
+    this.setState({ fields });
     Object.keys(this.state.fields).forEach(field => this.validate(field, this.state.fields[field].value));
     return Object.keys(this.state.fields).every(field => !this.state.fields[field].isPristine && this.state.fields[field].errors.length == 0);
+  }
+
+  componentWillReceiveProps = (props, state) => {
+    const { signatureData } = props;
+    this.setState({
+      fields:
+      {
+        references: field({ name: 'references', value: '', isRequired: true, pattern: '^[0][5][0|2|3|4|5|9]{1}[-]{0,1}[0-9]{7}$' }),
+        webServer: field({ name: 'webServer', value: '', isRequired: false   })
+      }
+    });
   }
 
   render() {
