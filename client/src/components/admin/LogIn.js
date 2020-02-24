@@ -1,9 +1,8 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
-import {login} from '../../api/controllers/admin';
-
+import { login } from '../../api/controllers/admin';
 import { setUser, getUser } from '../../api/controllers/auth';
-import homepages from './homepages';
+import Homepages from './Homepages';
 
 export default class LogIn extends React.Component {
   constructor(props) {
@@ -29,12 +28,11 @@ export default class LogIn extends React.Component {
       if (this.state.role != '') {
         return <Redirect to={`/${this.state.role}`} />
       }
-      // return <Redirect to='./AdminDashboard' />
     }
   }
   resetRedirect = page => {
-    if( page === "resetpassword"){
-      this.setState({resetClicked :true})
+    if (page === "resetpassword") {
+      this.setState({ resetClicked: true })
     }
   }
   onBlur = ({ target: { name, value } }) => {
@@ -42,55 +40,31 @@ export default class LogIn extends React.Component {
       [name]: value
     });
   }
-  onSubmit = async e => { 
+  onSubmit = async e => {
     e.preventDefault();
-    const user = await login(this.state.username, this.state.password);
     try {
-      let role= user.roles[0].name;
-      console.log(user);
-      console.log(role);
+    const user = await login(this.state.username, this.state.password);
+      let role = user.roles[0].name;
       this.setState({ role: user.roles[0].name });
       this.setState({ errorMsg: '' });
-      
       setUser(user);
-
       window.location.reload();
     } catch (error) {
       this.setState({
-        errorMsg: user
+        errorMsg: error
       });
     }
   }
-  
-  setUser = user => {
-    
-  }
 
-  // componentDidMount() {
-  //   axios.get(`http://localhost:3000/login`, (req, res) => res.json()
-  //   ).then(res => {
-  //       const users = res.data.map(user => ({
-  //         ...user
-  //       }));
-  //       console.log(JSON.stringify(users));
-  //       this.setState({users: users });
-  //     });
-  // }
-  // onResetClick =() =>{
-  //   return <Link to = {`/ResetPassword/`}/>
-  // }
-
-  
   render() {
-    if(getUser()) return <Redirect to="/" />
+    if (getUser()) return <Redirect to="/" />
 
     if (this.state.role !== '') {
-      return homepages(this.state.role);
+      return Homepages(this.state.role);
     }
     return (
       <>
-          {/* {this.renderRedirect()} */}
-          {this.state.resetClicked && <Redirect to = '/resetpassword'/>}
+        {this.state.resetClicked && <Redirect to='/resetpassword' />}
         <div class="row">
           <div class="col"></div>
           <div class="col">
@@ -125,13 +99,11 @@ export default class LogIn extends React.Component {
                 {
                   this.state.errorMsg && <div class="alert alert-danger" role="alert">
                     {this.state.errorMsg}
-
-                    </div>
+                  </div>
                 }
                 <label >
-                  <button type="button" class="btn btn-link " onClick ={()=> this.resetRedirect("resetpassword")}> Reset Password </button>
+                  <button type="button" class="btn btn-link " onClick={() => this.resetRedirect("resetpassword")}> Reset Password </button>
                 </label>
-            
                 <button type="submit" class="btn btn-block btn-secondary">Sign In</button>
               </form>
             </div>
