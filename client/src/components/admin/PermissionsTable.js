@@ -1,7 +1,4 @@
 import React from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSort } from "@fortawesome/free-solid-svg-icons";
-import axios from 'axios';
 import { getpermissionNew } from '../../api/controllers/admin';
 
 
@@ -10,27 +7,16 @@ import { getpermissionNew } from '../../api/controllers/admin';
  * If permissions were dynamic, then how can we force its usage without changing the code?
  * So when a new permission is needed, it must be added here and whenever necessary on client/server code
  */
-function TableHeader(props) {
-  return (
-    <th scope="col">
-      {props.header}
-      <FontAwesomeIcon
-    icon={faSort}
-    onClick={() => props.sortOn(props.header)}
-  ></FontAwesomeIcon>
-    </th>
-  );
-}
 
 export default class PermissionsTable extends React.Component {
   constructor(props) {
     super(props);
-    
+
     this.state = {
       permissions: [],
       checkBoxError:false
     };
- 
+
   }
   async componentDidMount() {
     console.log(this.props.isEdit);
@@ -62,15 +48,16 @@ valthischeckBox = ()=> {
 
   render() {
     return (
-        <table className="table table-striped table-hover table-bordered border-dark"
-        style={{ borderWidth: "3px", textAlign:'center' }}>
+      <table className="table table-striped table-hover table-bordered border-dark"
+        style={{ borderWidth: "3px", textAlign: 'center' }}>
         <thead>
-            <tr class="m-0">
-                <th class="w-50">Avaliable permissions</th>
-                <th class="w-50">Select</th>
-            </tr>
+          <tr class="m-0">
+            <th class="w-50">Avaliable permissions</th>
+            <th class="w-50">Select</th>
+          </tr>
         </thead>
         <tbody>
+
             {
               this.state.permissions.map(p => <tr class="m-0">
                   <td class="w-25">{p.name}</td>
@@ -84,8 +71,9 @@ valthischeckBox = ()=> {
                   </td>
               </tr>)
             }
+
         </tbody>
-    </table>
+      </table>
     );
   }
 }

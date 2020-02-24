@@ -2,8 +2,9 @@ import fetcher from '../fetcher';
 
 const updateQaDashboard = async (signatureIds) => {
     try {
-        const { data } = await fetcher.put('/Qa/dashboard', signatureIds)
-        console.log(signatureIds)
+        console.log('signatureIds for ayas',JSON.parse( signatureIds))
+        const { data } = await fetcher.put('/Qa/dashboard', JSON.parse(signatureIds))
+        // console.log(signatureIds)
         return data;
     } catch (error) {
         throw error.message;
@@ -99,6 +100,14 @@ const getResearcher = async (requestURL) => {
         throw error.message;
     }
 }
+const cveidSearch = async (requestURL) => {
+    try {
+        const { data } = await fetcher.get(requestURL)
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
 export {
     updateQaDashboard,
     getQaDashboard,
@@ -108,5 +117,6 @@ export {
     exportSignaturesTofile,
     exportAllSignaturesTofile,
     getResearcher,
-    getSignatures
+    getSignatures,
+    cveidSearch
 };

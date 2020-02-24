@@ -1,6 +1,5 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom'
-import axios from 'axios';
 import { withRouter } from 'react-router-dom'
 import PermissionsTable from './PermissionsTable';
 import { postNewRole } from '../../api/controllers/admin';
@@ -23,6 +22,7 @@ class NewRole extends React.Component {
             role:[],
             isNewRole : true,  
             ifRoleCreated: false
+
         };
     }
 
@@ -65,6 +65,7 @@ class NewRole extends React.Component {
     }
 
     registerClick = async e => {
+
         try {
             e.preventDefault();
             const errors = this.validate();
@@ -72,6 +73,7 @@ class NewRole extends React.Component {
             this.setState({ errors: errors || {} });
             console.log(this.state.errors)
            // if (errors) return;
+
 
         let dataRole = {
             name: this.state.account.rolename,
@@ -91,17 +93,16 @@ class NewRole extends React.Component {
         catch (error) {
             alert(error);
         }
+
     }
 
-    async componentWillMount() {
+    async componentDidMount() {
         const id = this.props.match.params;
-        if(id){
-        this.setState({id});
-        console.log('id : ', id);
-        const data = await getRoleWithId(id.id);
-        // const {data} = await axios.get(`http://localhost:3001/users/${id.id}`);
-        this.setState({ role: data });
-        // console.log(this.state.user)
+        if (id) {
+            this.setState({ id });
+            const data = await getRoleWithId(id.id);
+            this.setState({ role: data });
+        }
     }
 }
 
@@ -194,11 +195,12 @@ handleeChange = ({ currentTarget: input }) => {
                                     {!this.state.permissions.length && <div class="alert alert-danger" role="alert">
                                     Please select at least 1 permission
                                 </div>}
+
                                 </fieldset>
                                 <button type="button" onClick={this.registerClick} className="btn btn-secondary btn-block" >Save</button>
                                 <button type="button" onClick={() => this.renderRedirect("users")} className="btn btn-secondary  btn-block">Cancel</button>
 
-                            </form> 
+                            </form>
                         </div>
                     </div>
                 </div>

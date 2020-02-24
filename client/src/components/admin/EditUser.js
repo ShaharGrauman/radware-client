@@ -1,13 +1,19 @@
 
+
 import React from 'react';
 import Table from './RolesDashboard';
-import MyTable from '../shared/MyTable';
+import AdminTable from '../shared/AdminTable';
 import Joi from 'joi-browser'
 import Input from './input';
 import { Redirect, Link } from 'react-router-dom'
 import axios from 'axios';
 import { putUser } from '../../api/controllers/admin';
-import { getRolesNew } from '../../api/controllers/admin';
+import { getRolesList } from '../../api/controllers/admin';
+import Input from './InputValidation';
+
+
+
+
 
 
 export default class EditUser extends React.Component {
@@ -22,6 +28,7 @@ export default class EditUser extends React.Component {
             userdata: [],
             userEditedOK: false,
             checkBoxError: false
+
         };
         this.handleChange = this.handleChange.bind(this);
         this.updateData = [];
@@ -44,6 +51,7 @@ export default class EditUser extends React.Component {
         name: Joi.string().required().label("Name"),
         phone: Joi.string().trim().regex(/[0-9]/).max(10).min(10).label('Phone Number'),
         username: Joi.string().required().email().label("Email"),
+
       //  password: Joi.string().min(6).max(20).required().label("password"),
     }
     isChecked = (event, id) => {
@@ -75,6 +83,7 @@ export default class EditUser extends React.Component {
         }
         console.log('tempData')
         console.log(selectedRoles)
+
         const roles = data.map(role => ({
             role: role.name,
             selected: <input id="checkbox" defaultChecked={userRoles.some(ur => ur.id == role.id)} type="checkbox" name="myTextEditBox" onChange={event => this.handleChange(event, event.target.checked, role.id)}></input>
@@ -82,6 +91,7 @@ export default class EditUser extends React.Component {
         this.setState({
             roles,
             selectedRoles,
+
             account: {
                 name: this.props.user.name,
                 username: this.props.user.username,
@@ -90,11 +100,13 @@ export default class EditUser extends React.Component {
         });
         console.log(selectedRoles);
         console.log({ roles });
+
     }
 
     onRoleSelect = roleId => {
         if (this.state.roles.includes(roleId)) {
             console.log('here')
+
             this.setState({
                 roles: [
                     ...this.state.roles.filter(pid => pid != roleId)
@@ -102,6 +114,7 @@ export default class EditUser extends React.Component {
             })
         } else {
             console.log('not here')
+
             this.setState({
                 roles: [...this.state.roles, roleId]
             });
@@ -117,8 +130,6 @@ export default class EditUser extends React.Component {
         { rolename: "Automation QA", selected: <input type="checkbox" name="myTextEditBox" value="checked" /> }
 
     ];
-
-
 
 
 
@@ -144,7 +155,9 @@ export default class EditUser extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+
         console.log('nextProps', nextProps);
+
         this.setState({
             account: {
                 name: nextProps.user.name,
@@ -154,6 +167,7 @@ export default class EditUser extends React.Component {
             roles: nextProps.user.roles
         });
     }
+
 
     valthischeckBox = ()=> {
         var checkboxs=document.getElementsByName("myTextEditBox");
@@ -228,6 +242,40 @@ export default class EditUser extends React.Component {
     }
 
     handleeChange = ({ currentTarget: input }) => {
+// =======
+//     handleSumbit = async e => {
+//         try {
+//         e.preventDefault();
+//         const errors = this.validate();
+//         this.setState({ errors: errors || {} });
+//         // if (errors) return;
+//         const id = this.props.id
+//         const user = {
+//             name: this.state.account.name,
+//             username: this.state.account.username,
+//             phone: this.state.account.phone,
+//             roles: this.updateData
+//         };
+
+//             const userUpdated = await putUser(id.id, user);
+//             this.setState({ userEditedOK: true });
+//         } catch (error) {
+//             alert(error);
+//             console.log(error.msg);
+//         }
+//     };
+
+//     handleChange = (event, value, id) => {
+//         if (value === true) {
+//             this.updateData.push(id);
+//         } else {
+//             var index = this.updateData.indexOf(id);
+//             this.updateData.splice(index, 1);
+//         }
+//     }
+
+//     handleInputChange = ({ currentTarget: input }) => {
+// >>>>>>> master
         const errors = { ...this.state.errors };
         const errorMessage = this.validateProperty(input);
         if (errorMessage) errors[input.name] = errorMessage;
@@ -238,8 +286,6 @@ export default class EditUser extends React.Component {
         this.setState({ account, errors });
         console.log(this.state.account)
     };
-
-
 
 
 
@@ -348,6 +394,54 @@ export default class EditUser extends React.Component {
                 }
 
                     </fieldset>
+// =======
+//                     <legend className="scheduler-border">Personal info</legend>
+//                     <div className="form-group mt-2 ml-2">
+//                         <label htmlFor="firstname"> Name : </label>
+//                         <Input className="form-control"
+//                             type="text"
+//                             id="name"
+//                             name="name"
+//                             value={this.state.account.name}
+//                             onChange={this.handleInputChange}
+//                             error={errors.name}
+//                         />
+//                     </div>
+
+//                     <div className="form-group ml-2">
+//                         <label htmlFor="Rphone">Phone :</label>
+//                         <Input className="form-control"
+//                             type="text"
+//                             id="phone"
+//                             name="phone"
+//                             value={this.state.account.phone}
+//                             onChange={this.handleInputChange}
+//                             error={errors.phone} />
+//                     </div>
+//                     <legend className="scheduler-border">User info</legend>
+//                     <div className="form-group ml-2">
+//                         <label htmlFor="Remail">Email address :</label>
+//                         <input className="form-control"
+//                             disabled="true"
+//                             type="email"
+//                             className="form-control"
+//                             id="username"
+//                             name="username"
+//                             placeholder="name@example.com"
+//                             value={this.state.account.username}
+//                             error={errors.username}
+//                             readOnly={true}
+//                         />
+//                         <small className="form-text text-muted">This will be used as username.</small>
+//                     </div>
+//                     <p className="ml-2">Select role :</p>
+
+//                     <AdminTable
+//                         header={this.tableHeaders}
+//                         data={this.state.roles}
+//                         sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
+//                         className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</AdminTable>
+// >>>>>>> master
 
                     <button className="btn btn-secondary btn-block" >Save</button>
                     <button type="button" onClick={() => this.renderRedirect("users")} className="btn btn-secondary  btn-block">Cancel</button>

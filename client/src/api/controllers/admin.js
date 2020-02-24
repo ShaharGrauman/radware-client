@@ -17,7 +17,8 @@ const getRoles = async () => {
         throw error.message;
     }
 }
-const getRolesNew = async () => {
+
+const getRolesList = async () => {
     try {
         const { data } = await fetcher.get(`/users/roles`);
         return data;
@@ -25,6 +26,7 @@ const getRolesNew = async () => {
         throw error.message;
     }
 }
+
 const getRolesEdit = async (id) => {
     try {
         const { data } = await fetcher.get(`/users/${id}`);
@@ -69,7 +71,8 @@ const login = async (username, password) => {
         const { data } = await fetcher.post('/login', { username, password });
         return data;
     } catch (error) {
-        throw error.message;
+        console.log(error)
+        throw error.msg
     }
 }
 const getpermissionNew = async () => {
@@ -103,6 +106,14 @@ const deleteUser = async (username) => {
     try {
         console.log("username in admin: ", username);
         const { data } = await fetcher.put('/users/delete_user', { username })
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
+const deleteRole = async (role) => {
+    try {
+        const { data } = await fetcher.put(`/role/delete/${role}`)
         return data;
     } catch (error) {
         throw error.message;
@@ -148,7 +159,7 @@ export {
     getUsers,
     login,
     getRoles,
-    getRolesNew,
+    getRolesList,
     getpermissionNew,
     postNewUser,
     postNewRole,
@@ -160,6 +171,7 @@ export {
     getRoleWithId,
     getAudit,
     putRole,
-    getConstant
+    getConstant,
+    deleteRole
 
 };

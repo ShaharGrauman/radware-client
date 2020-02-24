@@ -1,6 +1,6 @@
 import Cookies from 'js-cookie';
 
-const cookieName = 'loginDetails';
+const cookieName = 'radware';
 
 const getGuestUser = () => {
     return { userId: null, username: null, roles: [] };
