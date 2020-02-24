@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faUserTag } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import MyTable from '../shared/AdminTable';
-import { getRoles } from '../../api/controllers/admin';
+import { getRoles, deleteRole } from '../../api/controllers/admin';
 
 class RolesDashboard extends React.Component {
     constructor(props) {
@@ -44,12 +44,23 @@ class RolesDashboard extends React.Component {
                 <button type="button" key={role.id + "edit"} title="Edit" className="btn btn-outline float-left ">
                     <Link to={`/editrole/${role.id}`} params={role.id}><FontAwesomeIcon className="fa-lg "
                         icon={faEdit}> </FontAwesomeIcon></Link></button>,
-                <button type="button" key={role.id + "delete"} title="Delete" className="btn  btn-outline float-left" ><FontAwesomeIcon className="fa-lg " icon={faTrash}></FontAwesomeIcon></button>,
+                <button type="button" key={role.id + "delete"} title="Delete" className="btn  btn-outline float-left" onClick={() => this.deleteRole(role.id)}>
+                    <FontAwesomeIcon className="fa-lg " icon={faTrash}></FontAwesomeIcon></button>,
             ]
         }));
         this.setState({ orgRoles: roles, roles: roles });
     };
+    async deleteRole(id){
+        try {
+            alert("Are you sure?");
+            const role = await deleteRole(id);
+            const updatedRoles = this.state.roles.filter(function(element) { return element.id != id; });
+            this.setState({roles: updatedRoles})
+          } catch (error) {
+            console.log(error);
+          }
 
+    }
     tableHeaders = [
         { key: "id", value: "ID", toSort: true, sortOrder: true },
         { key: "name", value: "Role name", toSort: true, sortOrder: true },

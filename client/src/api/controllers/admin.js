@@ -111,6 +111,14 @@ const deleteUser = async (username) => {
         throw error.message;
     }
 }
+const deleteRole = async (role) => {
+    try {
+        const { data } = await fetcher.put(`/role/delete/${role}`)
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
 const putUpdatePassword = async (username, tempPwd, newPwd) => {
     try {
         const { data } = await fetcher.put('/login/resetPassword', { username, tempPwd, newPwd })
@@ -163,6 +171,7 @@ export {
     getRoleWithId,
     getAudit,
     putRole,
-    getConstant
+    getConstant,
+    deleteRole
 
 };
