@@ -33,7 +33,7 @@ export default class Register extends React.Component {
     schema = {
         name: Joi.string().required().label("Firstname"),
         //lastname: Joi.string().required().label("Lastname"),
-        phone: Joi.string().trim().regex(/[0-9]/).max(10).min(10).label('Phone Number'),
+        phone: Joi.string().trim().regex(/^[0-9]{10}$/).max(10).min(10).label('Phone Number'),
         username: Joi.string().required().email().label("Email"),
         // password: Joi.string().required().min(5).alphanum().label("Password"),
         password: Joi.string().min(6).max(20).required().label("password")
@@ -182,8 +182,7 @@ render() {
             </div>
           </div>
             <form className="ml-3" onSubmit={this.handleSumbit}>
-                <fieldset className="scheduler-border">
-                    <legend className="scheduler-border font-weight-light">Personal info</legend>
+                    <legend className="scheduler-border font-weight-light ml-2">Personal info</legend>
                     <div className="form-group mt-2 ml-2">
                         <label htmlFor="firstname"> Name : </label>
                         <Input className="form-control"
@@ -205,9 +204,8 @@ render() {
                             onChange={this.handleeChange}
                             error={errors.phone} />
                     </div>
-                </fieldset>
                 <fieldset className="scheduler-border">
-                    <legend className="scheduler-border font-weight-light">User info</legend>
+                    <legend className="scheduler-border font-weight-light ml-2">User info</legend>
                     <div className="form-group ml-2">
                         <label htmlFor="Remail">Email address :</label>
                         <Input className="form-control"
