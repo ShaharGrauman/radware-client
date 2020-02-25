@@ -33,10 +33,10 @@ constructor(props) {
     //     {key:'1990-004' , number:4}
     // ];
     this.CveIdReportData=[
-        {cveid:'2000-001' , quantity:3},
-        // {cveid:'2000-002' , quantity:7},
+        {cveid:'2030-0015156' , quantity:3},
+        {cveid:'2000-002' , quantity:7},
         // {cveid:'2000-003' , quantity:2},
-        // {cveid:'1990-004' , quantity:4}
+        {cveid:'1990-004' , quantity:4}
     ];
 
     // this.CveIdReportData=[
@@ -106,13 +106,27 @@ constructor(props) {
   }
 }
 
-openCveId= key =>{
+openCveId= cveid =>{
+  const [year,key]=cveid.split('-')
+  console.log('URL',`signature/cveid?year=${year}&serial=${key}`)
+  // try{
+       
+  //   console.log('this.onSearchText',this.onSearchText)
+    
+  //     // const signatures= await cveidSearch(`signature/cveid?year=${this.onSearchText}&serial=${cveid.slice(4)}`)
+  //      console.log(response)
+  //   }catch(error){
+
+  //   this.setState({
+  //     errorMsg: 'ERROR'
+  //   });
+  // }
 
     const data=this.state.TableData;
     console.log('befor: ',data)
-    // if(!data.includes(key)){
+    // if(!data.includes(cveid)){
     data.map(cveidData=>
-      cveidData.cveid==key?
+      cveidData.cveid==cveid?
             !cveidData.hasOwnProperty('signatures')?
             cveidData['signatures']=this.signatures.slice(0,cveidData.quantity):
             delete cveidData.signatures
