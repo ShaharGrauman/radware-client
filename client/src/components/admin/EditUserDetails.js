@@ -24,11 +24,11 @@ class EditUserDetails extends React.Component {
         return (
             <>
                 <div className="container">
-                    <div className="row mt-2">
+                    {/* <div className="row mt-2">
                         <div className="col-md-12">
                             <h1>Edit User</h1>
                         </div>
-                    </div>
+                    </div> */}
                     {
                     this.state.user && 
                         <div className="row">
