@@ -44,7 +44,7 @@ export default class EditUser extends React.Component {
 
     schema = {
         name: Joi.string().required().label("Name"),
-        phone: Joi.string().trim().regex(/[0-9]/).max(10).min(10).label('Phone Number'),
+        phone: Joi.string().trim().regex(/^[0-9]{10}$/).max(10).min(10).label('Phone Number'),
         username: Joi.string().required().email().label("Email"),
 
       //  password: Joi.string().min(6).max(20).required().label("password"),

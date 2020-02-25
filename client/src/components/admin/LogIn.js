@@ -43,8 +43,8 @@ export default class LogIn extends React.Component {
   }
   onSubmit = async e => {
     e.preventDefault();
-    try {
     const user = await login(this.state.username, this.state.password);
+    try {
       let role = user.roles[0].name;
       this.setState({ role: user.roles[0].name });
       this.setState({ errorMsg: '' });
@@ -52,7 +52,7 @@ export default class LogIn extends React.Component {
       window.location.reload();
     } catch (error) {
       this.setState({
-        errorMsg: error
+        errorMsg: user
       });
     }
   }
