@@ -121,7 +121,7 @@ handleeChange = ({ currentTarget: input }) => {
         const { account, errors } = this.state;
         if (this.state.ifRoleCreated) {
             return (
-                <NotificationIsCreated page={'Role'} />
+                <NotificationIsCreated ifRoleCreated = {this.state.ifRoleCreated} />
             )
         }
         return (
