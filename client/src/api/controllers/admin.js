@@ -72,7 +72,7 @@ const login = async (username, password) => {
         return data;
     } catch (error) {
         console.log(error)
-        throw error.msg
+        throw error.message
     }
 }
 const getpermissionNew = async () => {

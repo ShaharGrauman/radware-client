@@ -7,11 +7,11 @@ export default class NewUserDashboard extends React.Component {
     return (
       <>
         <div className="container">
-          <div className="row mt-2">
+          {/* <div className="row mt-2">
             <div className="col-6 ml-4">
               <h1>New User</h1>
             </div>
-          </div>
+          </div> */}
           <div className="col-md-12">
             <Register />
           </div>

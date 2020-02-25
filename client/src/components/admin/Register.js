@@ -170,12 +170,17 @@ render() {
     const { account, errors } = this.state;
     if (this.state.ifUserCreated) {
         return (
-            <NotificationIsCreated page={'User'} />
+            <NotificationIsCreated ifUserCreated = {this.state.ifUserCreated} />
         )
     }
     return (
         <>
             {this.state.cancelClicked && <Redirect to='/users' />}
+            <div className="row mt-2">
+            <div className="col-6 ml-4">
+              <h1>New User</h1>
+            </div>
+          </div>
             <form className="ml-3" onSubmit={this.handleSumbit}>
                 <fieldset className="scheduler-border">
                     <legend className="scheduler-border font-weight-light">Personal info</legend>

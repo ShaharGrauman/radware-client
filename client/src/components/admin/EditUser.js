@@ -9,11 +9,7 @@ import axios from 'axios';
 import { putUser } from '../../api/controllers/admin';
 import { getRolesList } from '../../api/controllers/admin';
 import Input from './InputValidation';
-
-
-
-
-
+import NotificationIsCreated from './NotificationIsCreated';
 
 export default class EditUser extends React.Component {
 
@@ -290,21 +286,20 @@ export default class EditUser extends React.Component {
 
     render() {
         const { account, errors } = this.state;
-
         if (this.state.userEditedOK) {
-            return (
-                <div class="jumbotron jumbotron-fluid">
-                    <div class="container">
-                        <h1 class="display-4">User Updated</h1>
-                        <p class="lead">Successfully</p>
-                        <Link to='/users'>Go back to Users page</Link>
-                    </div>
-                </div>
-            )
+            console.log(this.state.userEditedOK)
+            return(
+                <NotificationIsCreated userEditedOK = {this.state.userEditedOK}/>
+                )
         }
         return (
             <>
                 {this.state.cancelClicked && <Redirect to='/users' />}
+                <div className="row mt-2">
+                        <div className="col-md-12">
+                            <h1>Edit User</h1>
+                        </div>
+                    </div>
                 <form className="ml-3" onSubmit={this.handleSumbit}>
 
 

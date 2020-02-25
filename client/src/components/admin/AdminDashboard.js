@@ -5,7 +5,10 @@ import { getUsers, deleteUser } from '../../api/controllers/admin';
 import { Link } from 'react-router-dom';
 import AdminTable from '../shared/AdminTable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash,faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faTrash, faUserPlus } from '@fortawesome/free-solid-svg-icons';
+import NotificationIsCreated from './NotificationIsCreated';
+import Modal from './Modal/Modal';
+import Backdrop from './Backdrop/Backdrop';
 
 class AdminDashboard extends React.Component {
   constructor(props) {
@@ -14,13 +17,35 @@ class AdminDashboard extends React.Component {
       orgUsers: [],
       users: [],
       id: 0,
-      newUserClicked: false
+      newUserClicked: false,
+      deleteUserClicked: false,
+      modalIsOpen: false,
+      deleteUser:'',
+      ifUserDeleted:false,
     }
+  }
+
+  showModal = () => {
+
+  }
+
+  closeModal = () => {
+    this.setState({ modalIsOpen: false });
+  }
+
+  ifClickedDeleteUser = (id) => {
+    this.setState({ modalIsOpen: true ,
+                    deleteUser: id});
+    
+  }
+  clickDeleteUser = () => {
+    this.deleteUser(this.state.deleteUser);
   }
   deleteUser = async (username) => {
     try {
-      alert("Are you sure?");
-      const usr = await deleteUser(username);
+      await deleteUser(username);
+      this.setState({ifUserDeleted:true})
+      console.log(this.state.ifUserDeleted); 
     } catch (error) {
       console.log(error);
     }
@@ -52,7 +77,7 @@ class AdminDashboard extends React.Component {
       roles: user.roles.map(role => role.name).join(', '),
       actions: [
         <button type="button" key={user.id + "edit"} title="Edit" className="btn btn-outline float-left "><Link to={`/edit_user/${user.id}`} ><FontAwesomeIcon className="fa-lg " icon={faEdit}> </FontAwesomeIcon></Link></button>,
-        <button type="button" key={user.id + "delete"} title="Delete" className="btn  btn-outline float-left" onClick={() => this.deleteUser(user.username)}><FontAwesomeIcon className="fa-lg " icon={faTrash}></FontAwesomeIcon></button>,
+        <button type="button" key={user.id + "delete"} title="Delete" className="btn  btn-outline float-left" onClick={() => this.ifClickedDeleteUser(user.username)}><FontAwesomeIcon className="fa-lg " icon={faTrash}></FontAwesomeIcon></button>,
       ]
     }));
 
@@ -74,6 +99,21 @@ class AdminDashboard extends React.Component {
 
   render() {
 
+    if(this.state.ifUserDeleted){
+      console.log(this.state.ifUserDeleted);
+      return(
+        <NotificationIsCreated ifUserDeleted = {this.state.ifUserDeleted}/>
+      )
+    }
+    if (this.state.modalIsOpen) {
+      return (
+        <div>
+          <Modal show={this.state.modalIsOpen} closed={this.closeModal} clickDeleteUser={this.clickDeleteUser} />
+          <Backdrop show={this.state.modalIsOpen} />
+        </div>
+      )
+    }
+ 
     return (
       <>
         <div>
