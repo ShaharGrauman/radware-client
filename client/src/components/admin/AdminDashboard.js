@@ -60,14 +60,23 @@ class AdminDashboard extends React.Component {
 
   SortByKey(sortKey) {
     let sorted;
-    if (sortKey.sortOrder)
-      sorted = this.state.users.sort((a, b) => a[sortKey.key] > b[sortKey.key] ? 1 : -1);
-
+    if(sortKey.key != "id" && sortKey.key != "phone" ){
+      if (sortKey.sortOrder)
+      sorted = this.state.users.sort((a, b) => a[sortKey.key].toLowerCase() > b[sortKey.key].toLowerCase() ? 1 : -1);
     else
-      sorted = this.state.users.sort((a, b) => a[sortKey.key] < b[sortKey.key] ? 1 : -1);
+      sorted = this.state.users.sort((a, b) => a[sortKey.key].toLowerCase() < b[sortKey.key].toLowerCase() ? 1 : -1);
+    }
+    else{
+      if (sortKey.sortOrder)
+      sorted = this.state.users.sort((a, b) => a[sortKey.key] > b[sortKey.key] ? 1 : -1);
+    else
+      sorted = this.state.users.sort((a, b) => a[sortKey.key] < b[sortKey.key] ? 1 : -1); 
+    }
     sortKey.sortOrder = !sortKey.sortOrder;
     this.setState({ users: sorted })
   }
+
+  
   showDeletedUsers = async e => {
     await this.setState({showDeletedUsersClicked: !this.state.showDeletedUsersClicked})
     if(this.state.showDeletedUsersClicked){
