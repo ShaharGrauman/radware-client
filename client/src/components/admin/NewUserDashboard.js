@@ -12,9 +12,9 @@ export default class NewUserDashboard extends React.Component {
               <h1>New User</h1>
             </div>
           </div> */}
-          <div className="col-md-12">
+          {/* <div className="col-md-12"> */}
             <Register />
-          </div>
+          {/* </div> */}
         </div>
       </>
     );

@@ -32,12 +32,12 @@ class EditUserDetails extends React.Component {
                     {
                     this.state.user && 
                         <div className="row">
-                            <div className="col-md-12">
+                            {/* <div className="col-md-12"> */}
                                 <EditUser 
                                 id={this.state.id}
                                 user={this.state.user}
                                 />
-                            </div>
+                            {/* </div> */}
                         </div>
                     }
                 </div>
