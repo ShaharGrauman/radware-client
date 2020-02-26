@@ -17,6 +17,7 @@ import CveIdReport from './components/reports/CveIdReport/CveIdReport';
 
 import ResetPassword from './components/admin/ResetPassword';
 import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
+import CreatetSignature from './components/signature/CreatetSignature'
 import ResearcherDashboard from './components/reports/SearchSignature/ResearcherDashboard';
 import Export from './components/reports/SearchSignature/Export';
 import AttacksOrSeverityChart from './components/reports/AttacksOrSeverityChart/AttacksOrSeverityChart';
@@ -74,6 +75,9 @@ class App extends React.Component {
                     </Route>
                     <Route path="/createOrEditSignature">
                         <CreateOrEditSignatureWizard />
+                    </Route>
+                    <Route path="/createSignature"> 
+                        <CreatetSignature/>
                     </Route>
                     <Route path="/QaDashboard">
                         <QaDashboard />

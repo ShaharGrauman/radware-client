@@ -64,7 +64,7 @@ export default class NotificationIsCreated extends React.Component {
                     </div>
                     <div>
                         {this.state.isAdmminClicked && <Redirect to='/researcher-dashboard/'/>}
-                        {this.state.isNewClicked && <Redirect to='/createOrEditSignature/'/>}
+                        {this.state.isNewClicked && <Redirect to='/createSignature/'/>}
                     </div>
                 
                 </div>
