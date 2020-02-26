@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import AdminTable from '../shared/AdminTable';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faUserPlus } from '@fortawesome/free-solid-svg-icons';
-import NotificationIsCreated from './NotificationIsCreated';
 import Modal from './Modal/Modal';
 import Backdrop from './Backdrop/Backdrop';
 
@@ -24,7 +23,7 @@ class AdminDashboard extends React.Component {
       showDeletedUsersClicked: false,
       modalIsOpen: false,
       deleteUser:'',
-      ifUserDeleted:false,
+      message: 'a'
     }
   }
 
@@ -39,12 +38,13 @@ class AdminDashboard extends React.Component {
   }
   clickDeleteUser = () => {
     this.deleteUser(this.state.deleteUser);
+    this.setState({ modalIsOpen: false })
   }
   deleteUser = async (username) => {
     try {
       await deleteUser(username);
-      this.setState({ifUserDeleted:true})
-      console.log(this.state.ifUserDeleted); 
+      const updatedUsers = this.state.users.filter(function (element) { return element.username != username; });
+      this.setState({ users: updatedUsers })
     } catch (error) {
       console.log(error);
     }
@@ -125,18 +125,13 @@ class AdminDashboard extends React.Component {
   { key: "actions", value: "", toSort: false, sortOrder: true }
 
   ];
-  render() {
 
-    if(this.state.ifUserDeleted){
-      console.log(this.state.ifUserDeleted);
-      return(
-        <NotificationIsCreated ifUserDeleted = {this.state.ifUserDeleted}/>
-      )
-    }
+  
+  render() {
     if (this.state.modalIsOpen) {
       return (
         <div>
-          <Modal show={this.state.modalIsOpen} closed={this.closeModal} clickDeleteUser={this.clickDeleteUser} />
+          <Modal show={this.state.modalIsOpen} closed={this.closeModal} clickDelete={this.clickDeleteUser} />
           <Backdrop show={this.state.modalIsOpen} />
         </div>
       )
