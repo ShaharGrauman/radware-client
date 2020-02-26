@@ -18,19 +18,18 @@ import CreateOrEditSignatureStep7Analytics from './SignatureLifeCycleAnalytics';
 import Modal from './Modal/Modal.js'
 import Backdrop from './Backdrop/Backdrop.js';
 
-import { validateStep1 } from '../shared/validations/signature';
 const stepsIndexesContainingCreateWithDefaultsButton = [2, 3];
 
 const valueBySeverity = {
-    'low': 0,
-    'medium': 50,
-    'high': 100
+    'Low': 0,
+    'Medium': 50,
+    'High': 100
 };
 
 const severityByValue = {
-    0: 'low',
-    50: 'medium',
-    100: 'high'
+    0: 'Low',
+    50: 'Medium',
+    100: 'High'
 };
 
 class CreateOrEditSignatureWizard extends Component {
@@ -79,23 +78,13 @@ class CreateOrEditSignatureWizard extends Component {
         this.step3ref = React.createRef();
         this.step4ref = React.createRef();
     }
-    
+
     showModal = () => {
         this.setState({ modalIsOpen: true });
     }
 
     closeModal = () => {
         this.setState({ modalIsOpen: false });
-    }
-    
-    onBlur = ({ target: { name, value } }) => {
-        const errors = validateStep1({ [name]: value });
-        this.setState({
-            errors: {
-                ...this.state.errors,
-                [name]: errors
-            }
-        });
     }
 
     onChangeHandler = event => {
@@ -128,14 +117,12 @@ class CreateOrEditSignatureWizard extends Component {
                 }
                 break;
             default:
-                this.setState({ currentStep: this.state.currentStep + 1});
+                this.setState({ currentStep: this.state.currentStep + 1 });
                 break;
         }
     }
 
     setIsValidStep = isValidStep => {
-        console.log('in set is valid step ', this.state.isValidStep);
-        // this.props.checkValid();
         this.setState({ isValidStep: isValidStep });
     }
 
@@ -164,8 +151,6 @@ class CreateOrEditSignatureWizard extends Component {
     }
 
     mapStateToApiInput = () => {
-        const now = new Date().toLocaleString("he-IL").split(', ');
-
         let vuln_data = '', type = '', signature = this.state.signatureData;
 
         if (signature.simpleOrExtendedText === 'ExtendedText') type = 'vuln_ex';
@@ -179,8 +164,6 @@ class CreateOrEditSignatureWizard extends Component {
 
         const createSignatureInput = {
             type: type,
-            creation_time: now[1],
-            creation_date: now[0],
             status: this.state.signatureData.status,
             vuln_data: this.state.signatureData.vuln_data,
             keep_order: this.state.signatureData.keep_order,
@@ -205,7 +188,7 @@ class CreateOrEditSignatureWizard extends Component {
             web_servers: this.state.signatureData.web_servers,
             signature_status_histories: this.state.signature_status_histories
         };
-        
+
         return createSignatureInput;
     }
 
@@ -238,9 +221,6 @@ class CreateOrEditSignatureWizard extends Component {
 
     mapApiResultToState = retrievedSignature => {
         const mappedSignature = {
-            // id: retrievedSignature.id,
-            //user_id: retrievedSignature.user_id,
-            // pattern_id: retrievedSignature.pattern_id,
             type: retrievedSignature.type,
             status: retrievedSignature.status,
             vuln_data: retrievedSignature.vuln_data,
@@ -273,16 +253,16 @@ class CreateOrEditSignatureWizard extends Component {
     }
 
     createWithDefaultsButtonClick = async () => {
-            try {
-                const createSignatureInput = this.mapStateToApiInput();
-                await createSignatureWithDefaults(createSignatureInput);
-                this.setState({ isCreateSignature: true });
-            } catch (error) {
-                this.setState({
-                    isErrorSignature: true,
-                    errors: error
-                })
-            }
+        try {
+            const createSignatureInput = this.mapStateToApiInput();
+            await createSignatureWithDefaults(createSignatureInput);
+            this.setState({ isCreateSignature: true });
+        } catch (error) {
+            this.setState({
+                isErrorSignature: true,
+                errors: error
+            })
+        }
     }
 
     toggleshowRegularInStep2 = () => {
@@ -298,8 +278,7 @@ class CreateOrEditSignatureWizard extends Component {
         this.setState({ left_index: this.state.signatureData.left_index = leftIndex })
         this.setState({ right_index: this.state.signatureData.right_index = rightIndex })
     }
-
-    // REMOVE WHEN DISABLING CONTROL STEPS
+    
     setCurrentStep = currentStep => {
         this.setState({ currentStep: currentStep });
     }
@@ -310,23 +289,23 @@ class CreateOrEditSignatureWizard extends Component {
         //  this.setState({ifCancelButton:true})
         // {this.state.ifCancelButton && <Redirect to='/researcher-dashboard' />}
     }
-    
+
     clickYesUpdated = () => {
         this.setState({ ifValidUpdate: true });
         this.updateSignatureButton()
     }
-    
+
     updateSignatureButton = async () => {
         try {
             const createSignatureInput = this.mapStateToApiInput(this.state.signatureData);
             await updateSignature(this.props.match.params.id, createSignatureInput);
             this.setState({ isUpdatSignature: true })
-            } catch (error) {
-                this.setState({
-                    isErrorSignature: true,
-                    errors: error
-                });
-            }
+        } catch (error) {
+            this.setState({
+                isErrorSignature: true,
+                errors: error
+            });
+        }
     }
 
     render() {
@@ -339,7 +318,7 @@ class CreateOrEditSignatureWizard extends Component {
             <CreateOrEditSignatureStep6History signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} isCancelResarcherDashboard={this.isCancelResarcherDashboard} showModal={this.showModal} />,
             <CreateOrEditSignatureStep7Analytics signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} />
         ];
-       
+
         if (this.state.isCreateSignature || this.state.isUpdatSignature || this.state.isErrorSignature) {
             return (<NotificationIsCreated isCreateSignature={this.state.isCreateSignature}
                 isUpdatSignature={this.state.isUpdatSignature}
@@ -355,7 +334,7 @@ class CreateOrEditSignatureWizard extends Component {
                 </div>
             );
         }
-        
+
         return (
             <div style={{ margin: '20px' }}>
                 <ControlSteps currentStep={this.state.currentStep} setCurrentStep={this.setCurrentStep} isUpdateSignature={this.props.match.params.id} />
