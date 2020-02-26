@@ -222,6 +222,8 @@ class CreateOrEditSignatureWizard extends Component {
     mapApiResultToState = retrievedSignature => {
         const mappedSignature = {
             type: retrievedSignature.type,
+            creation_time: retrievedSignature.creation_time,
+            creation_date: retrievedSignature.creation_date,
             status: retrievedSignature.status,
             vuln_data: retrievedSignature.vuln_data,
             showRegularInStep2: retrievedSignature.showRegularInStep2,
