@@ -108,6 +108,15 @@ const cveidSearch = async (requestURL) => {
         throw error.message;
     }
 }
+const getSigByAttacks = async ()  => {
+    try {
+        const { data } = await fetcher.get('/signature/attacks')
+        console.log(data)
+        return data;
+    } catch (error) {
+        throw error.message;
+    }
+}
 export {
     updateQaDashboard,
     getQaDashboard,
@@ -118,5 +127,7 @@ export {
     exportAllSignaturesTofile,
     getResearcher,
     getSignatures,
-    cveidSearch
+    cveidSearch,
+    getSigByAttacks
+    
 };
