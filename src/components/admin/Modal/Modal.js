@@ -10,9 +10,9 @@ const modal = props => {
 
   return (
     <div className={cssClasses.join(' ')}>
-      <h5 className="text-danger">Are you sure to delete the user ?</h5>
+      <h5 className="text-danger">Are you sure ?</h5>
       <div>
-         <button type="button" class="btn btn-outline-danger btn-block mb-2" onClick={props.clickDeleteUser}>Yes</button>
+         <button type="button" class="btn btn-outline-danger btn-block mb-2" onClick={props.clickDelete}>Yes</button>
       </div>
        <div>
            <button type="button" class="btn btn-outline-secondary btn-block" onClick={props.closed}>Cancel</button>

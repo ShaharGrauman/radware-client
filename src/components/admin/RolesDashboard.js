@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faUserTag } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import AdminTable from '../shared/AdminTable';
+import Modal from './Modal/Modal';
+import Backdrop from './Backdrop/Backdrop';
 import { getRoles, deleteRole } from '../../api/controllers/admin';
 
 class RolesDashboard extends React.Component {
@@ -14,7 +16,9 @@ class RolesDashboard extends React.Component {
             roles: [],
             orgRoles: [],
             newRoleClicked: false,
-            id: 0
+            id: 0,
+            modalIsOpen: false,
+            deleteRole: ''
         }
     }
     renderRedirect = page => {
@@ -53,7 +57,7 @@ class RolesDashboard extends React.Component {
                 <button type="button" key={role.id + "edit"} title="Edit" className="btn btn-outline float-left ">
                     <Link to={`/editrole/${role.id}`} params={role.id}><FontAwesomeIcon className="fa-lg "
                         icon={faEdit}> </FontAwesomeIcon></Link></button>,
-                <button type="button" key={role.id + "delete"} title="Delete" className="btn  btn-outline float-left" onClick={() => this.deleteRole(role.id)}>
+                <button type="button" key={role.id + "delete"} title="Delete" className="btn  btn-outline float-left" onClick={() => this.ifClickedDeleteRole(role.id)}>
                     <FontAwesomeIcon className="fa-lg " icon={faTrash}></FontAwesomeIcon></button>,
             ]
         }));
@@ -61,7 +65,6 @@ class RolesDashboard extends React.Component {
     };
     async deleteRole(id) {
         try {
-            alert("Are you sure?");
             const role = await deleteRole(id);
             const updatedRoles = this.state.roles.filter(function (element) { return element.id != id; });
             this.setState({ roles: updatedRoles })
@@ -70,6 +73,19 @@ class RolesDashboard extends React.Component {
         }
 
     }
+    closeModal = () => {
+        this.setState({ modalIsOpen: false });
+      }
+    
+      ifClickedDeleteRole = (id) => {
+        this.setState({ modalIsOpen: true ,
+                        deleteRole: id});
+        
+      }
+      clickDeleteRole = () => {
+        this.deleteRole(this.state.deleteRole);
+        this.setState({ modalIsOpen: false })
+      }
     tableHeaders = [
         { key: "id", value: "ID", toSort: true, sortOrder: true },
         { key: "name", value: "Role name", toSort: true, sortOrder: true },
@@ -79,6 +95,14 @@ class RolesDashboard extends React.Component {
     ];
 
     render() {
+        if (this.state.modalIsOpen) {
+            return (
+              <div>
+                <Modal show={this.state.modalIsOpen} closed={this.closeModal} clickDelete={this.clickDeleteRole} />
+                <Backdrop show={this.state.modalIsOpen} />
+              </div>
+            )
+          }
         return (
             <>
                 <div>
