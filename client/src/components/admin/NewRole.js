@@ -21,7 +21,8 @@ class NewRole extends React.Component {
             id:[],
             role:[],
             isNewRole : true,  
-            ifRoleCreated: false
+            ifRoleCreated: false,
+            checkBoxError:false
         };
     }
     schema = {
@@ -56,7 +57,7 @@ class NewRole extends React.Component {
             const errors = this.validate();
               //method return object looks like error 
             this.setState({ errors: errors || {} });
-            console.log(this.state.errors)
+            console.log('error:',this.state.errors)
            // if (errors) return;
         let dataRole = {
             name: this.state.account.rolename,
@@ -75,7 +76,10 @@ class NewRole extends React.Component {
     }
         catch (error) {
             alert(error);
+            
         }
+        this.setState({checkBoxError:true})
+        
     }
     async componentWillMount() {
         const id = this.props.match.params;
@@ -166,7 +170,7 @@ handleeChange = ({ currentTarget: input }) => {
                                     </div>
                                     <p className="ml-2">Select Permission :</p>
                                     <PermissionsTable onSelect={this.onPermissionSelect} isNew = {this.state.isNewRole}/>
-                                    {!this.state.permissions.length && <div class="alert alert-danger" role="alert">
+                                    {this.state.checkBoxError && <div class="alert alert-danger" role="alert">
                                     Please select at least 1 permission
                                 </div>}
                                 </fieldset>
