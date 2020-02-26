@@ -20,12 +20,19 @@ constructor(props) {
         openOrClose:this.openIcon
     }
     this.totalSignatures=0;
-    this.props.data.forEach(cveIdData=>this.totalSignatures=this.totalSignatures+cveIdData.quantity)
+    this.props.data.forEach(cveIdData=>{
+        console.log('this.props.data',cveIdData)
+        this.totalSignatures=this.totalSignatures+cveIdData.quantity
+    })
     this.openCveId=this.props.openCveId;
     
 }
 render() {
-    
+    this.totalSignatures=0;
+    this.props.data.forEach(cveIdData=>{
+        console.log('this.props.data',cveIdData)
+        this.totalSignatures=this.totalSignatures+cveIdData.quantity
+    })
     // this.props.data.forEach(cveId=>this.totalSignatures=this.totalSignatures+cveId.number)
 return (
 
@@ -48,7 +55,7 @@ return (
                 <th scope="col" className="Centered"></th>
                 <th scope="col" colspan="2" className="Centered">CveId</th>
                 
-                <th scope="col" colspan="2" className="Centered">{`Number (Total=${this.totalSignatures})`}</th>
+                <th scope="col" colspan="2" className="Centered">{`Quantity (Total=${this.totalSignatures})`}</th>
             </tr>
         </thead>
         <tbody>
@@ -67,7 +74,7 @@ return (
             <tr className='table-active'>
                 <th scope="row" className="Centered" style={{fontWeight: 'bold'}}>CveId</th>
                 <td className="Centered" style={{fontWeight: 'bold'}}>PatterId</td>
-                <td className="Centered" style={{fontWeight: 'bold'}}>Descr</td>
+                <td className="Centered" style={{fontWeight: 'bold'}}>Description</td>
                 <td className="Centered" style={{fontWeight: 'bold'}}>Status</td>
                 <td className="Centered" style={{fontWeight: 'bold'}}>Edit</td>
             </tr>
