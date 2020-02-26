@@ -50,7 +50,7 @@ export default class CreateOrEditSignatureStep4ExternalReferences extends React.
     this.setState({ increment_index: this.state.increment_index + 1 });
     const reference = document.querySelector('#referenceId').value;
     if (reference && this.state.error.length == 0) {
-      this.props.addToStateArray('external_references', { id: `NEW_${this.increment_index}`, reference: reference, type: document.querySelector('#inputType').value })
+      this.props.addToStateArray('external_references', { id: `NEW_${this.state.increment_index}`, reference: reference, type: document.querySelector('#inputType').value })
     }
   }
 
@@ -80,7 +80,7 @@ export default class CreateOrEditSignatureStep4ExternalReferences extends React.
       fields:
       {
         references: field({ name: 'references', value: '', isRequired: true, pattern: '^[0][5][0|2|3|4|5|9]{1}[-]{0,1}[0-9]{7}$' }),
-        webServer: field({ name: 'webServer', value: '', isRequired: false   })
+        webServer: field({ name: 'webServer', value: '', isRequired: false })
       }
     });
   }
@@ -116,11 +116,13 @@ export default class CreateOrEditSignatureStep4ExternalReferences extends React.
             </div>
           </div>
           <div className="col-md-2 col-xs-4 mb-2"></div>
-          {
-            this.state.fields.references.errors.map((error, index) => (
-              <small key={index} className="form-text text-danger">{error}</small>
-            ))
-          }
+          <div>
+            {
+              this.state.fields.references.errors.map((error, index) => (
+                <small key={index} className="form-text text-danger">{error}</small>
+              ))
+            }
+          </div>
         </div>
         <div className="row mt-3">
           <div className="col-md-5 col-sm-5">

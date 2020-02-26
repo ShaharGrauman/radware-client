@@ -109,7 +109,7 @@ export default class CreateOrEditSignatureStep2Volnarability extends React.Compo
     ifParamterIsValidate = () => {
         const ParamData = document.querySelector('#txtAddParameter').value
         if (ParamData && this.state.error.length == 0) {
-            this.props.addToStateArray('parameters', { id: `NEW_${this.increment_index}`, parameter: ParamData })
+            this.props.addToStateArray('parameters', { id: `NEW_${this.state.increment_index}`, parameter: ParamData })
             this.setState({ increment_index: this.state.increment_index + 1 });
         }
     }
