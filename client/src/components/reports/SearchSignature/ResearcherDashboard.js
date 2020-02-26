@@ -390,7 +390,7 @@ export default class ResearcherDashboard extends React.Component {
                       }
                     >
                       <i className="far fa-star"></i> Published
-                      <Badge pill variant="info" className=" ml-3"> {this.state.signaturesCountByStatus[4].Count} </Badge>
+                      <Badge pill variant="info" className=" ml-3"> {this.state.signaturesCountByStatus[0].Count} </Badge>
                     </button>
                     <button
 
@@ -408,7 +408,7 @@ export default class ResearcherDashboard extends React.Component {
                     >
                       <i className="fas fa-exclamation-triangle"></i> Suspended 
                       
-                      <Badge pill variant="info" className=" ml-3">{this.state.signaturesCountByStatus[5].Count} </Badge>
+                      <Badge pill variant="info" className=" ml-3">{this.state.signaturesCountByStatus[4].Count} </Badge>
                    
                       
                     </button>
