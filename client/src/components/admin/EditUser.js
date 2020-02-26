@@ -381,7 +381,7 @@ export default class EditUser extends React.Component {
                             sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
                             className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</AdminTable>
          {
-                  this.state.checkBoxError && <div class="alert alert-danger" role="alert">
+                  this.state.checkBoxError &&  <div  className="mb-3" style={{color:"red"}}>
                    Must choose at least one role 
 
                     </div>

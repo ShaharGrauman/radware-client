@@ -243,7 +243,7 @@ render() {
                         className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</AdminTable>
                          {
                 //this.state.checkBoxError && <div class="alert alert-danger" role="alert"></div>
-                  this.state.checkBoxError && <div style={{color:"red"}}>
+                  this.state.checkBoxError && <div  className="mb-3" style={{color:"red"}}>
                    Must choose at least one role 
                     </div>
                 }
