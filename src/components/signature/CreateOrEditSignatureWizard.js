@@ -167,8 +167,8 @@ class CreateOrEditSignatureWizard extends Component {
             status: this.state.signatureData.status,
             vuln_data: this.state.signatureData.vuln_data,
             keep_order: this.state.signatureData.keep_order,
-            start_break: this.state.signatureData.start_break,
-            end_break: this.state.signatureData.end_break,
+            start_break: this.state.signatureData.start_break || '',
+            end_break: this.state.signatureData.end_break || '',
             right_index: this.state.signatureData.right_index,
             left_index: this.state.signatureData.left_index,
             scan_uri: this.state.signatureData.scan_uri,
@@ -338,7 +338,7 @@ class CreateOrEditSignatureWizard extends Component {
         }
 
         return (
-            <div style={{ margin: '20px' }}>
+            <div key={this.state.newSignature} style={{ margin: '20px' }}>
                 <ControlSteps currentStep={this.state.currentStep} setCurrentStep={this.setCurrentStep} isUpdateSignature={this.props.match.params.id} />
                 <div style={{ paddingTop: '10px', paddingBottom: '80px' }}>
                     {steps[this.state.currentStep]}

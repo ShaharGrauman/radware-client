@@ -15,7 +15,7 @@ export default class CreateOrEditSignatureStep2Volnarability extends React.Compo
             fields: {
                 txtExtendedText: field({ name: 'txtExtendedText', value: '', isRequired: true, minLength: 3 }),
                 vuln_data: field({ name: 'vuln_data', value: this.props.signatureData.vuln_data, isRequired: true, minLength: 4 }),
-                txtAddParameter: field({ name: 'txtAddParameter', value: '', isRequired: false, pattern: '^([a-zA-Z0-9.!#$%&*+/?^_`{|}~-]+=([A-Z0-9.!#$%&*+/?^_`{|}~-])*)*$' })
+                txtAddParameter: field({ name: 'txtAddParameter', value: '', isRequired: false, pattern: '^([a-zA-Z0-9.!#$%&*+/?^_`{|}~-]+=([a-zA-Z0-9.!#$%&*+/?^_`{|}~-]*)*)*$' })
             },
             isAdd: false,
             increment_index: 0,

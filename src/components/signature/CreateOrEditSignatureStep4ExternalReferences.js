@@ -15,7 +15,7 @@ export default class CreateOrEditSignatureStep4ExternalReferences extends React.
       error: [],
       increment_index: 0,
       fields: {
-        references: field({ name: 'references', value: '', isRequired: true, pattern: '^[0][5][0|2|3|4|5|9]{1}[-]{0,1}[0-9]{7}$' }),
+        references: field({ name: 'references', value: '', isRequired: false, pattern: /((http|ftp|https):\/\/)*[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/ }),
         webServer: field({ name: 'webServer', value: '', isRequired: false })
       }
     };
@@ -79,7 +79,7 @@ export default class CreateOrEditSignatureStep4ExternalReferences extends React.
     this.setState({
       fields:
       {
-        references: field({ name: 'references', value: '', isRequired: true, pattern: '^[0][5][0|2|3|4|5|9]{1}[-]{0,1}[0-9]{7}$' }),
+        references: field({ name: 'references', value: '', isRequired: false, pattern: /((http|ftp|https):\/\/)*[\w-]+(\.[\w-]+)+([\w.,@?^=%&amp;:\/~+#-]*[\w@?^=%&amp;\/~+#-])?/ }),
         webServer: field({ name: 'webServer', value: '', isRequired: false })
       }
     });

@@ -48,9 +48,9 @@ export default class CreateOrEditSignatureStep1Details extends React.Component {
   componentWillReceiveProps = (props, state) => {
     const { signatureData } = props;
     this.setState({
-      description: field({ name: 'description', value: signatureData.description, isRequired: true, minLength: 3 }),
-      attack_id: field({ name: 'attack_id', value: signatureData.attack_id, isRequired: true }),
-      status: field({ name: 'status', value: signatureData.status, isRequired: true })
+      description: {...this.state.description, value: signatureData.description},
+      attack_id: {...this.state.attack_id, value: signatureData.attack_id},
+      status: {...this.state.status, value: signatureData.status}
     });
   }
 
