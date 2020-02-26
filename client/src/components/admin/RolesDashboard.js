@@ -86,7 +86,7 @@ class RolesDashboard extends React.Component {
                     <div className="row ml-3 mr-3">
                         <div className="col-lg-10 col-md-9 col-sm-6">
                             <h2>Admin Dashboard</h2>
-                            <h4>Roles` Management</h4>
+                            <h4>Roles Management</h4>
                         </div>
                         <div className="col ml-3 mb-3 float-right">
                             <button type="button" title="add role" className="btn btn-outline float-right" onClick={() => this.renderRedirect("newrole")}>

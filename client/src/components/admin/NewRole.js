@@ -170,7 +170,7 @@ handleeChange = ({ currentTarget: input }) => {
                                     </div>
                                     <p className="ml-2">Select Permission :</p>
                                     <PermissionsTable onSelect={this.onPermissionSelect} isNew = {this.state.isNewRole}/>
-                                    {this.state.checkBoxError && <div class="alert alert-danger" role="alert">
+                                    {this.state.checkBoxError &&  <div className="mb-3" style={{color:"red"}}>
                                     Please select at least 1 permission
                                 </div>}
                                 </fieldset>

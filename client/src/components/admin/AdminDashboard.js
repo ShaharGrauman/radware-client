@@ -148,7 +148,7 @@ class AdminDashboard extends React.Component {
           <div className="row ml-3 mr-3">
             <div className="col-lg-10 col-md-9 col-sm-6">
                 <h2>Admin Dashboard</h2>
-                <h4>Users` Management</h4>
+                <h4>Users Management</h4>
             </div>
             <div className="col ml-3 mb-3 float-right">
               <div>
