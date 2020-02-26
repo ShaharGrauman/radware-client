@@ -1,7 +1,7 @@
 import React from 'react';
 const Input = ({ ref, name, type, lable, value, error, onChange }) => {
     return (
-        <div className="form-group" >
+        <div className= "mb-3">
             <label htmlFor={name}>{lable}</label>
             <input
                 size="145"
@@ -11,9 +11,9 @@ const Input = ({ ref, name, type, lable, value, error, onChange }) => {
                 name={name}
                 type={type}
                 ref={ref}
-                className="form-group"
-            />
-            {error && <div className="alert alert-danger">{error}</div>}
+                />
+                {/* className="alert alert-danger" */}
+                {error && <div style={{color:"red"}} >{error}</div>}
         </div>
     );
 };

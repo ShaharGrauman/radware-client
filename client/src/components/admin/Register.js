@@ -182,8 +182,8 @@ render() {
             </div>
           </div>
             <form className="ml-3" onSubmit={this.handleSumbit}>
-                    <legend className="scheduler-border font-weight-light ml-2">Personal info</legend>
-                    <div className="form-group mt-2 ml-2">
+                    <h4 className="scheduler-border font-weight-light pb-2 ml-2" style={{color:"blue"}}><u>Personal info</u></h4>
+                    <div className="form-group ml-2">
                         <label htmlFor="firstname"> Name : </label>
                         <Input className="form-control"
                             type="text"
@@ -196,7 +196,7 @@ render() {
                     </div>
                     <div className="form-group ml-2">
                         <label htmlFor="Rphone">Phone :</label>
-                        <Input className="form-control"
+                        <Input
                             type="text"
                             id="phone"
                             name="phone"
@@ -204,8 +204,8 @@ render() {
                             onChange={this.handleeChange}
                             error={errors.phone} />
                     </div>
-                <fieldset className="scheduler-border">
-                    <legend className="scheduler-border font-weight-light ml-2">User info</legend>
+                    
+                    <h4 className="scheduler-border font-weight-light pb-2 ml-2" style={{color:"blue"}}><u>User info</u></h4>
                     <div className="form-group ml-2">
                         <label htmlFor="Remail">Email address :</label>
                         <Input className="form-control"
@@ -242,11 +242,11 @@ render() {
                         sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
                         className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</AdminTable>
                          {
-                  this.state.checkBoxError && <div class="alert alert-danger" role="alert">
+                //this.state.checkBoxError && <div class="alert alert-danger" role="alert"></div>
+                  this.state.checkBoxError && <div style={{color:"red"}}>
                    Must choose at least one role 
                     </div>
                 }
-                </fieldset>
                 <button className="btn btn-secondary btn-block" >Save</button>
                 <button type="button" onClick={() => this.renderRedirect("users")} className="btn btn-secondary  btn-block">Cancel</button>
             </form>

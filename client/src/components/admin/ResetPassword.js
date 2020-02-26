@@ -133,6 +133,7 @@ export default class ResetPassword extends React.Component {
 
                   
                 <button type="submit" class="btn btn-block btn-secondary" onClick={this.updatePassword}>Save</button>
+                <button type="button" class="btn btn-block btn-secondary" onClick={() => this.loginRedirect("login")}>Back to Login</button>
           
               </form>
             </div>
