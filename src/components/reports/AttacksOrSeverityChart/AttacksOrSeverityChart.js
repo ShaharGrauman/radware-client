@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import {withRouter} from "react-router-dom"
+import {getSigByAttacks} from '../../../api/controllers/reports';
 
 
 // import CanvasJSReact from '../../shared/canvasjs.react';
@@ -15,8 +16,10 @@ class AttacksOrSeverityChart extends Component {
 constructor(props){
     super(props);
     this.chartType='';
-    this.options={}
+    this.state={
+        options:{}
 
+    }
 
     this.stamData=[
         {   attack_id: 1,
@@ -41,40 +44,53 @@ constructor(props){
         }
     ]
 }
-componentWillMount =() =>{
+componentWillMount =async () =>{
     this.chartType=this.props.match.params.type
-    // try{
-    //     const {data} = await axios.get(requestURL,{withCredentials: true});
-        
-    //   }catch(error){
-    //     this.setState({
-    //       errorMsg: 'Inalid email or password'
-    //     });
-    //   }
+    let dataForChart=[];
+    try{
+        const data = await getSigByAttacks();
+        dataForChart=data.map(attack=>(
+            // console.log(attack)
+            attack.attack!=null?
+            { label: attack.attack.name,  y: attack.SigCount  }
+            :
+            { label: 'undefined',  y: 0  }
+            ))
+            console.log('dataForChart',data,dataForChart)
+
+      }catch(error){
+        this.setState({
+          errorMsg: 'Inalid email or password'
+        });
+      }
+console.log('dataForChart',dataForChart)
     // let data=this.stamData;
-    let data=this.stamData.map(attack=>(
-        {  y: attack.SigCount, indexLabel: attack.attack.name }
-        ))
-    console.log('data',data)
-
-        const options = {
-            theme: "light2",
-            title:{
-                text: `${this.chartType} chart`
-            },		
-            data: [
-            {       
-                type: "pie",
-                showInLegend: true,
-                toolTipContent: "{y} - #percent %",
-                yValueFormatString: "#",
-                legendText: "{indexLabel}",
-                dataPoints: data
-            }
-            ]
-        }
-        this.options=options;
-
+    // let data=this.stamData.map(attack=>(
+    //     {  y: attack.SigCount, indexLabel: attack.attack.name }
+    //     ))
+    // const data=this.data.map(attack=>(
+    //     { label: attack.attack.name,  y: attack.SigCount  }
+    //     ))
+    // console.log('data',data)
+    // let data=dataForChart;
+        const  options = {
+            title: {
+              text: "Attacks percentage Chart"
+            },
+            data: [{				
+                      type: "column",
+                    //   dataPoints: [
+                    //       { label: "Apple",  y: 10  },
+                    //       { label: "Orange", y: 15  },
+                    //       { label: "Banana", y: 25  },
+                    //       { label: "Mango",  y: 30  },
+                    //       { label: "Grape",  y: 28  }
+                    //   ]
+                      dataPoints: dataForChart
+             }]
+         }
+        // this.options=options;
+         this.setState({options:options})
 
 }
 render() {
@@ -84,12 +100,12 @@ render() {
       <div className="container">
   <div className="row">
     <div className="col-sm">
-    <CanvasJSChart options = {this.options}/>
+    <CanvasJSChart options = {this.state.options}/>
     </div>
     <div className="col-2">
     </div>
     <div className="col-sm">
-    <CanvasJSChart options = {this.options}/>
+    {/* <CanvasJSChart options = {this.options}/> */}
     </div>
   </div>
 </div>
