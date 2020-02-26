@@ -104,7 +104,7 @@ loadData =async () =>{
     }
     ));
     console.log('newdata',newData)
-    // this.setState({hasNext:data.hasNext})
+    this.setState({hasNext:data.hasNext})
     if(newData.length==0){
       newData=[{patternID: "NO RESULTS FOUND !", description: "NO RESULTS FOUND !", status:'NO RESULTS FOUND !', select:'' }]
       this.exportDetails.lastExport='';

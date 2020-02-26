@@ -23,7 +23,8 @@ export default class CveIdReport extends Component {
 constructor(props) {
     super(props);
     this.state={
-        TableData:[]
+        TableData:[],
+
     }
     this.onSearchText='';
     // this.CveIdReportData=[
@@ -33,10 +34,10 @@ constructor(props) {
     //     {key:'1990-004' , number:4}
     // ];
     this.CveIdReportData=[
-        {cveid:'2030-0015156' , quantity:3},
-        {cveid:'2000-002' , quantity:7},
-        // {cveid:'2000-003' , quantity:2},
-        {cveid:'1990-004' , quantity:4}
+        // {cveid:'2030-0015156' , quantity:3},
+        // {cveid:'2000-002' , quantity:7},
+        // // {cveid:'2000-003' , quantity:2},
+        // {cveid:'1990-004' , quantity:4}
     ];
 
     // this.CveIdReportData=[
@@ -106,35 +107,51 @@ constructor(props) {
   }
 }
 
-openCveId= cveid =>{
+openCveId= async cveid =>{
   const [year,key]=cveid.split('-')
   console.log('URL',`signature/cveid?year=${year}&serial=${key}`)
-  // try{
+  try{
        
-  //   console.log('this.onSearchText',this.onSearchText)
+    console.log('this.onSearchText',this.onSearchText)
     
-  //     // const signatures= await cveidSearch(`signature/cveid?year=${this.onSearchText}&serial=${cveid.slice(4)}`)
-  //      console.log(response)
-  //   }catch(error){
+      const signatures= await cveidSearch(`signature/cveid?year=${year}&serial=${key}`)
+       console.log('signatures',signatures,`signature/cveid?year=${year}&serial=${key}`)
 
-  //   this.setState({
-  //     errorMsg: 'ERROR'
-  //   });
-  // }
+       const data=this.state.TableData;
+       console.log('befor: ',data)
+       // if(!data.includes(cveid)){
+       data.map(cveidData=>
+         cveidData.cveid==cveid?
+               !cveidData.hasOwnProperty('signatures')?
+               // cveidData['signatures']=this.signatures.slice(0,cveidData.quantity):
+               cveidData['signatures']=signatures:
+               delete cveidData.signatures
+               :
+               cveidData
+       )
+       this.setState({TableData:data})
 
-    const data=this.state.TableData;
-    console.log('befor: ',data)
-    // if(!data.includes(cveid)){
-    data.map(cveidData=>
-      cveidData.cveid==cveid?
-            !cveidData.hasOwnProperty('signatures')?
-            cveidData['signatures']=this.signatures.slice(0,cveidData.quantity):
-            delete cveidData.signatures
-            :
-            cveidData
-    )
+    }catch(error){
 
-    this.setState({TableData:data})
+    this.setState({
+      errorMsg: 'ERROR'
+    });
+  }
+
+    // const data=this.state.TableData;
+    // console.log('befor: ',data)
+    // // if(!data.includes(cveid)){
+    // data.map(cveidData=>
+    //   cveidData.cveid==cveid?
+    //         !cveidData.hasOwnProperty('signatures')?
+    //         // cveidData['signatures']=this.signatures.slice(0,cveidData.quantity):
+    //         cveidData['signatures']=signatures:
+    //         delete cveidData.signatures
+    //         :
+    //         cveidData
+    // )
+
+    // this.setState({TableData:data})
     // console.log('after: ',this.state.TableData)
     // console.log('after: ',this.state.TableData[1].signatures)
 
@@ -163,7 +180,8 @@ onSearch =async () =>{
       console.log('this.onSearchText',this.onSearchText)
       
         const response= await cveidSearch(`signature/cveid?year=${this.onSearchText}`)
-         console.log(response)
+        this.setState({TableData:response});
+         console.log('response',response)
       }catch(error){
   
       this.setState({
@@ -181,7 +199,6 @@ render() {
   return (
     <>
     <h2 className="ml-3 mb-3">CveId Report</h2>
-    <h5 className="ml-3 mb-3">bla bla bla bla bla bla bla</h5>
     <br></br>
     <div className="container ml-3 mb-3">
       <div className="row">

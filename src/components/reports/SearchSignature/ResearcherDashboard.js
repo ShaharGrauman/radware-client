@@ -46,7 +46,8 @@ export default class ResearcherDashboard extends React.Component {
       createOrEditSignatureClicked: false,
       QAClicked: false,
       TestingClicked: false,
-      GitClicked: false
+      GitClicked: false,
+      cveIdReportClicked: false
 
     }
     this.urlDetails={
@@ -80,6 +81,11 @@ export default class ResearcherDashboard extends React.Component {
     if (page === "Git") {
       this.setState({
         GitClicked: true
+      });
+    }
+    if (page === "CveIdReport") {
+      this.setState({
+        cveIdReportClicked: true
       });
     }
 }
@@ -193,6 +199,7 @@ export default class ResearcherDashboard extends React.Component {
         {this.state.QAClicked && <Redirect to='/Export/QA' />}
         {this.state.TestingClicked && <Redirect to='/Export/Testing' />}
         {this.state.GitClicked && <Redirect to='/Export/Git' />}
+        {this.state.cveIdReportClicked && <Redirect to='/CveIdReport' />}
         <h2 className="ml mb-3">Researcher dashboard</h2>
         <div className='row'>
         <div className='ml-2 mr-4'>
@@ -225,7 +232,7 @@ export default class ResearcherDashboard extends React.Component {
                             onClick={() => this.renderRedirect("search")}
                             className="ml-2 mr-4 btn btn-secondary">Search</button>
 
-         </div>
+          </div>
 
           {/* <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <a className="dropdown-item" href="#">
@@ -251,6 +258,10 @@ export default class ResearcherDashboard extends React.Component {
           </Dropdown.Menu>
         </Dropdown>
         </div>
+        <button type="button"
+                            onClick={() => this.renderRedirect("CveIdReport")}
+                            className="ml-2 mr-4 btn btn-secondary">CveId</button>
+
         </div>
         <div className="ml-2 mt-3 mx-">
         <h5 className=" mb-2">{this.state.dataFilter} by Create Date</h5>
