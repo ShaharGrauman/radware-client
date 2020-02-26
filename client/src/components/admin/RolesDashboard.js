@@ -4,7 +4,7 @@ import { Redirect, withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faUserTag } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
-import MyTable from '../shared/AdminTable';
+import AdminTable from '../shared/AdminTable';
 import { getRoles, deleteRole } from '../../api/controllers/admin';
 
 class RolesDashboard extends React.Component {
@@ -27,10 +27,19 @@ class RolesDashboard extends React.Component {
 
     SortByKey(sortKey) {
         let sorted;
-        if (sortKey.sortOrder)
-            sorted = this.state.orgRoles.sort((a, b) => a[sortKey.key] > b[sortKey.key] ? 1 : -1);
-        else
-            sorted = this.state.orgRoles.sort((a, b) => a[sortKey.key] < b[sortKey.key] ? 1 : -1);
+
+        if (sortKey.key != "id") {
+            if (sortKey.sortOrder)
+                sorted = this.state.orgRoles.sort((a, b) => a[sortKey.key].toLowerCase() > b[sortKey.key].toLowerCase() ? 1 : -1);
+            else
+                sorted = this.state.orgRoles.sort((a, b) => a[sortKey.key].toLowerCase() < b[sortKey.key].toLowerCase() ? 1 : -1);
+        }
+        else {
+            if (sortKey.sortOrder)
+                sorted = this.state.orgRoles.sort((a, b) => a[sortKey.key] > b[sortKey.key] ? 1 : -1);
+            else
+                sorted = this.state.orgRoles.sort((a, b) => a[sortKey.key] < b[sortKey.key] ? 1 : -1);
+        }
         sortKey.sortOrder = !sortKey.sortOrder;
         this.setState({ roles: sorted })
     }
@@ -50,15 +59,15 @@ class RolesDashboard extends React.Component {
         }));
         this.setState({ orgRoles: roles, roles: roles });
     };
-    async deleteRole(id){
+    async deleteRole(id) {
         try {
             alert("Are you sure?");
             const role = await deleteRole(id);
-            const updatedRoles = this.state.roles.filter(function(element) { return element.id != id; });
-            this.setState({roles: updatedRoles})
-          } catch (error) {
+            const updatedRoles = this.state.roles.filter(function (element) { return element.id != id; });
+            this.setState({ roles: updatedRoles })
+        } catch (error) {
             console.log(error);
-          }
+        }
 
     }
     tableHeaders = [
@@ -74,30 +83,23 @@ class RolesDashboard extends React.Component {
             <>
                 <div>
                     {this.state.newRoleClicked && <Redirect to='/newrole' />}
-                    <div className="row">
-                        <div className="col-md-11 col-sm-11 col-11">
-                            <div className="ml-3 mb-3">
-                                <h2>Admin Dashboard</h2>
-                                <h4>Roles` Management</h4>
-                            </div>
+                    <div className="row ml-3 mr-3">
+                        <div className="col-lg-10 col-md-9 col-sm-6">
+                            <h2>Admin Dashboard</h2>
+                            <h4>Roles` Management</h4>
                         </div>
-                        <div className="ml-3 mb-4">
-                            <button type="button" title="add role" className="btn btn-outline float-left" onClick={() => this.renderRedirect("newrole")}>
+                        <div className="col ml-3 mb-3 float-right">
+                            <button type="button" title="add role" className="btn btn-outline float-right" onClick={() => this.renderRedirect("newrole")}>
                                 <FontAwesomeIcon size="3x" icon={faUserTag}></FontAwesomeIcon></button>
                         </div>
                     </div>
-                    <div className="row">
-                        <div className="mr-3 mb-4"></div>
-                    </div>
-                    <div className=" ml-3 mr-3">
-                        <div className="row">
-                            <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
-                                <MyTable
-                                    header={this.tableHeaders}
-                                    data={this.state.roles}
-                                    sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
-                                    className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</MyTable>
-                            </div>
+                    <div className="row ml-3 mr-3 mt-3">
+                        <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+                            <AdminTable
+                                header={this.tableHeaders}
+                                data={this.state.roles}
+                                sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
+                                className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</AdminTable>
                         </div>
                     </div>
                 </div>

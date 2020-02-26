@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {updateQaDashboard, getQaDashboard} from '../../../api/controllers/reports';
+import {updateQaDashboard, getQaDashboard ,cveidSearch} from '../../../api/controllers/reports';
 import {getUser} from '../../../api/controllers/auth';
 
 import { Dropdown, ButtonGroup, Button } from 'react-bootstrap';
@@ -56,21 +56,37 @@ export default class QADashboard extends React.Component {
         permissionArrays.forEach(array => {
             permissions.push(...array);
         })
+        console.log('permissions',permissions)
         const filterPermissions=[];
+        let Performance=false, Automation=false,Manual=false
         permissions.forEach(permission =>{
+            // if(filterPermissions.includes())
             switch(permission.name){
                 case 'Update QA performance internal status':
-                    filterPermissions.push('Performance')
+                    console.log(!Performance,!Performance&&'Performance')
+                    !Performance&&filterPermissions.push('Performance')
+                    // filterPermissions.push('Performance')
+                    Performance=true
                     break;
                 case 'Update QA automation internal status':
-                    filterPermissions.push('Automation')
+                    console.log(!Automation,!Automation&&'Automation')
+
+                    !Automation&&filterPermissions.push('Automation')
+                    // filterPermissions.push('Automation')
+                    Automation=true
                     break;
                 case 'Update QA manual internal status':
-                    filterPermissions.push('Manual')
+                    console.log(!Manual,!Manual&&'Manual')
+
+                    !Manual&&filterPermissions.push('Manual')
+                    // filterPermissions.push('Manual')
+                    Manual=true
                     break;
             }}
             )
-            return filterPermissions;
+            console.log('filterPermissions',filterPermissions)
+            // filterPermissions.sort((a,b)=>a-b)
+            return filterPermissions.sort();
     }
 
     async componentDidMount() { 

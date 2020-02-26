@@ -10,9 +10,9 @@ export default class CreateOrEditSignatureStep3Validate extends React.Component 
         this.state = {
             get: 'GET <URI> HTTP Host: \n10.205.156.51 - default IP , but need to be configurable. Connection: close',
             post: 'POST <URI>  HTTP/1.1\nHost: 10.205.156.51\nReferer: attackscript.perl\nContent-Type: application/x-www-form-urlencoded\nCache-Control: no-cache Accept-Encoding: identity\nConnection: close\nContent-Length: <Length>\n',
-            postWithFile :'POST WITH FILE Description',        
+            postWithFile: 'POST WITH FILE Description',
             fields: {
-                texPostOrGet: field({ name: 'texPostOrGet', value: '', isRequired: true }),
+                texPostOrGet: field({ name: 'texPostOrGet', value: '', isRequired: false })
             }
         }
         this.extendedTextHeaders = ['Description', 'Order', 'Actions'];
@@ -25,9 +25,11 @@ export default class CreateOrEditSignatureStep3Validate extends React.Component 
     usePostClick = () => {
         this.props.signatureData.test_data = document.querySelector('#txtTextAreaUseMethods').value = this.state.post;
     }
+    
     usePostWithFileClick = () => {
         this.props.signatureData.test_data = document.querySelector('#txtTextAreaUseMethods').value = this.state.postWithFile;
     }
+    
     validate = (fieldName, value) => {
         value = this.state.fields.value = this.props.signatureData.test_data
         console.log(value)
@@ -62,6 +64,16 @@ export default class CreateOrEditSignatureStep3Validate extends React.Component 
         return Object.keys(this.state.fields).every(field => !this.state.fields[field].isPristine && this.state.fields[field].errors.length == 0);
     }
 
+    componentWillReceiveProps = (props, state) => {
+        const { signatureData } = props;
+        this.setState({
+            fields:
+            {
+                texPostOrGet: field({ name: 'texPostOrGet', value: signatureData.texPostOrGet, isRequired: false })
+            }
+        });
+    }
+
     render() {
         return (
             <div>
@@ -71,7 +83,7 @@ export default class CreateOrEditSignatureStep3Validate extends React.Component 
                         <div className="form-check">
                             <input type="radio" name="simpleOrExtendedText" id="rbSimpleText" value="SimpleText" checked={this.props.signatureData.simpleOrExtendedText === 'SimpleText'} disabled={true} onClick={this.simpleOrExtendedTextClick} />
                             <label className="form-check-label" for="rbSimpleText">Simple text</label>
-                            <input type="text" class="form-control" id="text" value={this.props.signatureData.txtSimpleText} disabled></input>
+                            <input type="text" class="form-control" id="text" value={this.props.signatureData.vuln_data} disabled></input>
                             <div className="form-group form-check">
                                 <input className="form-check-input" type="checkbox" id="cbToggleshowRegular" checked={this.props.signatureData.showRegularInStep2} onClick={this.props.toggleshowRegularInStep2} disabled={true} />
                                 <label className="form-check-label" for="cbToggleshowRegular">Regular expression</label>
@@ -128,7 +140,7 @@ export default class CreateOrEditSignatureStep3Validate extends React.Component 
                             <div className="col-md-4 mb-2">
                                 <button type="button" class="btn btn-outline-secondary btn-block" onClick={this.useGetClick}>Use Get</button>
                             </div>
-                            <div className="col-md-4">
+                            <div className="col-md-4 mb-2">
                                 <button type="button" class="btn btn-outline-secondary btn-block" onClick={this.usePostClick}>Use Post</button>
                             </div>
                             <div className="col-md-4">

@@ -18,12 +18,12 @@ constructor(props) {
 
 render() {
 return (
-    <div className="table-responsive">
-    <table className="table table-striped table-sm border border-dark" >
+    <div>
+    <table className="table table-striped table-hover table-bordered border-dark" style={{ borderWidth: "3px",width:'105%' }}>
       <thead>
           <tr>
               {Object.keys(this.props.data[0]).slice(1).map((key,index)=>
-              <th scope="col" className="border-secondary border-right" key={index}>
+              <th scope="col" key={index}>
                   {key!='patternID'?key:<div>{key}{this.sortIcon}</div>}
                 </th>
                 )}
@@ -34,7 +34,7 @@ return (
               this.props.data.map((item,index) =>(
                 <tr key={index}>
                 {Object.values(item).slice(1,7).map((column,index) => (
-                    <td scope="row" className="Centered border-secondary border-right border-top-0 font-weight-normal" key={index}>
+                    <td key={index}>
                       {(()=>{
                         switch(column){
                             case 1:
@@ -51,7 +51,7 @@ return (
                     </td>
                 ))}
                 {(Object.entries(item).slice(7)).map((status,index)=>(
-                    <td scope="row" className="Centered border-secondary border-right border-top-0 font-weight-normal" key={index}>
+                    <td key={index}>
                     {this.role.includes(status[0])?(
                         // console.log(status[0]),
                     <QaStatuseUpdate role={status[0]} signature={item} val={item[status[0]]}/>):

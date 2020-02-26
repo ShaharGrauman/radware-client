@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { Redirect, NavLink } from 'react-router-dom';
-import {getGuestUser, getUser, logout} from '../../api/controllers/auth';
+import { getGuestUser, getUser, logout } from '../../api/controllers/auth';
 
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
