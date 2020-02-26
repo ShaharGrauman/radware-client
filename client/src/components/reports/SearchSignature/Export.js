@@ -26,7 +26,7 @@ constructor(props) {
         tableData : [
             {PatternID: '', Description: '', select:'' }
         ],
-        hasNext:true,
+        hasNext:false,
         hasPrev:false,
         page:1,
         isLoading:true,
@@ -151,12 +151,17 @@ export=async ()=>{
 
 render() {
   this.state.tableData.forEach(sig=>{
-    
-    this.state.checkedSig.includes(`${sig.id}`)?
-        sig['select']=<div className="Centered fa-lg" value={sig.id} onClick={()=>this.onCheckBoxClick(sig.id)}><FontAwesomeIcon icon={faCheckSquare}/></div>
-        :
-        sig['select']=<div className="Centered fa-lg" value={sig.id} onClick={()=>this.onCheckBoxClick(sig.id)}><FontAwesomeIcon icon={faSquare}/></div>
+    if(sig.id>0){
+        sig['select']=<div className="Centered fa-lg" value={sig.id} onClick={()=>this.onCheckBoxClick(sig.id)}><FontAwesomeIcon icon={
+          this.state.checkedSig.includes(`${sig.id}`)?faCheckSquare:faSquare
+        }/></div>
+
+      // this.state.checkedSig.includes(`${sig.id}`)?
+      //   sig['select']=<div className="Centered fa-lg" value={sig.id} onClick={()=>this.onCheckBoxClick(sig.id)}><FontAwesomeIcon icon={faCheckSquare}/></div>
+      //   :
+      //   sig['select']=<div className="Centered fa-lg" value={sig.id} onClick={()=>this.onCheckBoxClick(sig.id)}><FontAwesomeIcon icon={faSquare}/></div>
       
+    }
     })
 
     console.log(this.state.tableData)
@@ -167,9 +172,9 @@ render() {
       },
       
       tableHeader:[
-        {value:'pattern_id' , valueToShow:'PatterID' , style:{width: "10%"}, sort:true},
-        {value:'description' , valueToShow:'description' , style:{width: "40%"} , sort:true},
-        {value:'status' , valueToShow:'statussss' , style:{width: "15%"} , sort:false},
+        {value:'pattern_id' , valueToShow:'PatterID' , style:{width: "10%"}, sort:false},
+        {value:'description' , valueToShow:'description' , style:{width: "40%"} , sort:false},
+        {value:'status' , valueToShow:'Status' , style:{width: "15%"} , sort:false},
         {value:'TestData' , valueToShow:'TestData' , style:{width: "10%"} , sort:false},
         {value:'Edit' , valueToShow:'Edit' , style:{width: "10%"} , sort:false},
         {value:'select' , valueToShow:'Select' , style:{width: "10%",paddingRight: "0px",paddingLeft: '0px'} , sort:false},
@@ -264,7 +269,7 @@ return (
 
         <button className="btn btn-secondary float-right pr-2" onClick={()=>{
           this.setState({checkedSig:[]})
-        }} >Rest all</button>
+        }} >Reset all</button>
         </div>
         
         <div className="col-2 align-self-end">
