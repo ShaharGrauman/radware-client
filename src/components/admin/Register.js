@@ -37,8 +37,8 @@ export default class Register extends React.Component {
         username: Joi.string().required().email().label("Email"),
         // password: Joi.string().required().min(5).alphanum().label("Password"),
         password: Joi.string().min(6).max(20).required().label("password")
-        
-     
+
+
     }
     async componentDidMount() {
         const data = await getRolesList();
@@ -61,22 +61,21 @@ export default class Register extends React.Component {
         }));
         this.setState({ roles });
     }
-     valthischeckBox = ()=> {
-    var checkboxs=document.getElementsByName("myTextEditBox");
-   
-    for(var i=0,l=checkboxs.length;i<l;i++)
-    {
-        if(checkboxs[i].checked)
-        {   this.setState({checkBoxError:false})
-            return true;
-            
-            break;
+    valthischeckBox = () => {
+        var checkboxs = document.getElementsByName("myTextEditBox");
+
+        for (var i = 0, l = checkboxs.length; i < l; i++) {
+            if (checkboxs[i].checked) {
+                this.setState({ checkBoxError: false })
+                return true;
+
+                break;
+            }
         }
+        this.setState({ checkBoxError: true })
+        return false;
+
     }
-    this.setState({checkBoxError:true})
-    return false; 
-   
-}
     onRoleSelect = roleId => {
         if (this.state.roles.includes(roleId)) {
             this.setState({
@@ -118,71 +117,81 @@ export default class Register extends React.Component {
         try {
             e.preventDefault();
             const errors = this.validate();
-              //method return object looks like error 
+            //method return object looks like error 
             this.setState({ errors: errors || {} });   //we render the object errors  in the setstate 
             // if (!errors) return null;
             console.log('account : ', this.state.account)
-            if (this.valthischeckBox())  {  
-            let user = {
-                name: this.state.account.name,
-                username: this.state.account.username,
-                phone: this.state.account.phone,
-                password: this.state.account.password,
-                roles: this.updateData
-            };
-           
-            console.log('updateData', this.updateData);
-            console.log('error : ', errors);
-            if (errors) return;
-            console.log(this.state.ifUserCreated);
-            // const user = await login(this.state.username, this.state.password);
-            // this.setState({ ifUserCreated: true });
-            const newUser = await postNewUser(user);
-            this.setState({ ifUserCreated: true });
-        } }
+            if (this.valthischeckBox()) {
+                let user = {
+                    name: this.state.account.name,
+                    username: this.state.account.username,
+                    phone: this.state.account.phone,
+                    password: this.state.account.password,
+                    roles: this.updateData
+                };
+
+                console.log('updateData', this.updateData);
+                console.log('error : ', errors);
+                if (errors) return;
+                console.log(this.state.ifUserCreated);
+                // const user = await login(this.state.username, this.state.password);
+                // this.setState({ ifUserCreated: true });
+                const newUser = await postNewUser(user);
+                if (typeof newUser == 'string') {
+                    this.setState({
+                        errors: newUser
+                    });
+                    console.log("errors in : ", this.state.errors)
+                    return;
+                }
+                this.setState({ ifUserCreated: true });
+            }
+        }
         catch (error) {
-            alert(error);
+            this.setState({
+                errors: "Internal error, please try again later"
+            })
         }
     }
-  
-handleeChange = ({ currentTarget: input }) => {
-    const errors = { ...this.state.errors };
-    const errorMessage = this.validateProperty(input);
-    if (errorMessage) errors[input.name] = errorMessage;
-    else delete errors[input.name];
-    const account = { ...this.state.account };
-    account[input.name] = input.value;
-    this.setState({ account, errors });
-    console.log(this.state.account)
-};
-handleChange = (event, value, id) => {
-    if (value === true) {
-        this.updateData.push(id);
-        // console.log('aaaa');
-        // console.log(this.updateData);
-    } else {
-        var index = this.updateData.indexOf(id);
-        this.updateData.splice(index, 1);
-        console.log(this.updateData)
+
+    handleeChange = ({ currentTarget: input }) => {
+        const errors = { ...this.state.errors };
+        const errorMessage = this.validateProperty(input);
+        if (errorMessage) errors[input.name] = errorMessage;
+        else delete errors[input.name];
+        const account = { ...this.state.account };
+        account[input.name] = input.value;
+        this.setState({ account, errors });
+        console.log(this.state.account)
+    };
+    handleChange = (event, value, id) => {
+        if (value === true) {
+            this.updateData.push(id);
+            // console.log('aaaa');
+            // console.log(this.updateData);
+        } else {
+            var index = this.updateData.indexOf(id);
+            this.updateData.splice(index, 1);
+            console.log(this.updateData)
+        }
     }
-}
-render() {
-    const { account, errors } = this.state;
-    if (this.state.ifUserCreated) {
+    render() {
+        const { account, errors } = this.state;
+        if (this.state.ifUserCreated) {
+            return (
+                <NotificationIsCreated ifUserCreated={this.state.ifUserCreated} />
+            )
+        }
         return (
-            <NotificationIsCreated ifUserCreated = {this.state.ifUserCreated} />
-        )
-    }
-    return (
-        <>
-            {this.state.cancelClicked && <Redirect to='/users' />}
-            <div className="row mt-2">
-            <div className="col-6 ml-4">
-              <h1>New User</h1>
-            </div>
-          </div>
-            <form className="ml-3" onSubmit={this.handleSumbit}>
-                    <h4 className="scheduler-border font-weight-light pb-2 ml-2" style={{color:"blue"}}><u>Personal info</u></h4>
+            <>
+                {this.state.cancelClicked && <Redirect to='/users' />}
+                <div className="row mt-2">
+                    <div className="col-6 ml-4">
+                        <h1>New User</h1>
+                    </div>
+                </div>
+                <form className="ml-3" onSubmit={this.handleSumbit}>
+                    <h4 className="scheduler-border font-weight-light pb-2 ml-2" style={{ color: "blue" }}><u>Personal info</u></h4>
                     <div className="form-group ml-2">
                         <label htmlFor="firstname"> Name : </label>
                         <Input className="form-control"
@@ -204,8 +213,8 @@ render() {
                             onChange={this.handleeChange}
                             error={errors.phone} />
                     </div>
-                    
-                    <h4 className="scheduler-border font-weight-light pb-2 ml-2" style={{color:"blue"}}><u>User info</u></h4>
+
+                    <h4 className="scheduler-border font-weight-light pb-2 ml-2" style={{ color: "blue" }}><u>User info</u></h4>
                     <div className="form-group ml-2">
                         <label htmlFor="Remail">Email address :</label>
                         <Input className="form-control"
@@ -241,16 +250,22 @@ render() {
                         data={this.state.roles}
                         sortDataByKey={(sortKey) => this.SortByKey(sortKey)}
                         className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >key={this.state.roles.ID}</AdminTable>
-                         {
-                //this.state.checkBoxError && <div class="alert alert-danger" role="alert"></div>
-                  this.state.checkBoxError && <div  className="mb-3" style={{color:"red"}}>
-                   Must choose at least one role 
+                    {
+                        //this.state.checkBoxError && <div class="alert alert-danger" role="alert"></div>
+                        this.state.checkBoxError && <div className="mb-3" style={{ color: "red" }}>
+                            Must choose at least one role
                     </div>
-                }
-                <button className="btn btn-secondary btn-block" >Save</button>
-                <button type="button" onClick={() => this.renderRedirect("users")} className="btn btn-secondary  btn-block">Cancel</button>
-            </form>
-        </>
-    );
-}
+                    }
+                    {
+
+                        this.state.errors.length && <div className="mb-3" style={{ color: "red" }}>
+                            {this.state.errors}
+                        </div>
+                    }
+                    <button className="btn btn-secondary btn-block" >Save</button>
+                    <button type="button" onClick={() => this.renderRedirect("users")} className="btn btn-secondary  btn-block">Cancel</button>
+                </form>
+            </>
+        );
+    }
 }

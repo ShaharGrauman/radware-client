@@ -26,14 +26,14 @@ export default class NotificationIsCreated extends React.Component {
 
     render() {
         return (
-            <div>
-                <div class="row align-items-center  border border-danger p-4">
+            <div className="container">
+                <div className="row align-items-center  border border-danger p-4">
 
-                    <div class="col-md-3 mt-3 mb-2">
+                    <div className="col-md-3 mt-3 mb-2">
 
                     </div>
 
-                    <div class="col-md-6 mt-3 mb-4">
+                    <div className="col-md-12 mb-4 text-center">
                         {
                             this.props.userEditedOK ?
                                 <div class="alert alert-success text-center">
