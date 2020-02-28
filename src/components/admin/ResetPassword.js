@@ -1,7 +1,8 @@
 import React from "react";
 import { Redirect, Link } from "react-router-dom";
 import { postResetPassword , putResetPassword, putUpdatePassword} from "../../api/controllers/admin";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser, faKey, faLock, faUsers, faUnlockAlt } from '@fortawesome/free-solid-svg-icons';
 export default class ResetPassword extends React.Component {
   constructor(props) {
     super(props)
@@ -14,7 +15,8 @@ export default class ResetPassword extends React.Component {
         temppassword: '',
         updated:false,
         reset:false,
-        passwordconfirm:false
+        passwordconfirm:false,
+        message:{}
       }
     }
 
@@ -40,8 +42,12 @@ export default class ResetPassword extends React.Component {
 
   resetPassword = async e => {
     e.preventDefault();
+    try{
     const password = await postResetPassword(this.state.resetDetails.username);
-    this.setState({reset:true})
+    this.setState({reset:true})}
+    catch(error){
+      this.setState({message: "Internal error, please try again later"})
+    }
   }
 
   updatePassword = async e => {
@@ -64,13 +70,20 @@ export default class ResetPassword extends React.Component {
         {this.state.loginRedirect && <Redirect to='/login' />}
         <div class="row">
           <div class="col"></div>
-          <div class="col">
+          <div class="col-md-6 col-sm-10">
             
-            <div class="alert bg-light text-dark" role="alert">
-              <h1>Reset Password </h1>
+            <div class="alert bg-light text-dark" style = {{fontFamily:"cursive",fontSize:"15px" }}role="alert">
+              {/* <h2>Reset Password </h2> */}
+              <div className="text-center mb-4">
+              <FontAwesomeIcon className="fa-lg fa-3x mr-3" icon={faUnlockAlt}> </FontAwesomeIcon>
+              <h1 className="mt-2" >Reset Password</h1>
+              </div>
               <form onSubmit={this.onSubmit}>
-                <div class="form-group">
-                  <label htmlFor="username">Username</label>
+                  {/* <label htmlFor="username">Username</label> */}
+                <div class="input-group flex-nowrap mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="addon-wrapping"><FontAwesomeIcon className="fa-lg " icon={faUser}> </FontAwesomeIcon> </span>
+                  </div>
                   <input
                     name="username"
                     class="form-control"
@@ -83,7 +96,7 @@ export default class ResetPassword extends React.Component {
 
                 </div>
 
-                <button type="submit" class="btn btn-block btn-secondary" onClick={this.resetPassword}>Send</button>
+                <button type="submit" class="btn btn-block btn-secondary mb-4" onClick={this.resetPassword}>Send</button>
                {this.state.reset && ( <small class="text-danger"> your reset password has been sent to your mail </small>)}
                 <div class="form-group">
                   <label htmlFor="password">Temporary Password</label>
@@ -93,31 +106,35 @@ export default class ResetPassword extends React.Component {
                     name="temppassword"
                     id="temppassword"
                     onBlur={this.onBlur}
-                    placeholder="TempPassword"
+                    // placeholder="TempPassword"
                     onChange={this.onChangeHandler}
                   />
                 </div>
                 <div class="form-group">
                   <label htmlFor="password">New Password</label>
+                  <label className = "text-danger ml-2">*</label>
+                  <span class="input-group-text" id="addon-wrapping"><FontAwesomeIcon className="fa-lg " icon={faUser}> </FontAwesomeIcon> </span>
+
                   <input
                     type="password"
                     class="form-control"
                     name="newPassword1"
                     id="Newpassword"
                     onBlur={this.onBlur}
-                    placeholder="New Password"
+                    // placeholder="New Password"
                     onChange={this.onChangeHandler}
                   />
                 </div>
                 <div class="form-group">
                   <label htmlFor="password">Confirm Password</label>
+                  <label className = "text-danger ml-2">*</label>
                   <input
                     type="password"
                     class="form-control"
                     name="newPassword2"
                     id="Confirmpassword"
                     onBlur={this.onBlur}
-                    placeholder="Confirm Password"
+                    // placeholder="Confirm Password"
                     onChange={this.onChangeHandler}
                   />
                  

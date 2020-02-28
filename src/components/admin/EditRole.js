@@ -150,7 +150,7 @@ class EditRole extends React.Component {
             <>
                 <div className="container">
                     <div className="row mt-2">
-                        <div className="col-md-12">
+                        <div className="col-md-12 ml-4 " style = {{fontFamily:"cursive",fontSize:"30px" }}>
                             <h1>Edit Role</h1>
                         </div>
                     </div>
@@ -159,7 +159,7 @@ class EditRole extends React.Component {
                             {this.state.cancelClicked && <Redirect to='/admin/roles' />}
                             <form className="ml-3" onSubmit={this.handleSumbit}>
                                 <fieldset className="scheduler-border">
-                                    <legend className="scheduler-border">Role info</legend>
+                                    <h4 className="scheduler-border font-weight-light pb-2 ml-2"><u>Role info</u></h4>
 
                                     <div className="form-group mt-2 ml-2">
                                         <label htmlFor="rolename">Role Name : </label>

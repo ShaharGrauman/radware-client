@@ -46,9 +46,9 @@ export default class LogIn extends React.Component {
     e.preventDefault();
     try {
       const user = await login(this.state.username, this.state.password);
-      if(typeof user == 'string'){
+      if(user.error){
         this.setState({
-          errorMsg: user
+          errorMsg: user.error
         });  
         return;
       }
@@ -59,7 +59,7 @@ export default class LogIn extends React.Component {
       window.location.reload();
     } catch (error) {
       this.setState({
-        errorMsg: "Something went wrong..."
+        errorMsg: "Something went wrong... Please try again "
       });
     }
   }
@@ -84,7 +84,7 @@ export default class LogIn extends React.Component {
       
         <div class="row alert bg-light text-dark">
           <div class="col"></div>
-          <div class="col">
+          <div class="col-md-6 col-sm-10">
             <div role="alert">
               <h1 ><FontAwesomeIcon className="fa-lg " icon={faUsers}> </FontAwesomeIcon></h1>
               <form onSubmit={this.onSubmit}>

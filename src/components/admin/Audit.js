@@ -25,7 +25,8 @@ export default class Audit extends React.Component {
             hasNext: false,
             hasPrev: false,
             noResult: false,
-            searchClicked: false
+            searchClicked: false,
+            message: {}
         }
     }
     tableHeaders = [{ key: "username", value: "Username", toSort: false },
@@ -35,15 +36,21 @@ export default class Audit extends React.Component {
     ];
 
     async componentDidMount() {
+    try{
         const constant = await getConstant();
         const actions = constant.actionName;
         this.setState({
             actions: actions, searchClicked: false
         })
-
+    }catch(error){
+        this.setState({
+            message: "Internal error, please try again later"
+        })
+    }
     }
 
     async submitHandler (e, page) {
+        try{
         const result = await getAudit(this.state.event, this.state.users_names, this.state.orderby, page, this.state.size, this.state.startdate, this.state.enddate, this.state.starttime, this.state.endtime);
         console.log("Result is: ", result);
 
@@ -69,6 +76,11 @@ export default class Audit extends React.Component {
                 searchClicked: true
             });
         }
+    }catch(error){
+        this.setState({
+            message:  "Internal error, please try again later"
+        })
+    }
     }
 
     onChangeHandler = (event, toChange) => {
@@ -100,7 +112,7 @@ export default class Audit extends React.Component {
             <>
                 <div className="">
                     <div className="container mt-5">
-                        <div className="row mb-2">
+                        <div className="row mb-2"   style = {{fontFamily:"cursive",fontSize:"30px" }}>
                             <h2>Audit Search</h2>
                         </div>
                         <div className="row mt-4">
@@ -200,13 +212,13 @@ export default class Audit extends React.Component {
                             <div className="col-lg-4">
                                 <button
                                     type="submit"
-                                    className="btn btn-primary"
+                                    className="btn btn-primary" 
                                     onClick={event => { this.submitHandler(event,1);this.setState({page:1});}} style={{ width: "150px" }}>
                                     Search
                             </button>
 
                             </div>
-
+                                            
                         </div>
                         {this.state.noResult &&
                             <div className="row float-center mt-5"><h5>There are no results that match your search</h5></div>}

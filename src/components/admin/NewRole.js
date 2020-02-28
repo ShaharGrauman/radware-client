@@ -58,15 +58,16 @@ class NewRole extends React.Component {
               //method return object looks like error 
             this.setState({ errors: errors || {} });
             console.log('error:',this.state.errors)
-           // if (errors) return;
-        let dataRole = {
-            name: this.state.account.rolename,
-            description: this.state.account.description,
-            permissions: this.state.permissions
-        }
-        //If validations correct:
-      
-        if(this.state.permissions.length > 0){
+            let dataRole = {
+                name: this.state.account.rolename,
+                description: this.state.account.description,
+                permissions: this.state.permissions
+            }
+            //If validations correct:
+            
+            if(this.state.permissions.length > 0){
+                this.setState({checkBoxError:false})
+                if (errors) return;
             const roleData = await postNewRole(dataRole);
             if (typeof roleData == 'string') {
                 this.setState({
@@ -75,16 +76,18 @@ class NewRole extends React.Component {
                 return;
             }
             this.setState({ ifRoleCreated: true });
+        }else{
+            this.setState({checkBoxError:true})
+
         }
        
         //If validation fails:
         //...
     }
         catch (error) {
-            alert(error);
+            this.setState({errors: error.msg})
             
         }
-        this.setState({checkBoxError:true})
         
     }
     async componentWillMount() {
@@ -137,8 +140,8 @@ handleeChange = ({ currentTarget: input }) => {
         return (
             <>
                 <div className="container">
-                    <div className="row mt-2">
-                        <div className="col-md-12">
+                    <div className="row mt-2 ml-2">
+                        <div className="col-md-12" style = {{fontFamily:"cursive",fontSize:"15px" }}>
                             <h1>New Role</h1>
                         </div>
                     </div>
@@ -146,8 +149,8 @@ handleeChange = ({ currentTarget: input }) => {
                         <div className="col-md-12">
                             {this.state.cancelClicked && <Redirect to='/admin/roles' />}
                             <form className="ml-3" onSubmit={this.onSubmit}>
-                                <fieldset className="scheduler-border">
-                                    <legend className="scheduler-border">Role info</legend>
+                                <div className="scheduler-border">
+                                    <h4 className="scheduler-border font-weight-light pb-2 ml-2"><u>Role info </u></h4>
                                     <div className="form-group mt-2 ml-2">
                                         <label htmlFor="rolename">Role Name : </label>
                                         <Input 
@@ -179,7 +182,7 @@ handleeChange = ({ currentTarget: input }) => {
                                     {this.state.checkBoxError &&  <div className="mb-3" style={{color:"red"}}>
                                     Please select at least 1 permission
                                 </div>}
-                                </fieldset>
+                                </div>
                                 {
                                     this.state.errors.length && <div className="mb-3" style={{ color: "red" }}>
                                         {this.state.errors}

@@ -23,7 +23,8 @@ class AdminDashboard extends React.Component {
       showDeletedUsersClicked: false,
       modalIsOpen: false,
       deleteUser:'',
-      message: 'a'
+      message: {},
+      
     }
   }
 
@@ -42,10 +43,15 @@ class AdminDashboard extends React.Component {
   }
   deleteUser = async (username) => {
     try {
-      await deleteUser(username);
+      const deleteUserMsg = await deleteUser(username);
+      console.log(deleteUserMsg.msg);
+      this.setState({message : deleteUserMsg.msg});
       const updatedUsers = this.state.users.filter(function (element) { return element.username != username; });
       this.setState({ users: updatedUsers })
     } catch (error) {
+      this.setState({
+        message: "Internal error, please try again later"
+      })
       console.log(error);
     }
 
@@ -87,6 +93,7 @@ class AdminDashboard extends React.Component {
     } 
   }
   async componentDidMount() {
+    try{
     const users = await getUsers();
     const usersWithRoles = [];
     const deletedUsers = [];
@@ -114,6 +121,11 @@ class AdminDashboard extends React.Component {
       users: usersWithRoles,
       deletedUsers: deletedUsers
     });
+  }catch(error){
+    this.setState({
+      message: "Internal error, please try again later"
+    })
+  }
   }
 
   tableHeaders = [{ key: "id", value: "SeqID", toSort: true, sortOrder: true },
@@ -141,7 +153,7 @@ class AdminDashboard extends React.Component {
       <>
           {this.state.newUserClicked && <Redirect to='/newuser' />}
           <div className="row ml-3 mr-3">
-            <div className="col-lg-10 col-md-9 col-sm-6">
+            <div className="col-lg-10 col-md-9 col-sm-6" style = {{fontFamily:"cursive",fontSize:"30px" }}>
                 <h2>Admin Dashboard</h2>
                 <h4>Users Management</h4>
             </div>
@@ -163,7 +175,14 @@ class AdminDashboard extends React.Component {
 </div>
                 
           </div>
+          <div className="ml-1">
+          {
+                  this.state.message.length &&  <div  className="mb-3 ml-4" style={{color:"red"}}>
+                   {this.state.message}
 
+                    </div>
+                }
+                </div>
           <div className="row ml-3 mr-3">
               <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
                 <AdminTable
