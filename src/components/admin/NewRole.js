@@ -141,7 +141,7 @@ handleeChange = ({ currentTarget: input }) => {
             <>
                 <div className="container">
                     <div className="row mt-2 ml-2">
-                        <div className="col-md-12" style = {{fontFamily:"cursive",fontSize:"15px" }}>
+                        <div className="col-md-12" >
                             <h1>New Role</h1>
                         </div>
                     </div>

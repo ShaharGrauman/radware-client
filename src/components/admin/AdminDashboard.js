@@ -153,7 +153,7 @@ class AdminDashboard extends React.Component {
       <>
           {this.state.newUserClicked && <Redirect to='/newuser' />}
           <div className="row ml-3 mr-3">
-            <div className="col-lg-10 col-md-9 col-sm-6" style = {{fontFamily:"cursive",fontSize:"30px" }}>
+            <div className="col-lg-10 col-md-9 col-sm-6" >
                 <h2>Admin Dashboard</h2>
                 <h4>Users Management</h4>
             </div>

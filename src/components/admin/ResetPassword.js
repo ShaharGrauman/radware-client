@@ -113,7 +113,6 @@ export default class ResetPassword extends React.Component {
                 <div class="form-group">
                   <label htmlFor="password">New Password</label>
                   <label className = "text-danger ml-2">*</label>
-                  <span class="input-group-text" id="addon-wrapping"><FontAwesomeIcon className="fa-lg " icon={faUser}> </FontAwesomeIcon> </span>
 
                   <input
                     type="password"

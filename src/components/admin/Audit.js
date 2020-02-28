@@ -112,7 +112,7 @@ export default class Audit extends React.Component {
             <>
                 <div className="">
                     <div className="container mt-5">
-                        <div className="row mb-2"   style = {{fontFamily:"cursive",fontSize:"30px" }}>
+                        <div className="row mb-2" >
                             <h2>Audit Search</h2>
                         </div>
                         <div className="row mt-4">

@@ -192,7 +192,7 @@ export default class Register extends React.Component {
             <>
                 {this.state.cancelClicked && <Redirect to='/users' />}
                 <div className="row mt-2">
-                    <div className="col-6 ml-4" style = {{fontFamily:"cursive",fontSize:"15px" }}>
+                    <div className="col-6 ml-4" >
                         <h1>New User</h1>
                     </div>
                 </div>

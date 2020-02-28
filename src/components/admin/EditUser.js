@@ -302,7 +302,7 @@ export default class EditUser extends React.Component {
             <>
                 {this.state.cancelClicked && <Redirect to='/users' />}
                 <div className="row mt-2">
-                        <div className="col-md-12 ml-4 "style = {{fontFamily:"cursive",fontSize:"30px" }}>
+                        <div className="col-md-12 ml-4 ">
                             <h1>Edit User</h1>
                         </div>
                     </div>
