@@ -72,16 +72,14 @@ class RolesDashboard extends React.Component {
                 this.setState({
                     errorMsg: role
                 });
-                return;
+                const updatedRoles = this.state.roles.filter(function (element) { return element.id != id; });
+                this.setState({ roles: updatedRoles })
             }
-            const updatedRoles = this.state.roles.filter(function (element) { return element.id != id; });
-            this.setState({ roles: updatedRoles })
         } catch (error) {
             this.setState({
                 errorMsg: "Internal error, please try again later"
             })
         }
-
     }
     closeModal = () => {
         this.setState({ modalIsOpen: false });

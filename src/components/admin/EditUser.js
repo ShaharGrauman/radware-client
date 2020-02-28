@@ -302,7 +302,7 @@ export default class EditUser extends React.Component {
             <>
                 {this.state.cancelClicked && <Redirect to='/users' />}
                 <div className="row mt-2">
-                        <div className="col-md-12 ml-4">
+                        <div className="col-md-12 ml-4 ">
                             <h1>Edit User</h1>
                         </div>
                     </div>
@@ -310,7 +310,7 @@ export default class EditUser extends React.Component {
 
 
                     <fieldset className="scheduler-border">
-                        <h4 className="scheduler-border font-weight-light pb-2 ml-2"style={{color:"blue"}}><u>Personal info</u></h4>
+                        <h4 className="scheduler-border font-weight-light pb-2 ml-2"><u>Personal info</u></h4>
                         <div className="form-group mt-2 ml-2">
                             <label htmlFor="firstname"> Name : </label>
                             <Input className="form-control"
@@ -341,7 +341,7 @@ export default class EditUser extends React.Component {
 
 
                     <fieldset className="scheduler-border">
-                        <h4 className="scheduler-border font-weight-light pb-2 ml-2" style={{color:"blue"}}><u>User info</u></h4>
+                        <h4 className="scheduler-border font-weight-light pb-2 ml-2"><u>User info</u></h4>
                         <div className="form-group ml-2">
                             <label htmlFor="Remail">Email address :</label>
                             <input className="form-control"

@@ -41,6 +41,7 @@ export default class Register extends React.Component {
 
     }
     async componentDidMount() {
+        try{
         const data = await getRolesList();
         const tempData = [];
         console.log(data);
@@ -60,6 +61,11 @@ export default class Register extends React.Component {
             selected: <input type="checkbox" name="myTextEditBox" onChange={event => this.handleChange(event, event.target.checked, role.id)}></input>
         }));
         this.setState({ roles });
+    }catch(error){
+        this.setState({
+            errors: "Internal error, please try again later"
+        })
+    }
     }
     valthischeckBox = () => {
         var checkboxs = document.getElementsByName("myTextEditBox");
@@ -186,12 +192,12 @@ export default class Register extends React.Component {
             <>
                 {this.state.cancelClicked && <Redirect to='/users' />}
                 <div className="row mt-2">
-                    <div className="col-6 ml-4">
+                    <div className="col-6 ml-4" >
                         <h1>New User</h1>
                     </div>
                 </div>
                 <form className="ml-3" onSubmit={this.handleSumbit}>
-                    <h4 className="scheduler-border font-weight-light pb-2 ml-2" style={{ color: "blue" }}><u>Personal info</u></h4>
+                    <h4 className="scheduler-border font-weight-light pb-2 ml-2 "><u>Personal info</u></h4>
                     <div className="form-group ml-2">
                         <label htmlFor="firstname"> Name : </label>
                         <Input className="form-control"
@@ -214,7 +220,7 @@ export default class Register extends React.Component {
                             error={errors.phone} />
                     </div>
 
-                    <h4 className="scheduler-border font-weight-light pb-2 ml-2" style={{ color: "blue" }}><u>User info</u></h4>
+                    <h4 className="scheduler-border font-weight-light pb-2 ml-2"><u>User info</u></h4>
                     <div className="form-group ml-2">
                         <label htmlFor="Remail">Email address :</label>
                         <Input className="form-control"
