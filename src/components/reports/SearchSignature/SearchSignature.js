@@ -68,7 +68,7 @@ class SearchSignature extends Component {
     if(tableData.length!=0){
     tableData.map(signatur=>{
       const id=signatur.Id
-      signatur['']=
+      signatur['Edit/Copy']=
       <div>
         <Link to={`/createOrEditSignature/${id}`}>
         {/* <Link to={`/Export/QA`}> */}

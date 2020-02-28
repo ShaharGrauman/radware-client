@@ -4,14 +4,15 @@ import axios from 'axios';
 import { Dropdown } from 'react-bootstrap';
 import {Badge} from 'react-bootstrap'; 
 import { Redirect } from 'react-router-dom';
-import {getResearcher,getSignatures} from '../../../api/controllers/reports'
+import {getResearcher,getSignatures,copySignature} from '../../../api/controllers/reports'
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRight,
   faArrowLeft,
   faSearch,
-  faEdit
+  faEdit,
+  faCopy
 } from "@fortawesome/free-solid-svg-icons";
 
 import Table from '../../shared/Table';
@@ -162,18 +163,49 @@ export default class ResearcherDashboard extends React.Component {
     // this.setState({currentButton:current});
   
   }
-
+  copySignature = async (id) => {
+    console.log(id)
+    const {data} =await copySignature(id);
+    this.props.history.push(`/createOrEditSignature/${data.id}`)
+  }
   render() {
+    // let newData=this.state.data.map(sig=>(
+    //   {      
+    //     ...sig,
+    //     Edit:<Link to={`/createOrEditSignature/${sig.id}`}>
+    //           <FontAwesomeIcon 
+    //             className="fa-lg float-left" 
+    //             icon={faEdit}  
+    //             style={{ color: 'blue',cursor:'pointer' }}
+    //             ></FontAwesomeIcon>
+    //           </Link>
+    // }
+    // ));
+
     let newData=this.state.data.map(sig=>(
       {      
         ...sig,
-        Edit:<Link to={`/createOrEditSignature/${sig.id}`}>
-              <FontAwesomeIcon 
-                className="fa-lg float-left" 
-                icon={faEdit}  
-                style={{ color: 'blue',cursor:'pointer' }}
-                ></FontAwesomeIcon>
-              </Link>
+        'Edit/Copy':
+        <div>
+        <Link to={`/createOrEditSignature/${sig.id}`}>
+        {/* <Link to={`/Export/QA`}> */}
+          <FontAwesomeIcon 
+            className="fa-lg float-left" 
+            icon={faEdit}  
+            style={{ color: 'blue',cursor:'pointer' }}
+            ></FontAwesomeIcon>
+        </Link> 
+          <FontAwesomeIcon 
+            onClick={()=>{
+              console.log('signatur',sig.id)
+              this.copySignature(sig.id)
+            }}
+            className="fa-lg float-right" 
+            icon={faCopy} 
+            style={{ color: 'red',cursor:'pointer' }}>
+          </FontAwesomeIcon>
+
+      </div>
     }
     ));
 
