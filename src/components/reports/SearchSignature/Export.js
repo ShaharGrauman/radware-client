@@ -122,7 +122,7 @@ export=async ()=>{
   this.setState({isLoading:true})
 
   try{
-    const response=[]
+    let response=[]
     !this.state.isAllChecked?
      response= await exportSignaturesTofile(this.exportType,
         {"id":this.state.checkedSig.map(id=>parseInt(id))})
