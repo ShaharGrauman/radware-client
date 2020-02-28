@@ -18,7 +18,8 @@ class RolesDashboard extends React.Component {
             newRoleClicked: false,
             id: 0,
             modalIsOpen: false,
-            deleteRole: ''
+            deleteRole: '',
+            errorMsg: ''
         }
     }
     renderRedirect = page => {
@@ -66,26 +67,37 @@ class RolesDashboard extends React.Component {
     async deleteRole(id) {
         try {
             const role = await deleteRole(id);
+            if (typeof role == 'string') {
+                console.log("role ",role)
+                this.setState({
+                    errorMsg: role
+                });
+                return;
+            }
             const updatedRoles = this.state.roles.filter(function (element) { return element.id != id; });
             this.setState({ roles: updatedRoles })
         } catch (error) {
-            console.log(error);
+            this.setState({
+                errorMsg: "Internal error, please try again later"
+            })
         }
 
     }
     closeModal = () => {
         this.setState({ modalIsOpen: false });
-      }
-    
-      ifClickedDeleteRole = (id) => {
-        this.setState({ modalIsOpen: true ,
-                        deleteRole: id});
-        
-      }
-      clickDeleteRole = () => {
+    }
+
+    ifClickedDeleteRole = (id) => {
+        this.setState({
+            modalIsOpen: true,
+            deleteRole: id
+        });
+
+    }
+    clickDeleteRole = () => {
         this.deleteRole(this.state.deleteRole);
         this.setState({ modalIsOpen: false })
-      }
+    }
     tableHeaders = [
         { key: "id", value: "ID", toSort: true, sortOrder: true },
         { key: "name", value: "Role name", toSort: true, sortOrder: true },
@@ -97,12 +109,12 @@ class RolesDashboard extends React.Component {
     render() {
         if (this.state.modalIsOpen) {
             return (
-              <div>
-                <Modal show={this.state.modalIsOpen} closed={this.closeModal} clickDelete={this.clickDeleteRole} />
-                <Backdrop show={this.state.modalIsOpen} />
-              </div>
+                <div>
+                    <Modal show={this.state.modalIsOpen} closed={this.closeModal} clickDelete={this.clickDeleteRole} />
+                    <Backdrop show={this.state.modalIsOpen} />
+                </div>
             )
-          }
+        }
         return (
             <>
                 <div>
@@ -116,6 +128,11 @@ class RolesDashboard extends React.Component {
                             <button type="button" title="add role" className="btn btn-outline float-right" onClick={() => this.renderRedirect("newrole")}>
                                 <FontAwesomeIcon size="3x" icon={faUserTag}></FontAwesomeIcon></button>
                         </div>
+                    </div>
+                    <div className="ml-2">
+                    {
+                        this.state.errorMsg && <div className="mb-3 ml-4" style={{ color: "red" } }> {this.state.errorMsg} </div>
+                    }
                     </div>
                     <div className="row ml-3 mr-3 mt-3">
                         <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >

@@ -67,7 +67,13 @@ class NewRole extends React.Component {
         //If validations correct:
       
         if(this.state.permissions.length > 0){
-            await postNewRole(dataRole);
+            const roleData = await postNewRole(dataRole);
+            if (typeof roleData == 'string') {
+                this.setState({
+                    errors: roleData
+                });
+                return;
+            }
             this.setState({ ifRoleCreated: true });
         }
        
@@ -174,6 +180,11 @@ handleeChange = ({ currentTarget: input }) => {
                                     Please select at least 1 permission
                                 </div>}
                                 </fieldset>
+                                {
+                                    this.state.errors.length && <div className="mb-3" style={{ color: "red" }}>
+                                        {this.state.errors}
+                                    </div>
+                                }
                                 <button type="button" onClick={this.registerClick} className="btn btn-secondary btn-block" >Save</button>
                                 <button type="button" onClick={() => this.renderRedirect("users")} className="btn btn-secondary  btn-block">Cancel</button>
                             </form> 

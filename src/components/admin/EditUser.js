@@ -209,7 +209,13 @@ export default class EditUser extends React.Component {
     
         try {
             const userUpdated = await putUser(id.id, user);
-        
+            if(typeof userUpdated == 'string'){
+                this.setState({
+                  errors: user
+                });  
+                console.log("errors in : ",this.state.errors)
+                return;
+              }
             this.setState({ userEditedOK: true });
         
         

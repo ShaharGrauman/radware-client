@@ -143,7 +143,7 @@ class EditRole extends React.Component {
         const { account, errors } = this.state;
         if (this.state.ifRoleUpdated) {
             return (
-                <NotificationIsCreated page={'Role'} />
+                <NotificationIsCreated ifRoleUpdated = {this.state.ifRoleUpdated}/>
             )
         }
         return (
