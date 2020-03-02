@@ -82,9 +82,9 @@ const exportAllSignaturesTofile = async (url) => {
     }
 }
 
-const getSignatures = async () => {
+const getSignatures = async (url) => {
     try {
-        const { data } = await fetcher.get('/signature/researcher')
+        const { data } = await fetcher.get(url)
         console.log(data);
         return data;
     } catch (error) {
