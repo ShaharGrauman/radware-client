@@ -211,12 +211,15 @@ render() {
             className="form-control form-rounded"
             placeholder="Search"
             onChange  ={e=>{
-                console.log('this.onSearchText',this.onSearchText)
-              
+                // console.log('this.onSearchText',this.onSearchText)
+                // console.log('e.target.value',e.target.value)
                 this.onSearchText=e.target.value;
                 // this.onSearch();
             }}
             onBlur={this.onSearch}
+            onKeyPress={(e)=>
+            e.key=='Enter'? this.onSearch():null
+            }
           />
         <ButtonToolbar>
         <OverlayTrigger
