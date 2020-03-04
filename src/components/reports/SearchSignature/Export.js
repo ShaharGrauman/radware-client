@@ -15,7 +15,9 @@ import {
   faArrowLeft,
   faEdit,
   faCheckSquare,
-  faSquare
+  faSquare,
+  faCheck,
+  faTimes
 } from "@fortawesome/free-solid-svg-icons";
 
 class Export extends React.Component {
@@ -47,6 +49,8 @@ constructor(props) {
         exportto:'QA'
       }
       this.exportType='';
+      this.trueIcon=<FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
+      this.falseIcon=<FontAwesomeIcon icon={faTimes}></FontAwesomeIcon>
 }
 
 componentWillMount =()=>{
@@ -90,9 +94,11 @@ loadData =async () =>{
     const data = await getExportSignatures(requestURL);
     this.serverData=data;
     // this.setState({hasNext:data.hasNext})
+    console.log(data)
     let newData=data.signatureData.map(sig=>(
       {      
         ...sig,
+        status:data.status,
         TestData: sig.test_data?this.trueIcon:this.falseIco,
         Edit:<Link to={`/createOrEditSignature/${sig.id}`}>
               <FontAwesomeIcon 
@@ -130,14 +136,14 @@ export=async ()=>{
       response= await exportSignaturesTofile(`${this.exportType}?exportTo=${this.exportDetails.to}`)
       console.log('response',response)
 
-       var fileURL = window.URL.createObjectURL(new Blob([response]));
-       var fileLink = document.createElement('a');
+      //  var fileURL = window.URL.createObjectURL(new Blob([response]));
+      //  var fileLink = document.createElement('a');
     
-       fileLink.href = fileURL;
-       fileLink.setAttribute('download', 'file.txt');
-       document.body.appendChild(fileLink);
+      //  fileLink.href = fileURL;
+      //  fileLink.setAttribute('download', 'file.txt');
+      //  document.body.appendChild(fileLink);
      
-       fileLink.click();
+      //  fileLink.click();
       
     }catch(error){
 

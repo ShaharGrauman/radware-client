@@ -5,7 +5,7 @@ import { Dropdown } from 'react-bootstrap';
 import {Badge} from 'react-bootstrap'; 
 import { Redirect } from 'react-router-dom';
 import {getResearcher,getSignatures,copySignature} from '../../../api/controllers/reports'
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowRight,
@@ -18,7 +18,7 @@ import {
 import Table from '../../shared/Table';
 import ReportsTable from '../ReportsTable';
 
-export default class ResearcherDashboard extends React.Component {
+class ResearcherDashboard extends React.Component {
  state={currentButton:"all"}
 
   constructor(props){
@@ -48,12 +48,13 @@ export default class ResearcherDashboard extends React.Component {
       QAClicked: false,
       TestingClicked: false,
       GitClicked: false,
-      cveIdReportClicked: false
+      cveIdReportClicked: false,
+      page:1
 
     }
     this.urlDetails={
       page: 1 ,
-      size: 20,
+      size: 10,
     };
     
   }
@@ -92,7 +93,7 @@ export default class ResearcherDashboard extends React.Component {
 }
 
   componentDidMount = async e => {
-    const res = await getSignatures();
+    const res = await getSignatures(`signature/researcher?status=all&page=1&size=${this.urlDetails.size}`);
           this.setState({hasNext:res.hasNext,hasPrev:res.hasPrev})
           console.log(res.signatureData);
           if(res.signatureData.length == 0){
@@ -114,7 +115,7 @@ export default class ResearcherDashboard extends React.Component {
     console.log(this.state.nextClicked);
     if(this.state.currentButton == filter&&!this.state.nextClicked){//to return to all w  hen double clicking
       this.setState({currentButton:"all"}); // to set currentButton to all when clicking twice at button
-      requestURL=`/signature/researcher`;
+      requestURL=`signature/researcher?status=all&page=1&size=${this.urlDetails.size}`;
       this.setState({dataFilter:"All Signatures"}); 
     }else{
       requestURL=`/signature/researcher?status=${filter}`;
@@ -148,6 +149,7 @@ export default class ResearcherDashboard extends React.Component {
   
   selectButton=(value)=>{
     this.urlDetails.page =1;
+    this.setState({page:this.urlDetails.page})
     this.setState({clickedButton:value});
     this.setState({dataFilter:`${value} Signatures`});
     console.log("clicked:"+this.state.clickedButton);
@@ -185,7 +187,7 @@ export default class ResearcherDashboard extends React.Component {
     let newData=this.state.data.map(sig=>(
       {      
         ...sig,
-        'Edit/Copy':
+        Edit:
         <div>
         <Link to={`/createOrEditSignature/${sig.id}`}>
         {/* <Link to={`/Export/QA`}> */}
@@ -218,7 +220,7 @@ export default class ResearcherDashboard extends React.Component {
       tableHeader:[
         {value:'pattern_id' , valueToShow:'PatterID' , style:{width: "10%"}, sort:true},
         {value:'description' , valueToShow:'description' , style:{width: "40%"} , sort:true},
-        {value:'Edit' , valueToShow:'Edit' , style:{width: "10%"} , sort:false},
+        {value:'Edit' , valueToShow:'Edit/Copy' , style:{width: "10%"} , sort:false},
       ],
       tableData:newData
 
@@ -326,6 +328,8 @@ export default class ResearcherDashboard extends React.Component {
                       // this.state.nextClicked = false;
                       this.loadData(this.state.currentButton);
                       this.state.nextClicked = false;
+                      this.setState({page:this.urlDetails.page})
+
                   }}>
                   <FontAwesomeIcon
                     icon={faArrowLeft}
@@ -336,7 +340,9 @@ export default class ResearcherDashboard extends React.Component {
               }
 
               </div>
-              <div className="col "></div>
+              <div className="col-1 col-lg-0 mx-2 mx-sm-2 mx-md-0">
+                <span class="badge badge-secondary">{this.state.page}</span>
+              </div>
               <div className="col-3 col-sm-2">
               {this.state.hasNext?
                 <span className="fas" onClick={()=>{
@@ -345,6 +351,7 @@ export default class ResearcherDashboard extends React.Component {
                   this.loadData(this.state.currentButton);
                   this.state.hasPrev = true;
                   this.state.nextClicked = false;
+                  this.setState({page:this.urlDetails.page})
 
                 }}>
                   Next
@@ -465,4 +472,7 @@ export default class ResearcherDashboard extends React.Component {
     );
   }
 }
+
+
+export default withRouter(ResearcherDashboard);
 
