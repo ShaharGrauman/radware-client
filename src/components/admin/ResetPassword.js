@@ -1,7 +1,7 @@
 import React from "react";
 import { Redirect, Link } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { postResetPassword, putUpdatePassword } from "../../api/controllers/admin";
+import { resetPassword, updatePassword } from "../../api/controllers/admin";
 import { faUser, faKey, faUnlockAlt, faLockOpen } from '@fortawesome/free-solid-svg-icons';
 export default class ResetPassword extends React.Component {
   constructor(props) {
@@ -44,7 +44,7 @@ export default class ResetPassword extends React.Component {
   resetPassword = async e => {
     e.preventDefault();
     try {
-      const password = await postResetPassword(this.state.resetDetails.username);
+      const password = await resetPassword(this.state.resetDetails.username);
       this.setState({ message: password })
       if (!(password === "No user found with that email address.")) {
         this.setState({ reset: true })
@@ -66,7 +66,7 @@ export default class ResetPassword extends React.Component {
       return;
     }
     if (this.state.resetDetails.newPassword1 === this.state.resetDetails.newPassword2) {
-      const updatepass = await putUpdatePassword(
+      const updatepass = await updatePassword(
         this.state.resetDetails.username,
         this.state.resetDetails.temppassword,
         this.state.resetDetails.newPassword1)

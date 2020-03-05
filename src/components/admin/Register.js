@@ -4,7 +4,7 @@ import Input from './InputValidation';
 import { Redirect } from 'react-router-dom'
 import AdminTable from '../shared/AdminTable';
 import NotificationIsCreated from './NotificationIsCreated';
-import { getRolesList, postNewUser } from '../../api/controllers/admin';
+import { getRolesList, createNewUser } from '../../api/controllers/admin';
 
 export default class Register extends React.Component {
     constructor(props) {
@@ -130,7 +130,7 @@ export default class Register extends React.Component {
                     roles: this.updateData
                 };
                 if (errors) return;
-                const newUser = await postNewUser(user);
+                const newUser = await createNewUser(user);
                 if (typeof newUser == 'string') {
                     this.setState({
                         errors: newUser

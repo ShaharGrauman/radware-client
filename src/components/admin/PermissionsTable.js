@@ -1,5 +1,5 @@
 import React from "react";
-import { getpermissionNew } from '../../api/controllers/admin';
+import { getpermission } from '../../api/controllers/admin';
 
 /**
  * Permissions aren't dynamic because it has to be supported in client and server.
@@ -17,7 +17,7 @@ export default class PermissionsTable extends React.Component {
   }
 
   async componentDidMount() {
-    const permissionRole = await getpermissionNew();
+    const permissionRole = await getpermission();
     const permissions = permissionRole.map(permission => ({
       ...permission
     }));

@@ -4,7 +4,7 @@ import Input from './InputValidation';
 import { Redirect } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 import PermissionsTable from './PermissionsTable';
-import { postNewRole } from '../../api/controllers/admin';
+import { createNewRole } from '../../api/controllers/admin';
 import { getRoleWithId } from '../../api/controllers/admin';
 import NotificationIsCreated from './NotificationIsCreated';
 
@@ -68,7 +68,7 @@ class NewRole extends React.Component {
             if (this.state.permissions.length > 0) {
                 this.setState({ checkBoxError: false })
                 if (errors) return;
-                const roleData = await postNewRole(dataRole);
+                const roleData = await createNewRole(dataRole);
                 if (typeof roleData == 'string') {
                     this.setState({
                         errors: roleData
@@ -135,7 +135,7 @@ class NewRole extends React.Component {
             <>
                 <div className="container">
                     <div className="row mt-2 ml-2">
-                        <div className="col-md-12" >
+                        <div className="col-md-12" style={{ fontFamily: "cursive", fontSize: "30px" }}>
                             <h1>New Role</h1>
                         </div>
                     </div>
@@ -144,7 +144,7 @@ class NewRole extends React.Component {
                             {this.state.cancelClicked && <Redirect to='/admin/roles' />}
                             <form className="ml-3" onSubmit={this.onSubmit}>
                                 <div className="scheduler-border">
-                                    <h4 className="scheduler-border font-weight-light pb-2 ml-2"><u>Role info </u></h4>
+                                    <h4 className="scheduler-border font-weight-light pb-2 ml-2" style={{ fontFamily: "cursive", fontSize: "20px" }}><u>Role info </u></h4>
                                     <div className="form-group mt-2 ml-2">
                                         <label htmlFor="rolename">Role Name : </label>
                                         <Input
