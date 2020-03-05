@@ -1,17 +1,15 @@
 import React from "react";
 import AdminTable from '../shared/AdminTable';
-import { getAudit, getConstant } from '../../api/controllers/admin';
-import DropdownButton from 'react-bootstrap/DropdownButton'
-import Dropdown from 'react-bootstrap/Dropdown'
-import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { getAudit, getConstant } from '../../api/controllers/admin';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
-export default class Audit extends React.Component {
 
+export default class Audit extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             audit: [],
+            message: {},
             actions: [],
             event: '',
             users_names: '',
@@ -22,65 +20,63 @@ export default class Audit extends React.Component {
             enddate: '',
             starttime: '',
             endtime: '',
-            hasNext: false,
             hasPrev: false,
+            hasNext: false,
             noResult: false,
-            searchClicked: false,
-            message: {}
+            searchClicked: false
         }
     }
-    tableHeaders = [{ key: "username", value: "Username", toSort: false },
-    { key: "action_name", value: "Event", toSort: false },
-    { key: "description", value: "Description", toSort: false },
-    { key: "lastupdated", value: "Last Updated", toSort: false }
+
+    tableHeaders = [
+        { key: "username", value: "Username", toSort: false },
+        { key: "action_name", value: "Event", toSort: false },
+        { key: "description", value: "Description", toSort: false },
+        { key: "lastupdated", value: "Last Updated", toSort: false }
     ];
 
     async componentDidMount() {
-    try{
-        const constant = await getConstant();
-        const actions = constant.actionName;
-        this.setState({
-            actions: actions, searchClicked: false
-        })
-    }catch(error){
-        this.setState({
-            message: "Internal error, please try again later"
-        })
-    }
-    }
-
-    async submitHandler (e, page) {
-        try{
-        const result = await getAudit(this.state.event, this.state.users_names, this.state.orderby, page, this.state.size, this.state.startdate, this.state.enddate, this.state.starttime, this.state.endtime);
-        console.log("Result is: ", result);
-
-
-        if (result.history.length < 1) this.setState({
-            noResult: true,
-            audit: [],
-            hasNext: false,
-            hasPrev: false
-        });
-        else {
-            const audit = result.history.map(data => ({
-                username: data.user.username,
-                action_name: data.action_name,
-                description: data.description,
-                lastupdated: data.date + "   " + data.time
-            }))
+        try {
+            const constant = await getConstant();
+            const actions = constant.actionName;
             this.setState({
-                audit: audit,
-                hasNext: result.hasNext,
-                hasPrev: result.hasPrev,
-                noResult: false,
-                searchClicked: true
-            });
+                actions: actions, searchClicked: false
+            })
+        } catch (error) {
+            this.setState({
+                message: "Internal error, please try again later"
+            })
         }
-    }catch(error){
-        this.setState({
-            message:  "Internal error, please try again later"
-        })
     }
+
+    async submitHandler(e, page) {
+        try {
+            const result = await getAudit(this.state.event, this.state.users_names, this.state.orderby, page, this.state.size, this.state.startdate, this.state.enddate, this.state.starttime, this.state.endtime);
+            if (result.history.length < 1) this.setState({
+                noResult: true,
+                audit: [],
+                hasNext: false,
+                hasPrev: false
+            });
+            else {
+                const audit = result.history.map(data => ({
+                    username: data.user.username,
+                    action_name: data.action_name,
+                    description: data.description,
+                    lastupdated: data.date + "   " + data.time
+                }))
+                this.setState({
+                    audit: audit,
+                    hasNext: result.hasNext,
+                    hasPrev: result.hasPrev,
+                    noResult: false,
+                    searchClicked: true
+                });
+            }
+        } catch (error) {
+            this.setState({
+                message: "Internal error, please try again later"
+            })
+        }
     }
 
     onChangeHandler = (event, toChange) => {
@@ -90,12 +86,9 @@ export default class Audit extends React.Component {
                 let user_name = target.replace(/\s+/g, '');
                 this.setState({ users_names: user_name });
                 break;
-            case "startdate":   this.setState({ startdate: target });
-                                let myDate = new Date(target);
-                                // myDate = myDate.getDate() + 60*60*24*1000;
-                                // myDate.setDate(myDate.getDate + 60*60*24*1000);
-                                console.log("my Date is: ", myDate);
-                                break;
+            case "startdate": this.setState({ startdate: target });
+                let myDate = new Date(target);
+                break;
             case "enddate": this.setState({ enddate: target }); break;
             case "starttime": this.setState({ starttime: target }); break;
             case "endtime": this.setState({ endtime: target }); break;
@@ -107,13 +100,12 @@ export default class Audit extends React.Component {
     }
 
     render() {
-
         return (
             <>
-                <div className="">
+                <div >
                     <div className="container mt-5">
-                        <div className="row mb-2" >
-                            <h2>Audit Search</h2>
+                        <div className="row mb-2" style={{ fontFamily: "cursive", fontSize: "30px" }}>
+                            <h2> Audit Search </h2>
                         </div>
                         <div className="row mt-4">
                             <div className="col-md-6">
@@ -212,17 +204,15 @@ export default class Audit extends React.Component {
                             <div className="col-lg-4">
                                 <button
                                     type="submit"
-                                    className="btn btn-primary" 
-                                    onClick={event => { this.submitHandler(event,1);this.setState({page:1});}} style={{ width: "150px" }}>
+                                    className="btn btn-primary"
+                                    onClick={event => { this.submitHandler(event, 1); this.setState({ page: 1 }); }} style={{ width: "150px" }}>
                                     Search
-                            </button>
-
+                                </button>
                             </div>
-                                            
                         </div>
+
                         {this.state.noResult &&
                             <div className="row float-center mt-5"><h5>There are no results that match your search</h5></div>}
-
                         {(this.state.searchClicked && !this.state.noResult) &&
                             <>
                                 <div className="row">
@@ -241,14 +231,12 @@ export default class Audit extends React.Component {
                                         {this.state.hasPrev &&
                                             <span className="fas" className="noselect ml-5"
                                                 onClick={event => {
-                                                    this.submitHandler(event,--this.state.page);
-                                                    this.setState({page: this.state.page--});
+                                                    this.submitHandler(event, --this.state.page);
+                                                    this.setState({ page: this.state.page-- });
                                                 }}>
-                                                <FontAwesomeIcon
-                                                    icon={faArrowLeft}
-                                                ></FontAwesomeIcon>{" "}
+                                                <FontAwesomeIcon icon={faArrowLeft}></FontAwesomeIcon>{" "}
                                                 Previous
-                                    </span>
+                                            </span>
                                         }
                                     </div>
                                     <div className="col-lg-2 col-sm-2">
@@ -257,8 +245,8 @@ export default class Audit extends React.Component {
                                     <div className="col-lg-3 col-sm-5 float-left">
                                         {this.state.hasNext &&
                                             <span className="fas" onClick={(event) => {
-                                                this.submitHandler(event,++this.state.page);
-                                                this.setState({page: this.state.page++});
+                                                this.submitHandler(event, ++this.state.page);
+                                                this.setState({ page: this.state.page++ });
                                             }}>
                                                 Next{" "}
                                                 <FontAwesomeIcon

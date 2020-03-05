@@ -10,7 +10,7 @@ export default class CreateOrEditSignatureStep3Validate extends React.Component 
         this.state = {
             get: 'GET <URI> HTTP Host: \n10.205.156.51 - default IP , but need to be configurable. Connection: close',
             post: 'POST <URI>  HTTP/1.1\nHost: 10.205.156.51\nReferer: attackscript.perl\nContent-Type: application/x-www-form-urlencoded\nCache-Control: no-cache Accept-Encoding: identity\nConnection: close\nContent-Length: <Length>\n',
-            postWithFile: 'POST WITH FILE Description',
+            postWithFile: 'POST /fileupload HTTP/1.1\nHost: 10.205.156.51\nConnection: keep-alive\nContent-Type: multipart/form-data; boundary=----WebKitFormBoundaryvBPvHMl1WIB2BGQ4\nAccept: */*\nAccept-Encoding: gzip, deflate, br\nAccept-Language: en-US,en;q=0.9,he;q=0.8\nContent-Length: 403\n------WebKitFormBoundaryvBPvHMl1WIB2BGQ4\nContent-Disposition: form-data; name="filesUploaded"; filename="my_filename.txt"\nContent-Type: text/plain\nmy_content\n------WebKitFormBoundaryvBPvHMl1WIB2BGQ4\nContent-Disposition: form-data; name="category"\nfile\n------WebKitFormBoundaryvBPvHMl1WIB2BGQ4\nContent-Disposition: form-data; name="comments"\n0\n------WebKitFormBoundaryvBPvHMl1WIB2BGQ4--',
             fields: {
                 texPostOrGet: field({ name: 'texPostOrGet', value: '', isRequired: false })
             }

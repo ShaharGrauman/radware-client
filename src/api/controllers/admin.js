@@ -47,7 +47,6 @@ const getRoleWithId = async (id) => {
 
 const putUser = async (id, user) => {
     try {
-        console.log("putUser: ", id)
         const { data } = await fetcher.put(`/users/${id}`, user)
         return data;
     } catch (error) {
@@ -71,7 +70,6 @@ const login = async (username, password) => {
         const { data } = await fetcher.post('/login', { username, password });
         return data;
     } catch (error) {
-        console.log(error)
         throw error.message
     }
 }
@@ -96,7 +94,6 @@ const postNewUser = async (user) => {
 const postResetPassword = async (username) => {
     try {
         const { data } = await fetcher.post('/login/resetPassword', { username })
-        console.log('data', data)
         return data;
     } catch (error) {
         throw error.message;
@@ -104,7 +101,6 @@ const postResetPassword = async (username) => {
 }
 const deleteUser = async (username) => {
     try {
-        console.log("username in admin: ", username);
         const { data } = await fetcher.put('/users/delete_user', { username })
         return data;
     } catch (error) {
@@ -138,10 +134,7 @@ const postNewRole = async (role) => {
 }
 const putRole = async (id, user) => {
     try {
-        console.log("in admin -- the id is :  ", id);
-        console.log("and the user is : ", user);
         const { data } = await fetcher.put(`/role/${id}`, user)
-        console.log(user);
         return data;
     } catch (error) {
         throw error.message;
