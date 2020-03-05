@@ -1,19 +1,20 @@
 import React from "react";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSort } from "@fortawesome/free-solid-svg-icons";
+
 let indx = 0;
-const capitalizeFirstLetter = str => str.replace(/^\w/, function (chr) {return chr.toUpperCase();});
+const capitalizeFirstLetter = str => str.replace(/^\w/, function (chr) { return chr.toUpperCase(); });
+
 function TableHedaer(props) {
   return (
-    <th scope="col" key={indx++}> 
+    <th scope="col" key={indx++}>
       {capitalizeFirstLetter(props.header)}
       <FontAwesomeIcon
         icon={faSort}
         onClick={() => props.sortOn(props.header)}
       ></FontAwesomeIcon>
     </th>
-  );
+  )
 }
 
 export default class Table extends React.Component {

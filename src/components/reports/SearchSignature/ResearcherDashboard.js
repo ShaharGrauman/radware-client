@@ -1,62 +1,37 @@
 import React from "react";
-
-import axios from 'axios';
 import { Dropdown } from 'react-bootstrap';
-import {Badge} from 'react-bootstrap'; 
+import { Badge } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
-import {getResearcher,getSignatures,copySignature} from '../../../api/controllers/reports'
+import { getResearcher, getSignatures, copySignature } from '../../../api/controllers/reports'
 import { Link, withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faArrowRight,
-  faArrowLeft,
-  faSearch,
-  faEdit,
-  faCopy
-} from "@fortawesome/free-solid-svg-icons";
-
-import Table from '../../shared/Table';
+import { faArrowRight, faArrowLeft, faEdit, faCopy } from "@fortawesome/free-solid-svg-icons";
 import ReportsTable from '../ReportsTable';
 
 class ResearcherDashboard extends React.Component {
- state={currentButton:"all"}
-
-  constructor(props){
+  state = { currentButton: "all" }
+  constructor(props) {
     super(props);
-    this.state={
-      hasNext:false,
-      hasPrev:false,
-      dataFilter:'All Singatures ',  
-      data : [
-        { patternID: '', description: ''},
-        
-      ] ,
-      signaturesCountByStatus:[{Count:0},{Count:0},{Count:0},{Count:0},{Count:0},{Count:0}],
-      // in_progress:true,
-      // in_test:true,
-      // inQa:true,
-      // Published:true,
-      // suspended:true,
-      // all:true,
-      currentButton:'all',
-      clickedButton:'',
+    this.state = {
+      hasNext: false,
+      hasPrev: false,
+      dataFilter: 'All Singatures ',
+      data: [{ patternID: '', description: '' }],
+      signaturesCountByStatus: [{ Count: 0 }, { Count: 0 }, { Count: 0 }, { Count: 0 }, { Count: 0 }, { Count: 0 }],
+      currentButton: 'all',
+      clickedButton: '',
       nextClicked: false,
       prevClicked: false,
-      errorMsg:'',
+      errorMsg: '',
       searchClicked: false,
       createOrEditSignatureClicked: false,
       QAClicked: false,
       TestingClicked: false,
       GitClicked: false,
       cveIdReportClicked: false,
-      page:1
-
+      page: 1
     }
-    this.urlDetails={
-      page: 1 ,
-      size: 10,
-    };
-    
+    this.urlDetails = { page: 1, size: 10, };
   }
 
   renderRedirect = page => {
@@ -65,165 +40,119 @@ class ResearcherDashboard extends React.Component {
         searchClicked: true
       });
     }
+
     if (page === "createOrEditSignature") {
       this.setState({
         createOrEditSignatureClicked: true
       });
     }
+
     if (page === "QA") {
       this.setState({
         QAClicked: true
       });
     }
+
     if (page === "Testing") {
       this.setState({
         TestingClicked: true
       });
     }
+
     if (page === "Git") {
       this.setState({
         GitClicked: true
       });
     }
+
     if (page === "CveIdReport") {
       this.setState({
         cveIdReportClicked: true
       });
     }
-}
+  }
 
   componentDidMount = async e => {
     const res = await getSignatures(`signature/researcher?status=all&page=1&size=${this.urlDetails.size}`);
-          this.setState({hasNext:res.hasNext,hasPrev:res.hasPrev})
-          console.log(res.signatureData);
-          if(res.signatureData.length == 0){
-            this.setState({data: [
-              { patternID: '', description: '' }
-            ]});         
-          }else{
-            this.setState({signaturesCountByStatus:res.signaturesCountByStatus})
-            console.log(res.signaturesCountByStatus);
-            this.setState({data:res.signatureData});
-          }
+    this.setState({ hasNext: res.hasNext, hasPrev: res.hasPrev })
+    if (res.signatureData.length == 0) {
+      this.setState({
+        data: [{ patternID: '', description: '' }]
+      });
+    } else {
+      this.setState({ signaturesCountByStatus: res.signaturesCountByStatus, data: res.signatureData })
+    }
   }
 
-  loadData = async(filter)=>{
+  loadData = async (filter) => {
     let requestURL;
-    // this.setState({currentButton:filter});
-    console.log("current:",this.state.currentButton);
-    console.log("clicked:",this.state.clickedButton);
-    console.log(this.state.nextClicked);
-    if(this.state.currentButton == filter&&!this.state.nextClicked){//to return to all w  hen double clicking
-      this.setState({currentButton:"all"}); // to set currentButton to all when clicking twice at button
-      requestURL=`signature/researcher?status=all&page=1&size=${this.urlDetails.size}`;
-      this.setState({dataFilter:"All Signatures"}); 
-    }else{
-      requestURL=`/signature/researcher?status=${filter}`;
-      Object.keys(this.urlDetails).forEach(key=>requestURL=requestURL.concat(`&${key}=${this.urlDetails[key]}`))
+    if (this.state.currentButton == filter && !this.state.nextClicked) {
+      this.setState({ currentButton: "all" });
+      requestURL = `signature/researcher?status=all&page=1&size=${this.urlDetails.size}`;
+      this.setState({ dataFilter: "All Signatures" });
+    } else {
+      requestURL = `/signature/researcher?status=${filter}`;
+      Object.keys(this.urlDetails).forEach(key => requestURL = requestURL.concat(`&${key}=${this.urlDetails[key]}`))
       requestURL.slice(1)
     }
-    console.log(requestURL)
-    // const isClicked=this.state[filter]
-    // if(isClicked&&filter!='all'){
-    //   this.setState({dataFilter:`${filter} Signature`,[filter]:false})
-    //   this.setState({dataFilter:`${filter} Signature`,[filter]:true})
-    // }else{
-    //  this.setState({dataFilter:`All Signature`,[filter]:true})
-    //  filter='';
-    // }
-   
     const res = await getResearcher(requestURL);
-    console.log('res',res)
-      this.setState({hasNext:res.hasNext,hasPrev:res.hasPrev})
-      console.log(res.signatureData);
-      if(res.signatureData.length == 0){
-        this.setState({data: [
-          { patternID: '', description: '' }
-         
-        ]});         
-      }else{
-        this.setState({data:res.signatureData});
-      }
-
-  } 
-  
-  selectButton=(value)=>{
-    this.urlDetails.page =1;
-    this.setState({page:this.urlDetails.page})
-    this.setState({clickedButton:value});
-    this.setState({dataFilter:`${value} Signatures`});
-    console.log("clicked:"+this.state.clickedButton);
-    
-    // console.log(currentButton,value)
-    // let current = this.state.currentButton;
-    // if (current === value) {
-    //   current = 'all';
-    //   this.state.dataFilter="all sig"
-    // }
-    // else current=value;
-    // this.loadData(value);
-    // this.setState({currentButton:current});
-  
+    this.setState({ hasNext: res.hasNext, hasPrev: res.hasPrev })
+    if (res.signatureData.length == 0) {
+      this.setState({
+        data: [{ patternID: '', description: '' }]
+      });
+    } else {
+      this.setState({ data: res.signatureData });
+    }
   }
+
+  selectButton = (value) => {
+    this.urlDetails.page = 1;
+    this.setState({ page: this.urlDetails.page })
+    this.setState({ clickedButton: value });
+    this.setState({ dataFilter: `${value} Signatures` });
+  }
+
   copySignature = async (id) => {
-    console.log(id)
-    const {data} =await copySignature(id);
+    const { data } = await copySignature(id);
     this.props.history.push(`/createOrEditSignature/${data.id}`)
   }
   render() {
-    // let newData=this.state.data.map(sig=>(
-    //   {      
-    //     ...sig,
-    //     Edit:<Link to={`/createOrEditSignature/${sig.id}`}>
-    //           <FontAwesomeIcon 
-    //             className="fa-lg float-left" 
-    //             icon={faEdit}  
-    //             style={{ color: 'blue',cursor:'pointer' }}
-    //             ></FontAwesomeIcon>
-    //           </Link>
-    // }
-    // ));
-
-    let newData=this.state.data.map(sig=>(
-      {      
+    let newData = this.state.data.map(sig => (
+      {
         ...sig,
         Edit:
-        <div>
-        <Link to={`/createOrEditSignature/${sig.id}`}>
-        {/* <Link to={`/Export/QA`}> */}
-          <FontAwesomeIcon 
-            className="fa-lg float-left" 
-            icon={faEdit}  
-            style={{ color: 'blue',cursor:'pointer' }}
-            ></FontAwesomeIcon>
-        </Link> 
-          <FontAwesomeIcon 
-            onClick={()=>{
-              console.log('signatur',sig.id)
-              this.copySignature(sig.id)
-            }}
-            className="fa-lg float-right" 
-            icon={faCopy} 
-            style={{ color: 'red',cursor:'pointer' }}>
-          </FontAwesomeIcon>
-
-      </div>
-    }
+          <div>
+            <Link to={`/createOrEditSignature/${sig.id}`}>
+              <FontAwesomeIcon
+                className="fa-lg float-left"
+                icon={faEdit}
+                style={{ color: 'blue', cursor: 'pointer' }}
+              ></FontAwesomeIcon>
+            </Link>
+            <FontAwesomeIcon
+              onClick={() => {
+                this.copySignature(sig.id)
+              }}
+              className="fa-lg float-right"
+              icon={faCopy}
+              style={{ color: 'red', cursor: 'pointer' }}>
+            </FontAwesomeIcon>
+          </div>
+      }
     ));
 
-    const testData={
-      tableStyle:{ //for the <table>
-        style:{ borderWidth: "3px",width:'100%' },
-        className:'table table-striped table-hover table-bordered border-dark'
+    const testData = {
+      tableStyle: {
+        style: { borderWidth: "3px", width: '100%' },
+        className: 'table table-striped table-hover table-bordered border-dark'
       },
-      
-      tableHeader:[
-        {value:'pattern_id' , valueToShow:'PatterID' , style:{width: "10%"}, sort:true},
-        {value:'description' , valueToShow:'description' , style:{width: "40%"} , sort:true},
-        {value:'Edit' , valueToShow:'Edit/Copy' , style:{width: "10%"} , sort:false},
+      tableHeader: [
+        { value: 'pattern_id', valueToShow: 'PatterID', style: { width: "10%" }, sort: true },
+        { value: 'description', valueToShow: 'description', style: { width: "40%" }, sort: true },
+        { value: 'Edit', valueToShow: 'Edit/Copy', style: { width: "10%" }, sort: false },
       ],
-      tableData:newData
-
+      tableData: newData
     }
 
     return (
@@ -236,141 +165,88 @@ class ResearcherDashboard extends React.Component {
         {this.state.cveIdReportClicked && <Redirect to='/CveIdReport' />}
         <h2 className="ml mb-3">Researcher dashboard</h2>
         <div className='row'>
-        <div className='ml-2 mr-4'>
-          <button type="button" className="ml-2 mr-4 btn btn-secondary" onClick={() => this.renderRedirect("createOrEditSignature")}>
-            New
+          <div className='ml-2 mr-4'>
+            <button type="button" className="ml-2 mr-4 btn btn-secondary" onClick={() => this.renderRedirect("createOrEditSignature")}>
+              New
           </button>
-          
-          {/* <div class="dropdown">
-          <button class="dropbtn" onclick="myFunction()">Export
-            <i class="fa fa-caret-down"></i>
-          </button>
-          <div class="dropdown-content" id="myDropdown">
-            <a href="#">QA</a>
-            <a href="#">Testing</a>
-            <a href="#">Git</a>
-          </div>
-          </div>  */}
-          {/* <button
-            className="btn btn-secondary dropdown-toggle mr-4"
-            type="button"
-            id="dropdownMenuButton"
-            data-toggle="dropdown"
-            aria-haspopup="true"
-            aria-expanded="true"
-            // onClick={this.myFunction()}
-          >
-            Export
-          </button> */}
-          <button type="button"
-                            onClick={() => this.renderRedirect("search")}
-                            className="ml-2 mr-4 btn btn-secondary">Search</button>
-
+            <button type="button"
+              onClick={() => this.renderRedirect("search")}
+              className="ml-2 mr-4 btn btn-secondary">Search</button>
           </div>
 
-          {/* <div className="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a className="dropdown-item" href="#">
-              QA
-            </a>
-            <a className="dropdown-item" href="#">
-              Testing
-            </a>
-            <a className="dropdown-item" href="#">
-              Git
-            </a>
-          </div> */}
-          <div className='ml-2 mr-4'> 
-          <Dropdown >
-          <Dropdown.Toggle className="btn btn-secondary dropdown-toggle mr-4" id="dropdown-basic">
-            Export
+          <div className='ml-2 mr-4'>
+            <Dropdown >
+              <Dropdown.Toggle className="btn btn-secondary dropdown-toggle mr-4" id="dropdown-basic">
+                Export
           </Dropdown.Toggle>
 
-          <Dropdown.Menu>
-            <Dropdown.Item onClick={() => this.renderRedirect("QA")}>QA</Dropdown.Item>
-            <Dropdown.Item onClick={() => this.renderRedirect("Testing")}>Testing</Dropdown.Item>
-            <Dropdown.Item onClick={() => this.renderRedirect("Git")}>Git</Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-        </div>
-        <button type="button"
-                            onClick={() => this.renderRedirect("CveIdReport")}
-                            className="ml-2 mr-4 btn btn-secondary">CveId</button>
-
+              <Dropdown.Menu>
+                <Dropdown.Item onClick={() => this.renderRedirect("QA")}>QA</Dropdown.Item>
+                <Dropdown.Item onClick={() => this.renderRedirect("Testing")}>Testing</Dropdown.Item>
+                <Dropdown.Item onClick={() => this.renderRedirect("Git")}>Git</Dropdown.Item>
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+          <button type="button"
+            onClick={() => this.renderRedirect("CveIdReport")}
+            className="ml-2 mr-4 btn btn-secondary">CveId</button>
         </div>
         <div className="ml-2 mt-3 mx-">
-        <h5 className=" mb-2">{this.state.dataFilter} by Create Date</h5>
-
-          {/* {this.state.dataFilter} by Create Date */}
-          </div>
+          <h5 className=" mb-2">{this.state.dataFilter} by Create Date</h5>
+        </div>
         <div className="container ml-0">
           <div className="row">
             <div className="col-7">
-            <div className="row">
-              <ReportsTable data={testData } />
-
-              {/* <Table data= {this.state.data}/> */}
-            </div>
-            <div className="row mx-auto">
-          <div className="col">
-            <div className="row">
-              <div className="col-2"></div>
-              <div className="col-3 col-sm-3 col-md-2" >
-                {this.state.hasPrev?
-                  <span className="fas" onClick={()=>{
-                    this.urlDetails.page--;
-                    this.state.nextClicked = true;
-                    
-                    // this.state.prevClicked = true;
-                    // if(this.urlDetails.page == 1){
-                      //   this.state.hasPrev = false;
-                      
-                      // }
-                      // this.state.nextClicked = false;
-                      this.loadData(this.state.currentButton);
-                      this.state.nextClicked = false;
-                      this.setState({page:this.urlDetails.page})
-
-                  }}>
-                  <FontAwesomeIcon
-                    icon={faArrowLeft}
-                  ></FontAwesomeIcon>
-                  Previous
-                </span>
-                : null  
-              }
-
+              <div className="row">
+                <ReportsTable data={testData} />
               </div>
-              <div className="col-1 col-lg-0 mx-2 mx-sm-2 mx-md-0">
-                <span class="badge badge-secondary">{this.state.page}</span>
+              <div className="row mx-auto">
+                <div className="col">
+                  <div className="row">
+                    <div className="col-2"></div>
+                    <div className="col-3 col-sm-3 col-md-2" >
+                      {this.state.hasPrev ?
+                        <span className="fas" onClick={() => {
+                          this.urlDetails.page--;
+                          this.state.nextClicked = true;
+                          this.loadData(this.state.currentButton);
+                          this.state.nextClicked = false;
+                          this.setState({ page: this.urlDetails.page })
+                        }}>
+                          <FontAwesomeIcon
+                            icon={faArrowLeft}
+                          ></FontAwesomeIcon>
+                          Previous
+                         </span>
+                        : null
+                      }
+                    </div>
+                    <div className="col-1 col-lg-0 mx-2 mx-sm-2 mx-md-0">
+                      <span class="badge badge-secondary">{this.state.page}</span>
+                    </div>
+                    <div className="col-3 col-sm-2">
+                      {this.state.hasNext ?
+                        <span className="fas" onClick={() => {
+                          this.state.nextClicked = true;
+                          this.urlDetails.page++;
+                          this.loadData(this.state.currentButton);
+                          this.state.hasPrev = true;
+                          this.state.nextClicked = false;
+                          this.setState({ page: this.urlDetails.page })
+                        }}>Next
+                          <FontAwesomeIcon
+                            icon={faArrowRight}
+                          ></FontAwesomeIcon>
+                        </span>
+                        : null
+                      }
+                    </div>
+                    <div className="col-2"></div>
+                  </div>
+                </div>
               </div>
-              <div className="col-3 col-sm-2">
-              {this.state.hasNext?
-                <span className="fas" onClick={()=>{
-                  this.state.nextClicked = true;
-                  this.urlDetails.page++;
-                  this.loadData(this.state.currentButton);
-                  this.state.hasPrev = true;
-                  this.state.nextClicked = false;
-                  this.setState({page:this.urlDetails.page})
-
-                }}>
-                  Next
-                  <FontAwesomeIcon
-                    icon={faArrowRight}
-                    // onClick={this.props.nextOnClick}
-                  ></FontAwesomeIcon>
-                </span>          
-            :null
-            }
-
-              </div>
-              <div className="col-2"></div>
-
             </div>
-          </div>
-        </div>
 
-            </div>
             <div className="col">
               <div className="container ">
                 <div className="row">
@@ -378,49 +254,41 @@ class ResearcherDashboard extends React.Component {
                     Version status
                     <button
                       type="button"
-                      className={this.state.clickedButton==="inProgress"&&this.state.currentButton=="in_progress" ?"outline- mt-3 btn btn-secondary btn-block  text-left":"outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
+                      className={this.state.clickedButton === "inProgress" && this.state.currentButton == "in_progress" ? "outline- mt-3 btn btn-secondary btn-block  text-left" : "outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
                       onClick={
-                        ()=>{
-                        this.selectButton("inProgress");
-                        this.setState({currentButton:'in_progress'});
-
-                        this.loadData("in_progress");
+                        () => {
+                          this.selectButton("inProgress");
+                          this.setState({ currentButton: 'in_progress' });
+                          this.loadData("in_progress");
                         }
                       }
-                     
                     >
-                      <i className="fas fa-star"></i> In progress 
+                      <i className="fas fa-star"></i> In progress
                       <Badge pill variant="info" className=" ml-3"> {this.state.signaturesCountByStatus[1].Count} </Badge>
                     </button>
                     <button
                       type="button"
-                      className={this.state.clickedButton==="inTest"&&this.state.currentButton=="in_test"?"outline- mt-3 btn btn-secondary btn-block  text-left":"outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
-                      onClick={()=>
-                          {
-                            this.selectButton("inTest");
-                            this.setState({currentButton:"in_test"});
-                            this.loadData("in_test");
-                            
-                            // this.setState({this.urlDetails.page:1});
-                            }
+                      className={this.state.clickedButton === "inTest" && this.state.currentButton == "in_test" ? "outline- mt-3 btn btn-secondary btn-block  text-left" : "outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
+                      onClick={() => {
+                        this.selectButton("inTest");
+                        this.setState({ currentButton: "in_test" });
+                        this.loadData("in_test");
                       }
-                    
+                      }
                     >
                       <i className="fas fa-star-half-alt"></i> In test
                       <Badge pill variant="info" className=" ml-3"> {this.state.signaturesCountByStatus[2].Count} </Badge>
                     </button>
                     <button
                       type="button"
-                      className={this.state.clickedButton==="inQa"&&this.state.currentButton=="in_qa"?"outline- mt-3 btn btn-secondary btn-block  text-left":"outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
-                      onClick={()=>
-                        { 
+                      className={this.state.clickedButton === "inQa" && this.state.currentButton == "in_qa" ? "outline- mt-3 btn btn-secondary btn-block  text-left" : "outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
+                      onClick={() => {
                         this.selectButton("inQa");
-                        this.setState({currentButton:"in_qa"});
+                        this.setState({ currentButton: "in_qa" });
                         this.loadData("in_qa");
-                        // this.setState({this.urlDetails.page:1});
-                        }
                       }
-                                          >
+                      }
+                    >
                       <i className="fas fa-star-half"></i> In QA
                       <Badge pill variant="info" className=" ml-3"> {this.state.signaturesCountByStatus[3].Count} </Badge>
                     </button>
@@ -429,14 +297,12 @@ class ResearcherDashboard extends React.Component {
                     Production status
                     <button
                       type="button"
-                      className={this.state.clickedButton==="Published"&&this.state.currentButton=="Published"?"outline- mt-3 btn btn-secondary btn-block  text-left":"outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
-                      onClick={()=>
-                        {
-                          this.selectButton("Published");
-                          this.setState({currentButton:"Published"});
-                          this.loadData("Published");
-                          // this.setState({this.urlDetails.page:1});
-                        }
+                      className={this.state.clickedButton === "Published" && this.state.currentButton == "Published" ? "outline- mt-3 btn btn-secondary btn-block  text-left" : "outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
+                      onClick={() => {
+                        this.selectButton("Published");
+                        this.setState({ currentButton: "Published" });
+                        this.loadData("Published");
+                      }
                       }
                     >
                       <i className="far fa-star"></i> Published
@@ -444,23 +310,21 @@ class ResearcherDashboard extends React.Component {
                     </button>
                     <button
 
-                        type="button"
-                      className={this.state.clickedButton==="Suspended"&&this.state.currentButton=="Suspended"?"outline- mt-3 btn btn-secondary btn-block  text-left":"outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
-                      onClick={()=>
-                        {
-                          this.selectButton("Suspended");
-                          this.setState({currentButton:"Suspended"});
-                          this.loadData("Suspended");
-                          // this.setState({this.urlDetails.page:1});
-                        }
+                      type="button"
+                      className={this.state.clickedButton === "Suspended" && this.state.currentButton == "Suspended" ? "outline- mt-3 btn btn-secondary btn-block  text-left" : "outline- mt-3 btn btn-outline-secondary btn-block  text-left"}
+                      onClick={() => {
+                        this.selectButton("Suspended");
+                        this.setState({ currentButton: "Suspended" });
+                        this.loadData("Suspended");
+                      }
                       }
 
                     >
-                      <i className="fas fa-exclamation-triangle"></i> Suspended 
-                      
+                      <i className="fas fa-exclamation-triangle"></i> Suspended
+
                       <Badge pill variant="info" className=" ml-3">{this.state.signaturesCountByStatus[4].Count} </Badge>
-                   
-                      
+
+
                     </button>
                   </div>
                 </div>
