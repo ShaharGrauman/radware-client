@@ -1,62 +1,53 @@
 import React from "react";
 import SwitchableComponent from "./SwitchableComponent";
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faThermometerEmpty,
-  faThermometerHalf,
-  faThermometerFull
-} from "@fortawesome/free-solid-svg-icons";
+import { faThermometerEmpty, faThermometerHalf, faThermometerFull } from "@fortawesome/free-solid-svg-icons";
 
 export default class SeverityRange extends SwitchableComponent {
   constructor(props) {
     super(props);
     this.props = props;
-    this.state={
+    this.state = {
       disableDiv: false,
-      severity:"2"
+      severity: "2"
     }
   }
+
   onChange = e => {
-    let valueText='';
-    this.setState({severity:e.target.value==0?"2":e.target.value})
-    console.log('severity',e.target.value)
-    switch(e.target.value) {
+    let valueText = '';
+    this.setState({ severity: e.target.value == 0 ? "2" : e.target.value })
+    switch (e.target.value) {
       case '0':
-        return this.props.onSelect('severity','');
+        return this.props.onSelect('severity', '');
       case '1':
-        return this.props.onSelect('severity','low');
+        return this.props.onSelect('severity', 'low');
       case '2':
-        return this.props.onSelect('severity','medium');
+        return this.props.onSelect('severity', 'medium');
       case '3':
-        return this.props.onSelect('severity','high');
+        return this.props.onSelect('severity', 'high');
       default:
-        return this.props.onSelect('severity','');
+        return this.props.onSelect('severity', '');
     }
-    // this.props.onSelect('severity',e.target.value)
   }
   render() {
     var divStyle = {
-      pointerEvents:this.state.disableDiv?'auto':'none', opacity:this.state.disableDiv?1:0.3
+      pointerEvents: this.state.disableDiv ? 'auto' : 'none', opacity: this.state.disableDiv ? 1 : 0.3
     };
     return (
       <>
         <div class="custom-control custom-switch">
-          <input type="checkbox" className="custom-control-input" id="customSwitch2" onClick={()=>{
-            const switchState=this.state.disableDiv;
-            this.setState({disableDiv:!switchState});
-            if(switchState){
-              // if switch to off
-              this.setState({severity:"2"})
-              this.onChange({target:{value:0}})
-            }else{
-              // if switch to on
-              this.onChange({target:{value:"2"}})
+          <input type="checkbox" className="custom-control-input" id="customSwitch2" onClick={() => {
+            const switchState = this.state.disableDiv;
+            this.setState({ disableDiv: !switchState });
+            if (switchState) {
+              this.setState({ severity: "2" })
+              this.onChange({ target: { value: 0 } })
+            } else {
+              this.onChange({ target: { value: "2" } })
             }
           }} ></input>
           <label className="custom-control-label" for="customSwitch2">Severity</label>
-        </div >       
-
+        </div >
         <input
           type="range"
           className="custom-range"
@@ -68,7 +59,6 @@ export default class SeverityRange extends SwitchableComponent {
           dataSliderHandle="custom"
           style={divStyle}
           onChange={this.onChange}
-          // onChange={e => this.props.slidingRangeV(e.target.value)}
           disabled={!this.state.disableDiv}
         />
 
@@ -93,6 +83,6 @@ export default class SeverityRange extends SwitchableComponent {
           </span>
         </span>
       </>
-    );
+    )
   }
 }

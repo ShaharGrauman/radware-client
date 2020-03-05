@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-
 export default class SearchRefinement extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.onChange = props.onChange;
   }
+
   render() {
     return (
       <>

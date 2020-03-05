@@ -1,25 +1,15 @@
 import React, { useState } from "react";
-import {updateQaDashboard, getQaDashboard ,cveidSearch} from '../../../api/controllers/reports';
-import {getUser} from '../../../api/controllers/auth';
-
+import { updateQaDashboard, getQaDashboard, cveidSearch } from '../../../api/controllers/reports';
+import { getUser } from '../../../api/controllers/auth';
 import { Dropdown, ButtonGroup, Button } from 'react-bootstrap';
 import { Container, Col, Row } from 'react-bootstrap';
 import { Modal } from 'react-bootstrap';
-
-
-
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faArrowRight,
-    faArrowLeft
-} from "@fortawesome/free-solid-svg-icons";
-
+import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import QATable from './QATable';
 import './QADashboard.css';
 
-
 export default class QADashboard extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -30,80 +20,58 @@ export default class QADashboard extends React.Component {
             dataToShow: [],
             allPressed: false,
             popupAlert: false,
-
             clickedButton: {
                 role: [],
                 value: '',
                 msg: '',
                 callBack: ''
             }
-
         };
         this.data = [];
         this.size = 15;
         this.role = []
-        // this.role=['manual','performance','automation']  
-
         this.ConfirmAlert = this.ConfirmAlert.bind(this);
-
     }
 
     getAllPermssions(roles) {
         const permissionArrays = roles.map(role => role.permissions);
-
         const permissions = [];
-
         permissionArrays.forEach(array => {
             permissions.push(...array);
         })
-        console.log('permissions',permissions)
-        const filterPermissions=[];
-        let Performance=false, Automation=false,Manual=false
-        permissions.forEach(permission =>{
-            // if(filterPermissions.includes())
-            switch(permission.name){
+        const filterPermissions = [];
+        let Performance = false, Automation = false, Manual = false
+        permissions.forEach(permission => {
+            switch (permission.name) {
                 case 'Update QA performance internal status':
-                    console.log(!Performance,!Performance&&'Performance')
-                    !Performance&&filterPermissions.push('Performance')
-                    // filterPermissions.push('Performance')
-                    Performance=true
+                    !Performance && filterPermissions.push('Performance')
+                    Performance = true
                     break;
                 case 'Update QA automation internal status':
-                    console.log(!Automation,!Automation&&'Automation')
-
-                    !Automation&&filterPermissions.push('Automation')
-                    // filterPermissions.push('Automation')
-                    Automation=true
+                    !Automation && filterPermissions.push('Automation')
+                    Automation = true
                     break;
                 case 'Update QA manual internal status':
-                    console.log(!Manual,!Manual&&'Manual')
-
-                    !Manual&&filterPermissions.push('Manual')
-                    // filterPermissions.push('Manual')
-                    Manual=true
+                    !Manual && filterPermissions.push('Manual')
+                    Manual = true
                     break;
-            }}
-            )
-            console.log('filterPermissions',filterPermissions)
-            // filterPermissions.sort((a,b)=>a-b)
-            return filterPermissions.sort();
+            }
+        }
+        )
+        return filterPermissions.sort();
     }
 
-    async componentDidMount() { 
-        this.role=this.getAllPermssions(JSON.parse(getUser()).roles);
-       
+    async componentDidMount() {
+        this.role = this.getAllPermssions(JSON.parse(getUser()).roles);
         try {
-            const  data  = await getQaDashboard();
+            const data = await getQaDashboard();
             this.data = data.sort((a, b) => a.patternID - b.patternID);
-            console.log(this.data)
             this.setState({ dataToShow: data.slice(0, this.size), page: 1 })
-            // console.log(this.state.data)
         } catch (error) {
         }
     }
 
     updateData = async e => {
-
         this.setState({ updateSelectedButton: 'loading...', allPressed: false });
         const urlBody = [];
         this.data.forEach(signature => {
@@ -113,7 +81,6 @@ export default class QADashboard extends React.Component {
             })
             urlBody.push(oneSigUpdate)
         })
-
         try {
             const msg = await updateQaDashboard(JSON.stringify(urlBody));
             this.setState({ updateSelectedButton: msg })
@@ -137,7 +104,6 @@ export default class QADashboard extends React.Component {
         this.setState({ allPressed: true })
     }
 
-
     ConfirmAlert() {
         const handleClose = () => this.setState({ popupAlert: false });
         const onAccept = () => {
@@ -150,9 +116,7 @@ export default class QADashboard extends React.Component {
                 e.key == 'Enter' && onAccept()
             }}>
                 <Modal show={this.state.popupAlert} onHide={handleClose}
-                aria-labelledby="contained-modal-title-vcenter"
-                centered
-                >
+                    aria-labelledby="contained-modal-title-vcenter" centered>
                     <Modal.Body>
                         {this.state.clickedButton.msg}
                     </Modal.Body>
@@ -161,23 +125,21 @@ export default class QADashboard extends React.Component {
                             this.setState({ popupAlert: false });
                         }}>
                             Cancel
-                </Button>
+                        </Button>
                         <Button variant="primary" onClick={onAccept}>
                             Yes
-                </Button>
+                        </Button>
                     </Modal.Footer>
                 </Modal>
             </div>
         );
     }
 
-
-
     render() {
         if (this.data.length == 0) {
             return (
                 <>
-                    <h2 className="ml-2 mb-3">QA dashboard</h2>
+                    <h2 className="ml-2 mb-3" >QA dashboard</h2>
                     <h5 className="ml-2 mb-3">Update signatures status at QA (signatures in QA status)</h5>
                     <br></br>
                     <div className="container ml-0 mt-2">
@@ -203,8 +165,10 @@ export default class QADashboard extends React.Component {
         } else {
             return (
                 <>
-                    <h2 className="ml-3 mb-3">QA dashboard</h2>
+                    <div style={{ fontFamily: "cursive", fontSize: "30px" }}>
+                    <div className="ml-3 mb-3">QA Dashboard</div>
                     <h5 className="ml-3 mb-3">Update signatures status at QA (signatures in QA status)</h5>
+                    </div>
                     <div className="container ml-0 mt-2">
                         <div className="row">
                             <div className="col">
@@ -220,19 +184,18 @@ export default class QADashboard extends React.Component {
                                         this.setState({ dataToShow: this.data.slice((newPage - 1) * this.size, newPage * this.size) })
                                         this.setState({ page: newPage });
                                     }}
-                                    style={{cursor:'pointer' }}
+                                        style={{ cursor: 'pointer' }}
                                     >
                                         <FontAwesomeIcon
                                             icon={faArrowLeft}
                                         ></FontAwesomeIcon>{" "}
                                         Previous
-                        </span>
+                                    </span>
                                     : null
                                 }
                             </div>
                             <div className="col-1 col-lg-0 mx-2 mx-sm-2 mx-md-0">
                                 <span class="badge badge-secondary">{this.state.page}</span>
-
                             </div>
                             <div className="col-3 col-sm-2">
                                 {this.size * this.state.page < this.data.length ?
@@ -242,9 +205,7 @@ export default class QADashboard extends React.Component {
 
                                         this.setState({ page: newPage });
                                     }}
-                                    style={{cursor:'pointer' }}
-                                    
-
+                                        style={{ cursor: 'pointer' }}
                                     >
                                         Next{" "}
                                         <FontAwesomeIcon
@@ -253,7 +214,6 @@ export default class QADashboard extends React.Component {
                                     </span>
                                     : null
                                 }
-
                             </div>
                         </div>
                     </div>
@@ -355,9 +315,9 @@ export default class QADashboard extends React.Component {
                             </Dropdown>
                         </Col>
                         <this.ConfirmAlert />
-
                     </Row>
-                </>);
+                </>
+            )
         }
     }
 }

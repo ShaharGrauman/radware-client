@@ -3,19 +3,17 @@ import SwitchableComponent from "./SwitchableComponent";
 
 export default class ScanAtCheckBoxes extends SwitchableComponent {
   onChange = e => {
-    // console.log(e.target.value,e.target.checked)
-    if(e.target.checked){
+    if (e.target.checked) {
       this.props.onSelect(e.target.value, 1)
-    }else{
+    } else {
       this.props.onSelect(e.target.value, "")
     }
-
   }
+
   render() {
     return (
       <>
         <label htmlFor="scanner">Scan at:</label>
-
         <span className="row">
           <span className="col">
             <div>
@@ -41,6 +39,7 @@ export default class ScanAtCheckBoxes extends SwitchableComponent {
               />
               <label htmlFor="scan-body"> Body</label>
             </div>
+
             <div>
               <input
                 type="checkbox"
