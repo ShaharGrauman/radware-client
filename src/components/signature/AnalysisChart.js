@@ -1,13 +1,11 @@
 import React, { Component } from 'react'
 import CanvasJSReact from '../shared/OurCanvasjs/canvasjs.react';
-//var CanvasJSReact = require('./canvasjs.react');
 var CanvasJS = CanvasJSReact.CanvasJS;
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 export default class SignatureLifeCycleAnalytics extends Component {
 
     componentDidMount() {
-        //Get signature data from props
         const finalData = [];
         const mapping = {};
         this.props.signatureData.signature_status_histories.forEach(history => {
@@ -23,7 +21,6 @@ export default class SignatureLifeCycleAnalytics extends Component {
                     times: [history.time]
                 };
             }
-            console.log(mapping);
         });
 
         for (let status in mapping) {
@@ -75,15 +72,12 @@ export default class SignatureLifeCycleAnalytics extends Component {
             animationEnabled: true,
             theme: "light2",
             title: {
-                //text: "Analysis"
                 text: "Signature life cycle"
             },
             axisX: {
-                //title: "Signature life cycle",
                 reversed: true,
             },
             axisY: {
-                //title: "Signature life cycle",
                 labelFormatter: this.addSymbols
             },
             data: [{
@@ -93,10 +87,7 @@ export default class SignatureLifeCycleAnalytics extends Component {
         }
         return (
             <div>
-                <CanvasJSChart options={options}
-                /* onRef={ref => this.chart = ref} */
-                />
-                {/*You can get reference to the chart instance as shown above using onRef. This allows you to access all chart properties and methods*/}
+                <CanvasJSChart options={options}/>
             </div>
         );
     }

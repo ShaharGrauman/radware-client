@@ -163,7 +163,7 @@ class ResearcherDashboard extends React.Component {
         {this.state.TestingClicked && <Redirect to='/Export/Testing' />}
         {this.state.GitClicked && <Redirect to='/Export/Git' />}
         {this.state.cveIdReportClicked && <Redirect to='/CveIdReport' />}
-        <h2 className="ml mb-3">Researcher dashboard</h2>
+        <h2 className="ml mb-3" style={{ fontFamily: "cursive", fontSize: "30px" }}>Researcher Dashboard</h2>
         <div className='row'>
           <div className='ml-2 mr-4'>
             <button type="button" className="ml-2 mr-4 btn btn-secondary" onClick={() => this.renderRedirect("createOrEditSignature")}>
@@ -192,7 +192,7 @@ class ResearcherDashboard extends React.Component {
             className="ml-2 mr-4 btn btn-secondary">CveId</button>
         </div>
         <div className="ml-2 mt-3 mx-">
-          <h5 className=" mb-2">{this.state.dataFilter} by Create Date</h5>
+          <h5 className=" mb-2" style={{ fontFamily: "cursive", fontSize: "20px" }}>{this.state.dataFilter} by Create Date</h5>
         </div>
         <div className="container ml-0">
           <div className="row">

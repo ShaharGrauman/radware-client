@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
-
 import { getSignature, createSignatureWithDefaults, updateSignature, createSignature } from '../../api/controllers/signature';
 import { withRouter } from 'react-router-dom';
-
 import ControlSteps from '../shared/ControlSteps';
 import WizardFooterButtons from '../shared/WizardFooterButtons';
-
 import NotificationIsCreated from './NotificationIsCreated';
 
 import CreateOrEditSignatureStep1Details from './CreateOrEditSignatureStep1Details';
@@ -280,16 +277,9 @@ class CreateOrEditSignatureWizard extends Component {
         this.setState({ left_index: this.state.signatureData.left_index = leftIndex })
         this.setState({ right_index: this.state.signatureData.right_index = rightIndex })
     }
-    
+
     setCurrentStep = currentStep => {
         this.setState({ currentStep: currentStep });
-    }
-
-    isCancelResarcherDashboard = () => {
-
-        // <Redirect to='/researcher-dashboard' />
-        //  this.setState({ifCancelButton:true})
-        // {this.state.ifCancelButton && <Redirect to='/researcher-dashboard' />}
     }
 
     clickYesUpdated = () => {
@@ -312,12 +302,12 @@ class CreateOrEditSignatureWizard extends Component {
 
     render() {
         const steps = [
-            <CreateOrEditSignatureStep1Details ref={this.step1ref} attacks={this.state.attacks} signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} onBlur={this.onBlur} signatureErrors={this.state.errors} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} isCancelResarcherDashboard={this.isCancelResarcherDashboard} showModal={this.showModal} />,
-            <CreateOrEditSignatureStep2Volnarability ref={this.step2ref} signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} toggleshowRegularInStep2={this.toggleshowRegularInStep2} setLeftAndRightIndexes={this.setLeftAndRightIndexes} isCancelResarcherDashboard={this.isCancelResarcherDashboard} showModal={this.showModal} />,
-            <CreateOrEditSignatureStep3Validate ref={this.step3ref} signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} toggleshowRegularInStep2={this.toggleshowRegularInStep2} isCancelResarcherDashboard={this.isCancelResarcherDashboard} showModal={this.showModal} />,
-            <CreateOrEditSignatureStep4ExternalReferences ref={this.step4ref} signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} isCancelResarcherDashboard={this.isCancelResarcherDashboard} showModal={this.showModal} />,
-            <CreateOrEditSignatureStep5Attributes signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} isCancelResarcherDashboard={this.isCancelResarcherDashboard} showModal={this.showModal} />,
-            <CreateOrEditSignatureStep6History signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} isCancelResarcherDashboard={this.isCancelResarcherDashboard} showModal={this.showModal} />,
+            <CreateOrEditSignatureStep1Details ref={this.step1ref} attacks={this.state.attacks} signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} onBlur={this.onBlur} signatureErrors={this.state.errors} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} />,
+            <CreateOrEditSignatureStep2Volnarability ref={this.step2ref} signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} toggleshowRegularInStep2={this.toggleshowRegularInStep2} setLeftAndRightIndexes={this.setLeftAndRightIndexes} showModal={this.showModal} />,
+            <CreateOrEditSignatureStep3Validate ref={this.step3ref} signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} toggleshowRegularInStep2={this.toggleshowRegularInStep2} showModal={this.showModal} />,
+            <CreateOrEditSignatureStep4ExternalReferences ref={this.step4ref} signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} showModal={this.showModal} />,
+            <CreateOrEditSignatureStep5Attributes signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} showModal={this.showModal} />,
+            <CreateOrEditSignatureStep6History signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} showModal={this.showModal} />,
             <CreateOrEditSignatureStep7Analytics signatureData={this.state.signatureData} onChangeHandler={this.onChangeHandler} addToStateArray={this.addToStateArray} excludeFromStateArrayById={this.excludeFromStateArrayById} />
         ];
 
@@ -353,7 +343,6 @@ class CreateOrEditSignatureWizard extends Component {
                     createWithDefaultsButtonClick={this.createWithDefaultsButtonClick}
                     createSignatureButtonClick={this.createSignatureButtonClick}
                     isUpdateSignature={this.props.match.params.id}
-                    isCancelResarcherDashboard={this.isCancelResarcherDashboard}
                     showModal={this.showModal}
                 />
             </div>

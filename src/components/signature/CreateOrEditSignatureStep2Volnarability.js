@@ -1,6 +1,5 @@
 import React from "react";
-
-import Table from '../shared/Table'
+import Table from '../shared/Table';
 import Actions from '../shared/Actions';
 import Scanat from "./Scanat";
 import validator, { field } from '../shared/validations/validator';
@@ -163,7 +162,6 @@ export default class CreateOrEditSignatureStep2Volnarability extends React.Compo
                                         type="text"
                                         className="form-control"
                                         name="txtTestText"
-                                        //defaultValue={this.state.fields.txtTestText.value}
                                         onChange={this.props.onChangeHandler}
                                         id="testText"
                                         placeholder="Add text">

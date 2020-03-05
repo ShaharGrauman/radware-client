@@ -1,13 +1,10 @@
 import React from 'react';
-import { store } from 'react-notifications-component';
 import 'react-notifications-component/dist/theme.css';
 import 'animate.css';
-import { Redirect ,useHistory} from 'react-router-dom';
-
+import { Redirect } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import CreateOrEditSignatureWizard from './CreateOrEditSignatureWizard';
 
 export default class NotificationIsCreated extends React.Component {
     constructor(props) {
@@ -28,11 +25,7 @@ export default class NotificationIsCreated extends React.Component {
         return (
             <div>
                 <div class="row align-items-center  border border-danger p-4">
-
-                    <div class="col-md-3 mt-3 mb-2">
-
-                    </div>
-
+                    <div class="col-md-3 mt-3 mb-2"></div>
                     <div class="col-md-6 mt-3 mb-4">
                         {
                             this.props.isCreateSignature ?
@@ -66,7 +59,6 @@ export default class NotificationIsCreated extends React.Component {
                         {this.state.isAdmminClicked && <Redirect to='/researcher-dashboard/'/>}
                         {this.state.isNewClicked && <Redirect to='/createSignature/'/>}
                     </div>
-                
                 </div>
             </div>
 
