@@ -45,7 +45,7 @@ const getRoleWithId = async (id) => {
     }
 }
 
-const putUser = async (id, user) => {
+const editUserById = async (id, user) => {
     try {
         const { data } = await fetcher.put(`/users/${id}`, user)
         return data;
@@ -56,14 +56,12 @@ const putUser = async (id, user) => {
 
 const getAudit = async (event, users_names, orderby, page, size, startdate, enddate, starttime, endtime) => {
     try {
-
         const { data } = await fetcher.get(`/admin/audit?event=${event}&users_names=${users_names}&orderby=${orderby}&page=${page}&size=${size}&startdate=${startdate}&enddate=${enddate}&starttime=${starttime}&endtime=${endtime}`);
         return data;
     } catch (error) {
         throw error.message;
     }
 }
-
 
 const login = async (username, password) => {
     try {
@@ -73,7 +71,8 @@ const login = async (username, password) => {
         throw error.message
     }
 }
-const getpermissionNew = async () => {
+
+const getpermission = async () => {
     try {
         const { data } = await fetcher.get(`/role/permissions`);
         return data;
@@ -82,7 +81,7 @@ const getpermissionNew = async () => {
     }
 }
 
-const postNewUser = async (user) => {
+const createNewUser = async (user) => {
     try {
         const { data } = await fetcher.post('/users/new_user', user)
         return data;
@@ -91,7 +90,7 @@ const postNewUser = async (user) => {
     }
 }
 
-const postResetPassword = async (username) => {
+const resetPassword = async (username) => {
     try {
         const { data } = await fetcher.post('/login/resetPassword', { username })
         return data;
@@ -99,6 +98,7 @@ const postResetPassword = async (username) => {
         throw error.message;
     }
 }
+
 const deleteUser = async (username) => {
     try {
         const { data } = await fetcher.put('/users/delete_user', { username })
@@ -107,6 +107,7 @@ const deleteUser = async (username) => {
         throw error.message;
     }
 }
+
 const deleteRole = async (role) => {
     try {
         const { data } = await fetcher.put(`/role/delete/${role}`)
@@ -115,7 +116,8 @@ const deleteRole = async (role) => {
         throw error.message;
     }
 }
-const putUpdatePassword = async (username, tempPwd, newPwd) => {
+
+const updatePassword = async (username, tempPwd, newPwd) => {
     try {
         const { data } = await fetcher.put('/login/resetPassword', { username, tempPwd, newPwd })
         return data;
@@ -123,7 +125,8 @@ const putUpdatePassword = async (username, tempPwd, newPwd) => {
         throw error.message;
     }
 }
-const postNewRole = async (role) => {
+
+const createNewRole = async (role) => {
     try {
         const { data } = await fetcher.post('/role/new_role', role)
         return data;
@@ -132,7 +135,8 @@ const postNewRole = async (role) => {
     }
 
 }
-const putRole = async (id, user) => {
+
+const editRole = async (id, user) => {
     try {
         const { data } = await fetcher.put(`/role/${id}`, user)
         return data;
@@ -140,6 +144,7 @@ const putRole = async (id, user) => {
         throw error.message;
     }
 }
+
 const getConstant = async () => {
     try {
         const { data } = await fetcher.get(`/constant`);
@@ -148,22 +153,23 @@ const getConstant = async () => {
         throw error.message;
     }
 }
+
 export {
     getUsers,
     login,
     getRoles,
     getRolesList,
-    getpermissionNew,
-    postNewUser,
-    postNewRole,
+    getpermission,
+    createNewUser,
+    createNewRole,
     getRolesEdit,
-    putUser,
-    postResetPassword,
-    putUpdatePassword,
+    editUserById,
+    resetPassword,
+    updatePassword,
     deleteUser,
     getRoleWithId,
     getAudit,
-    putRole,
+    editRole,
     getConstant,
     deleteRole
 

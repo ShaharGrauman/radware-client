@@ -4,7 +4,7 @@ import Input from './InputValidation';
 import { Redirect } from 'react-router-dom'
 import { withRouter } from 'react-router-dom'
 import PermissionsTable from './PermissionsTable';
-import { putRole } from '../../api/controllers/admin';
+import { editRole } from '../../api/controllers/admin';
 import { getRoleWithId } from '../../api/controllers/admin';
 import NotificationIsCreated from './NotificationIsCreated';
 
@@ -67,7 +67,7 @@ class EditRole extends React.Component {
         if (this.state.perId.length > 0) {
             try {
                 this.setState({ checkBoxError: false })
-                await putRole(this.state.id, dataRole);
+                await editRole(this.state.id, dataRole);
                 this.setState({ ifRoleUpdated: true });
             }
             catch (error) {
@@ -145,7 +145,7 @@ class EditRole extends React.Component {
                             {this.state.cancelClicked && <Redirect to='/admin/roles' />}
                             <form className="ml-3" onSubmit={this.handleSumbit}>
                                 <div className="scheduler-border">
-                                    <h4 className="scheduler-border font-weight-light pb-2 ml-2"><u>Role info</u></h4>
+                                    <h4 className="scheduler-border font-weight-light pb-2 ml-2" style={{ fontFamily: "cursive", fontSize: "20px" }}><u>Role info</u></h4>
 
                                     <div className="form-group mt-2 ml-2">
                                         <label htmlFor="rolename">Role Name : </label>

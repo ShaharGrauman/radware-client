@@ -3,7 +3,7 @@ import Joi from 'joi-browser'
 import Input from './InputValidation';
 import { Redirect } from 'react-router-dom'
 import AdminTable from '../shared/AdminTable';
-import { putUser } from '../../api/controllers/admin';
+import { editUserById } from '../../api/controllers/admin';
 import { getRolesList } from '../../api/controllers/admin';
 import NotificationIsCreated from './NotificationIsCreated';
 
@@ -129,7 +129,7 @@ export default class EditUser extends React.Component {
         if (errors) return
         if (this.valthischeckBox()) {
             try {
-                const userUpdated = await putUser(id.id, user);
+                const userUpdated = await editUserById(id.id, user);
                 if (typeof userUpdated == 'string') {
                     this.setState({
                         errors: user
