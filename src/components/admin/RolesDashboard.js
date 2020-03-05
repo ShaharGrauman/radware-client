@@ -1,13 +1,13 @@
 import React from 'react';
+import Modal from './Modal/Modal';
+import { Link } from 'react-router-dom';
+import Backdrop from './Backdrop/Backdrop';
+import AdminTable from '../shared/AdminTable';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Redirect, withRouter } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEdit, faTrash, faUserTag } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
-import AdminTable from '../shared/AdminTable';
-import Modal from './Modal/Modal';
-import Backdrop from './Backdrop/Backdrop';
 import { getRoles, deleteRole } from '../../api/controllers/admin';
+import { faEdit, faTrash, faUserTag } from '@fortawesome/free-solid-svg-icons';
 
 class RolesDashboard extends React.Component {
     constructor(props) {
@@ -22,6 +22,7 @@ class RolesDashboard extends React.Component {
             errorMsg: ''
         }
     }
+
     renderRedirect = page => {
         if (page === "newrole") {
             this.setState({
@@ -32,7 +33,6 @@ class RolesDashboard extends React.Component {
 
     SortByKey(sortKey) {
         let sorted;
-
         if (sortKey.key != "id") {
             if (sortKey.sortOrder)
                 sorted = this.state.orgRoles.sort((a, b) => a[sortKey.key].toLowerCase() > b[sortKey.key].toLowerCase() ? 1 : -1);
@@ -63,12 +63,12 @@ class RolesDashboard extends React.Component {
             ]
         }));
         this.setState({ orgRoles: roles, roles: roles });
-    };
+    }
+
     async deleteRole(id) {
         try {
             const role = await deleteRole(id);
             if (typeof role == 'string') {
-                console.log("role ",role)
                 this.setState({
                     errorMsg: role
                 });
@@ -81,6 +81,7 @@ class RolesDashboard extends React.Component {
             })
         }
     }
+
     closeModal = () => {
         this.setState({ modalIsOpen: false });
     }
@@ -92,10 +93,12 @@ class RolesDashboard extends React.Component {
         });
 
     }
+
     clickDeleteRole = () => {
         this.deleteRole(this.state.deleteRole);
         this.setState({ modalIsOpen: false })
     }
+
     tableHeaders = [
         { key: "id", value: "ID", toSort: true, sortOrder: true },
         { key: "name", value: "Role name", toSort: true, sortOrder: true },
@@ -118,7 +121,7 @@ class RolesDashboard extends React.Component {
                 <div>
                     {this.state.newRoleClicked && <Redirect to='/newrole' />}
                     <div className="row ml-3 mr-3">
-                        <div className="col-lg-10 col-md-9 col-sm-6">
+                        <div className="col-lg-10 col-md-9 col-sm-6" style={{ fontFamily: "cursive", fontSize: "15px" }}>
                             <h2>Admin Dashboard</h2>
                             <h4>Roles Management</h4>
                         </div>
@@ -128,9 +131,9 @@ class RolesDashboard extends React.Component {
                         </div>
                     </div>
                     <div className="ml-2">
-                    {
-                        this.state.errorMsg && <div className="mb-3 ml-4" style={{ color: "red" } }> {this.state.errorMsg} </div>
-                    }
+                        {
+                            this.state.errorMsg && <div className="mb-3 ml-4" style={{ color: "red" }}> {this.state.errorMsg} </div>
+                        }
                     </div>
                     <div className="row ml-3 mr-3 mt-3">
                         <div className="col-lg-12 col-md-12 col-sm-12 col-xs-12" >

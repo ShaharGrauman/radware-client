@@ -1,49 +1,45 @@
 import React from 'react';
-import { Redirect } from 'react-router-dom'
-import axios from 'axios';
-import { withRouter } from 'react-router-dom'
-import PermissionsTable from './PermissionsTable';
-import { postNewRole } from '../../api/controllers/admin';
-import { getRoleWithId } from '../../api/controllers/admin';
-import { putRole } from '../../api/controllers/admin';
 import Joi from 'joi-browser'
 import Input from './InputValidation';
+import { Redirect } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
+import PermissionsTable from './PermissionsTable';
+import { putRole } from '../../api/controllers/admin';
+import { getRoleWithId } from '../../api/controllers/admin';
 import NotificationIsCreated from './NotificationIsCreated';
 
 class EditRole extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            account: { rolename: '', description: '', permissions: [] },
             cancelClicked: false,
+            id: [],
+            role: [],
+            perId: [],
             errors: {},
-
-            id:[],
-            role:[],
-            perId:[],
-
+            message: '',
             isEditRole: true,
-            ifRoleUpdated:false
-            ,checkBoxError:false
+            ifRoleUpdated: false,
+            checkBoxError: false,
+            account: { rolename: '', description: '', permissions: [] },
         };
     }
-
 
     schema = {
         rolename: Joi.string().required().label("rolename"),
         description: Joi.string().required().label("description")
-        
-     
     }
     validate = () => {
-        const options = { abortEarly: false }
+        const options = { abortEarly: false };
         const { error } = Joi.validate(this.state.account, this.schema, options);
-        if (!error) return null;
+        if (!error)
+            return null;
         const errors = {};
         for (let item of error.details)
             errors[item.path[0]] = item.message;
         return errors;
-    };
+    }
+
     validateProperty = ({ name, value }) => {
         const obj = { [name]: value };
         const schema = { [name]: this.schema[name] };
@@ -58,38 +54,29 @@ class EditRole extends React.Component {
     }
 
     registerClick = async e => {
-        
         e.preventDefault();
         const errors = this.validate();
-          //method return object looks like error 
         this.setState({ errors: errors || {} });
-        console.log('error:',this.state.errors)
-    if(errors.description) return
+        if (errors.description)
+            return
         let dataRole = {
             name: this.state.account.rolename,
             description: this.state.account.description,
             permissions: this.state.perId
-
         }
+        if (this.state.perId.length > 0) {
+            try {
+                this.setState({ checkBoxError: false })
+                await putRole(this.state.id, dataRole);
+                this.setState({ ifRoleUpdated: true });
+            }
+            catch (error) {
+                this.setState({ message: "Something went wrong... Please try again " });
+            }
+        } this.setState({ checkBoxError: true })
+    }
 
-    
-        if(this.state.perId.length > 0){
-            try{
-                this.setState({checkBoxError:false})
-            await putRole(this.state.id, dataRole);  
-            
-            this.setState({ ifRoleUpdated: true });
-          
-    }  
-        catch(error){
-            console.log(error);
-            
-        }
-       
-       
-    }  this.setState({checkBoxError:true}) }
-
-    async componentWillMount() {
+    async componentDidMount() {
         const id = window.location.pathname.split('/')[2];
         this.setState({ id });
         const role = await getRoleWithId(id);
@@ -127,8 +114,8 @@ class EditRole extends React.Component {
             });
         }
     }
-    handleChangeInput = ({ currentTarget: input }) => {
 
+    handleChangeInput = ({ currentTarget: input }) => {
         const errors = { ...this.state.errors };
         const errorMessage = this.validateProperty(input);
         if (errorMessage) errors[input.name] = errorMessage;
@@ -136,21 +123,20 @@ class EditRole extends React.Component {
         const account = { ...this.state.account };
         account[input.name] = input.value;
         this.setState({ account, errors });
-        console.log(this.state.account)
     };
 
     render() {
         const { account, errors } = this.state;
         if (this.state.ifRoleUpdated) {
             return (
-                <NotificationIsCreated ifRoleUpdated = {this.state.ifRoleUpdated}/>
+                <NotificationIsCreated ifRoleUpdated={this.state.ifRoleUpdated} />
             )
         }
         return (
             <>
-                <div className="container">
-                    <div className="row mt-2">
-                        <div className="col-md-12 ml-4 " >
+                <div className="container" >
+                    <div className="row mt-2" >
+                        <div className="col-md-12 ml-4 " style={{ fontFamily: "cursive", fontSize: "30px" }}>
                             <h1>Edit Role</h1>
                         </div>
                     </div>
@@ -158,7 +144,7 @@ class EditRole extends React.Component {
                         <div className="col-md-12">
                             {this.state.cancelClicked && <Redirect to='/admin/roles' />}
                             <form className="ml-3" onSubmit={this.handleSumbit}>
-                                <fieldset className="scheduler-border">
+                                <div className="scheduler-border">
                                     <h4 className="scheduler-border font-weight-light pb-2 ml-2"><u>Role info</u></h4>
 
                                     <div className="form-group mt-2 ml-2">
@@ -172,36 +158,37 @@ class EditRole extends React.Component {
                                             error={errors.name}
                                             readOnly={true}
                                         />
-                                       
+
                                     </div>
 
                                     <div className="form-group ml-2">
                                         <label htmlFor="lName">Description : </label>
-                                        <Input 
-                                        className="form-control" 
-                                        name="description" 
-                                        type="text" 
-                                        id="lName" 
-                                        value={account.description}
-                                        onChange={this.handleChangeInput}
-                                        error={errors.description}
+                                        <Input
+                                            className="form-control"
+                                            name="description"
+                                            type="text"
+                                            id="lName"
+                                            value={account.description}
+                                            onChange={this.handleChangeInput}
+                                            error={errors.description}
                                         />
-                                       
+
                                     </div>
                                     <p className="ml-2">Select Permission :</p>
                                     {this.state.account.permissions.length &&
 
-                                    <PermissionsTable
-                                     onSelect={this.onPermissionSelect}
-                                     role={this.state.role}
-                                     isEdit = {this.state.isEditRole}
-                                      />
+                                        <PermissionsTable
+                                            onSelect={this.onPermissionSelect}
+                                            role={this.state.role}
+                                            isEdit={this.state.isEditRole}
+                                        />
 
                                     }
-                                    {this.state.checkBoxError &&  <div className="mb-3" style={{color:"red"}}>
-                                    Please select at least 1 permission
-                                </div>}
-                                </fieldset>
+                                    {this.state.checkBoxError && <div className="mb-3" style={{ color: "red" }}>
+                                        Please select at least 1 permission
+                                        </div>
+                                    }
+                                </div>
                                 <button type="button" onClick={this.registerClick} className="btn btn-secondary btn-block" >Save</button>
                                 <button type="button" onClick={() => this.renderRedirect("users")} className="btn btn-secondary  btn-block">Cancel</button>
 

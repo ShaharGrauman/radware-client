@@ -1,11 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
 import './index.css';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import EditUserDetails from './components/admin/EditUserDetails';
-import NewUserDashbaord from './components/admin/NewUserDashboard';
 import AdminDashbaord from './components/admin/AdminDashboard';
 import NewRole from './components/admin/NewRole';
 import Audit from './components/admin/Audit';
@@ -14,7 +12,6 @@ import LogIn from './components/admin/LogIn';
 import SearchSignature from './components/reports/SearchSignature/SearchSignature';
 import QaDashboard from './components/reports/QADashboard/QADashboard';
 import CveIdReport from './components/reports/CveIdReport/CveIdReport';
-
 import ResetPassword from './components/admin/ResetPassword';
 import CreateOrEditSignatureWizard from './components/signature/CreateOrEditSignatureWizard';
 import CreatetSignature from './components/signature/CreatetSignature'
@@ -23,6 +20,7 @@ import Export from './components/reports/SearchSignature/Export';
 import AttacksOrSeverityChart from './components/reports/AttacksOrSeverityChart/AttacksOrSeverityChart';
 import ApplicationBar from './components/shared/ApplicationBar';
 import EditRole from './components/admin/EditRole';
+import Register from './components/admin/Register';
 
 class App extends React.Component {
     render() {
@@ -37,7 +35,7 @@ class App extends React.Component {
                         <EditRole />
                     </Route>
                     <Route path="/newuser">
-                        <NewUserDashbaord />
+                        <Register />
                     </Route>
                     <Route path="/admin/roles">
                         <RolesDashboard />
@@ -50,8 +48,7 @@ class App extends React.Component {
                     </Route>
                     <Route path="/audit">
                         <Audit />
-                    </Route>
-                    
+                    </Route>   
                     <Route path="/researcher">
                         <Audit />
                     </Route>
