@@ -107,7 +107,7 @@ export default class CveIdReport extends Component {
   render() {
     return (
       <>
-        <h2 className="ml-3 mb-3">CveId Report</h2>
+        <h2 className="ml-3 mb-3" style={{ fontFamily: "cursive", fontSize: "30px" }}>CveId Report</h2>
         <br></br>
         <div className="container ml-3 mb-3">
           <div className="row">

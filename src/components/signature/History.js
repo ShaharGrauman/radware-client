@@ -1,7 +1,4 @@
 import React from "react";
-
-// import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
-
 import Table from '../shared/Table'
 
 export default class EditSignatures extends React.Component{

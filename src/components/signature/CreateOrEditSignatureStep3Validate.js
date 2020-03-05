@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Table from '../shared/Table';
 import Scanat from './Scanat';
 import validator, { field } from '../shared/validations/validator';
@@ -31,8 +30,7 @@ export default class CreateOrEditSignatureStep3Validate extends React.Component 
     }
     
     validate = (fieldName, value) => {
-        value = this.state.fields.value = this.props.signatureData.test_data
-        console.log(value)
+        value = this.state.fields.value = this.props.signatureData.test_data;
         return new Promise(resolve => {
             const errors = validator(fieldName, value, this.state.fields[fieldName].validations);
             const field = {

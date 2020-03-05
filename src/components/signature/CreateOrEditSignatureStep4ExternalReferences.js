@@ -1,9 +1,7 @@
 import React from "react";
-
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { faTextHeight } from '@fortawesome/free-solid-svg-icons';
-
 import Table from '../shared/Table';
 import Actions from '../shared/Actions';
 import validator, { field } from '../shared/validations/validator';

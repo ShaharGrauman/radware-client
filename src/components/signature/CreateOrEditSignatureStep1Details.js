@@ -1,5 +1,4 @@
 import React from 'react';
-
 import Severity from './Severity';
 import validator, { field } from '../shared/validations/validator';
 import { getAttacks, getStatuses } from '../../api/controllers/signature';
